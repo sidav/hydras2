@@ -2,6 +2,7 @@ package main
 
 type item struct {
 	asConsumable *consumableItemInfo
+	asWeapon     *itemWeapon
 }
 
 func (i *item) isConsumable() bool {
