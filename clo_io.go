@@ -5,13 +5,13 @@ import (
 	_ "github.com/gdamore/tcell/v2"
 )
 
-type cliRenderer struct {
+type cliIO struct {
 	screen                        tcell.Screen
 	style                         tcell.Style
 	CONSOLE_WIDTH, CONSOLE_HEIGHT int
 }
 
-func (c *cliRenderer) init() {
+func (c *cliIO) init() {
 	tcell.SetEncodingFallback(tcell.EncodingFallbackASCII)
 	var e error
 	c.screen, e = tcell.NewScreen()
@@ -27,15 +27,19 @@ func (c *cliRenderer) init() {
 	c.CONSOLE_WIDTH, c.CONSOLE_HEIGHT = c.screen.Size()
 }
 
-func (c *cliRenderer) close() {
+func (c *cliIO) close() {
 	c.screen.Fini()
 }
 
-func (c *cliRenderer) renderDungeon(d *dungeon, p *player) {
+func (c *cliIO) renderDungeon(d *dungeon, p *player) {
 	chars := *d.layout.WholeMapToCharArray(false, false, false)
 	for x := 0; x < len(chars); x++ {
 		for y := 0; y < len((chars)[0]); y++ {
 			chr := chars[x][y]
+			lx, ly := x/5, y/5 // coords of dungeonCell IN LAYOUT
+			if !d.rooms[lx][ly].isVisited {
+				continue
+			}
 			switch chr {
 			case '#':
 				c.style = c.style.Background(tcell.ColorDarkRed)
@@ -47,11 +51,12 @@ func (c *cliRenderer) renderDungeon(d *dungeon, p *player) {
 			c.screen.SetCell(x, y, c.style, chr)
 		}
 	}
+	c.style = c.style.Foreground(tcell.ColorBlue).Background(tcell.ColorBlack)
 	c.screen.SetCell(p.dungX*5+2, p.dungY*5+2, c.style, '@')
 	c.screen.Show()
 }
 
-func (c *cliRenderer) readKey() string {
+func (c *cliIO) readKey() string {
 	for {
 		ev := c.screen.PollEvent()
 		switch ev := ev.(type) {

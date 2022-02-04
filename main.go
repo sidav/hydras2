@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-var r cliRenderer
+var r cliIO
 
 func main() {
 	fmt.Printf("Nothing to see yet.\n")
