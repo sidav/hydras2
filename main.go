@@ -1,13 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"github.com/sidav/sidavgorandom/fibrandom"
+)
 
 var r cliIO
+var rnd fibrandom.FibRandom
 
 func main() {
-	fmt.Printf("Nothing to see yet.\n")
 	r.init()
+	rnd.InitDefault()
 	runGame()
 	r.close()
-	fmt.Printf("Works yet, though.\n")
 }

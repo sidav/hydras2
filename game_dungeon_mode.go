@@ -12,6 +12,7 @@ func runGame() {
 		dungX: x,
 		dungY: y,
 	}
+	plr.init()
 	dungeonMode()
 }
 

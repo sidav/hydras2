@@ -32,6 +32,7 @@ func (c *cliIO) close() {
 }
 
 func (c *cliIO) renderDungeon(d *dungeon, p *player) {
+	c.screen.Clear()
 	chars := *d.layout.WholeMapToCharArray(false, false, false)
 	for x := 0; x < len(chars); x++ {
 		for y := 0; y < len((chars)[0]); y++ {
@@ -42,13 +43,17 @@ func (c *cliIO) renderDungeon(d *dungeon, p *player) {
 			}
 			switch chr {
 			case '#':
-				c.style = c.style.Background(tcell.ColorDarkRed)
+				if d.rooms[lx][ly].isCleared {
+					c.style = c.style.Background(tcell.ColorDarkBlue)
+				} else {
+					c.style = c.style.Background(tcell.ColorDarkRed)
+				}
 				chr = ' '
 				break
 			default:
 				c.style = c.style.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack)
 			}
-			c.screen.SetCell(x, y, c.style, chr)
+			c.putChar(chr, x, y)
 		}
 	}
 	c.style = c.style.Foreground(tcell.ColorBlue).Background(tcell.ColorBlack)
@@ -65,6 +70,30 @@ func (c *cliIO) readKey() string {
 				return "EXIT"
 			}
 			return eventToKeyString(ev)
+		}
+	}
+}
+
+
+func (c *cliIO) showSelectWindow(title string, lines []string) int {
+	cursor := 0
+	for {
+		c.putString(title, 1, 0)
+		for i, l := range lines {
+			if i == cursor {
+				l = "> " + l
+			}
+			c.putString(l+ "  ", 0, 1+i)
+		}
+		c.screen.Show()
+		k := c.readKey()
+		switch k {
+		case "UP":
+			cursor--
+		case "DOWN":
+			cursor++
+		case "ENTER":
+			return cursor
 		}
 	}
 }
@@ -99,3 +128,14 @@ func eventToKeyString(ev *tcell.EventKey) string {
 		return string(ev.Rune())
 	}
 }
+
+func (c *cliIO) putChar(chr rune, x, y int) {
+	c.screen.SetCell(x, y, c.style, chr)
+}
+
+func (c *cliIO) putString(str string, x, y int) {
+	for i := 0; i < len(str); i++ {
+		c.screen.SetCell(x+i, y, c.style, rune(str[i]))
+	}
+}
+
