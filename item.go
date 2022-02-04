@@ -15,3 +15,10 @@ func (i *item) getName() string {
 	}
 	return "NO NAME"
 }
+
+func generateRandomItem() *item {
+	return &item{
+		asConsumable: consumablesData[getWeightedRandomConsumableCode()],
+		asWeapon:     nil,
+	}
+}

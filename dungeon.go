@@ -23,7 +23,6 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 		for y := range d.rooms[x] {
 			d.rooms[x][y] = &dungeonCell{
 				isCleared:   false,
-				isGenerated: false,
 				isRoom:      d.layout.GetElement(x, y).IsNode(),
 			}
 			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("start") {
