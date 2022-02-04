@@ -31,7 +31,7 @@ func (c *cliRenderer) close() {
 	c.screen.Fini()
 }
 
-func (c *cliRenderer) renderDungeon(d *dungeon) {
+func (c *cliRenderer) renderDungeon(d *dungeon, p *player) {
 	chars := *d.layout.WholeMapToCharArray(false, false, false)
 	for x := 0; x < len(chars); x++ {
 		for y := 0; y < len((chars)[0]); y++ {
@@ -47,19 +47,50 @@ func (c *cliRenderer) renderDungeon(d *dungeon) {
 			c.screen.SetCell(x, y, c.style, chr)
 		}
 	}
+	c.screen.SetCell(p.dungX*5+2, p.dungY*5+2, c.style, '@')
 	c.screen.Show()
-	c.readKey()
 }
 
-func (c *cliRenderer) readKey() {
+func (c *cliRenderer) readKey() string {
 	for {
 		ev := c.screen.PollEvent()
 		switch ev := ev.(type) {
 		case *tcell.EventKey:
 			if ev.Key() == tcell.KeyCtrlC {
-				return
+				return "EXIT"
 			}
-			return
+			return eventToKeyString(ev)
 		}
+	}
+}
+
+func eventToKeyString(ev *tcell.EventKey) string {
+	switch ev.Key() {
+	case tcell.KeyUp:
+		return "UP"
+	case tcell.KeyRight:
+		return "RIGHT"
+	case tcell.KeyDown:
+		return "DOWN"
+	case tcell.KeyLeft:
+		return "LEFT"
+	case tcell.KeyEscape:
+		return "ESCAPE"
+	case tcell.KeyEnter:
+		return "ENTER"
+	case tcell.KeyBackspace, tcell.KeyBackspace2:
+		return "BACKSPACE"
+	case tcell.KeyTab:
+		return "TAB"
+	case tcell.KeyDelete:
+		return "DELETE"
+	case tcell.KeyInsert:
+		return "INSERT"
+	case tcell.KeyEnd:
+		return "END"
+	case tcell.KeyHome:
+		return "HOME"
+	default:
+		return string(ev.Rune())
 	}
 }

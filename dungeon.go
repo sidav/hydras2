@@ -36,3 +36,13 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 	}
 	return playerx, playery
 }
+
+func (d *dungeon) canPlayerMoveFromByVector(p *player, vx, vy int) bool {
+	conns := d.layout.GetElement(p.dungX, p.dungY).GetAllConnectionsCoords()
+	for c := 0; c < len(conns); c++ {
+		if conns[c][0] == vx && conns[c][1] == vy {
+			return true
+		}
+	}
+	return false
+}
