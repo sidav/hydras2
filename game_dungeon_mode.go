@@ -37,6 +37,9 @@ func dungeonMode() {
 }
 
 func performCellActions() {
+	if !dung.rooms[plr.dungX][plr.dungY].isGenerated {
+		dung.rooms[plr.dungX][plr.dungY].generateDungeonCell()
+	}
 	dung.rooms[plr.dungX][plr.dungY].isVisited = true
 }
 

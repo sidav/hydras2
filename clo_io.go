@@ -43,7 +43,7 @@ func (c *cliIO) renderDungeon(d *dungeon, p *player) {
 			}
 			switch chr {
 			case '#':
-				if d.rooms[lx][ly].isCleared {
+				if d.rooms[lx][ly].isCleared() {
 					c.style = c.style.Background(tcell.ColorDarkBlue)
 				} else {
 					c.style = c.style.Background(tcell.ColorDarkRed)
