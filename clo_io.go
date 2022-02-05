@@ -74,6 +74,39 @@ func (c *cliIO) readKey() string {
 	}
 }
 
+func (c *cliIO) showYNSelect(title string, lines []string) bool {
+	c.screen.Clear()
+	cursor := 0
+	for {
+		c.resetStyle()
+		c.putString(title, 1, 0)
+		for i, l := range lines {
+			c.putString(l+ "  ", 0, 1+i)
+		}
+		if cursor == 0 {
+			c.style = c.style.Foreground(tcell.ColorBlack).Background(tcell.ColorWhite)
+		} else {
+			c.resetStyle()
+		}
+		c.putString("YES", 1, len(lines)+3)
+		if cursor == 1 {
+			c.style = c.style.Foreground(tcell.ColorBlack).Background(tcell.ColorWhite)
+		} else {
+			c.resetStyle()
+		}
+		c.putString("NO", 7, len(lines)+3)
+		c.screen.Show()
+		k := c.readKey()
+		switch k {
+		case "LEFT":
+			cursor--
+		case "RIGHT":
+			cursor++
+		case "ENTER":
+			return cursor == 0
+		}
+	}
+}
 
 func (c *cliIO) showSelectWindow(title string, lines []string) int {
 	cursor := 0
@@ -131,6 +164,10 @@ func eventToKeyString(ev *tcell.EventKey) string {
 
 func (c *cliIO) putChar(chr rune, x, y int) {
 	c.screen.SetCell(x, y, c.style, chr)
+}
+
+func (c *cliIO) resetStyle() {
+	c.style = c.style.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack)
 }
 
 func (c *cliIO) putString(str string, x, y int) {

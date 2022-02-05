@@ -37,15 +37,32 @@ func dungeonMode() {
 }
 
 func performCellActions() {
-	if !dung.rooms[plr.dungX][plr.dungY].isGenerated {
-		dung.rooms[plr.dungX][plr.dungY].generateDungeonCell()
-	}
 	dung.rooms[plr.dungX][plr.dungY].isVisited = true
+}
+
+func onCellEntry(vx, vy int) bool {
+	x, y := plr.dungX+vx, plr.dungY+vy
+	if !dung.rooms[x][y].isGenerated {
+		dung.rooms[x][y].generateDungeonCell()
+	}
+	if !dung.rooms[x][y].isCleared() {
+		var lines []string
+		for _, e := range dung.rooms[x][y].enemies {
+			lines = append(lines, e.getName())
+		}
+		for _, t := range dung.rooms[x][y].treasure {
+			lines = append(lines, t.getName())
+		}
+		return r.showYNSelect("You see here:", lines)
+	}
+	return true
 }
 
 func movePlayerByVector(vx, vy int) {
 	if dung.canPlayerMoveFromByVector(plr, vx, vy) {
-		plr.dungX += vx
-		plr.dungY += vy
+		if onCellEntry(vx, vy) {
+			plr.dungX += vx
+			plr.dungY += vy
+		}
 	}
 }
