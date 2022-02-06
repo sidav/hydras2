@@ -9,6 +9,10 @@ const (
 type enemy struct {
 	enemyType int
 	heads     int
+
+	// battlefield-only vars:
+	x, y          int
+	nextTickToAct int
 }
 
 func (e *enemy) getName() string {

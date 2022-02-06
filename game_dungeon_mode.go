@@ -56,7 +56,11 @@ func onCellEntry(vx, vy int) bool {
 			lines = append(lines, t.getName())
 		}
 		lines = append(lines, "   Enter the combat?")
-		return io.showYNSelect("  You see here enemies:", lines)
+		if io.showYNSelect("  You see here enemies:", lines) {
+			b := battlefield{}
+			b.init(dung.rooms[x][y], plr)
+			b.startCombat()
+		}
 	}
 	return true
 }
