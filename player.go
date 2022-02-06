@@ -6,6 +6,9 @@ type player struct {
 
 	// stats
 	strength int // how many items can be carried
+
+	// battlefield-only vars
+	x, y int
 }
 
 func (p *player) init() {

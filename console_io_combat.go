@@ -17,11 +17,13 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 
 	// render outline:
 	c.style = c.style.Background(tcell.ColorDarkRed)
-	for i := 0; i <= bfW+1; i++ {
-		c.putChar(' ', 0, i+1)
-		c.putChar(' ', bfW+1, i+1)
-		c.putChar(' ', i, 1)
-		c.putChar(' ', i, bfH+2)
+	for x := 0; x <= bfW+1; x++ {
+		c.putChar(' ', x, 1)
+		c.putChar(' ', x, bfH+2)
+	}
+	for y := 0; y <= bfH+1; y++ {
+		c.putChar(' ', 0, y+1)
+		c.putChar(' ', bfW+1, y+1)
 	}
 	// render the battlefield itself
 	for x := range b.tiles {
@@ -39,6 +41,8 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	for i := range b.enemies {
 		c.renderEnemy(b.enemies[i])
 	}
+	c.resetStyle()
+	c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
 	c.screen.Show()
 }
 
