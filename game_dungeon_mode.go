@@ -45,15 +45,18 @@ func onCellEntry(vx, vy int) bool {
 	if !dung.rooms[x][y].isGenerated {
 		dung.rooms[x][y].generateDungeonCell()
 	}
+	dung.rooms[x][y].isVisited = true
 	if !dung.rooms[x][y].isCleared() {
 		var lines []string
 		for _, e := range dung.rooms[x][y].enemies {
 			lines = append(lines, e.getName())
 		}
+		lines = append(lines, "   Treasure:")
 		for _, t := range dung.rooms[x][y].treasure {
 			lines = append(lines, t.getName())
 		}
-		return r.showYNSelect("You see here:", lines)
+		lines = append(lines, "   Enter the combat?")
+		return r.showYNSelect("  You see here enemies:", lines)
 	}
 	return true
 }

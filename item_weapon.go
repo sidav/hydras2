@@ -39,9 +39,13 @@ type itemWeapon struct {
 	damage     int
 }
 
-func getRandomWeaponData() *weaponTypeStaticData {
+func generateRandomItemWeapon() *itemWeapon {
 	index := rnd.SelectRandomIndexFromWeighted(len(weaponsStaticData), func(i int) int { return weaponsStaticData[i].frequency })
-	return weaponsStaticData[index]
+	iw := itemWeapon{
+		weaponType: weaponType(index),
+		damage:     rnd.RandInRange(weaponsStaticData[index].minDamageForGeneration, weaponsStaticData[index].minDamageForGeneration + 2),
+	}
+	return &iw
 }
 
 func (w *itemWeapon) getName() string {
