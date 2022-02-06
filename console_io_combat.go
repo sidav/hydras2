@@ -50,6 +50,8 @@ func (c *consoleIO) renderEnemy(e *enemy) {
 	strForHeads := "?"
 	if e.heads < 10 {
 		strForHeads = strconv.Itoa(e.heads)
+	} else if e.heads < 16 {
+		strForHeads = []string{"A", "B", "C", "D", "E", "F"}[e.heads-10]
 	}
 	c.style = c.style.Foreground(tcell.ColorRed).Background(tcell.ColorBlack)
 	c.putString(strForHeads, e.x+bf_x_offset, e.y+bf_y_offset)
