@@ -4,12 +4,12 @@ import (
 	"github.com/sidav/sidavgorandom/fibrandom"
 )
 
-var r cliIO
+var io consoleIO
 var rnd fibrandom.FibRandom
 
 func main() {
-	r.init()
+	io.init()
 	rnd.InitDefault()
 	runGame()
-	r.close()
+	io.close()
 }

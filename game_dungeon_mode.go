@@ -19,8 +19,8 @@ func runGame() {
 func dungeonMode() {
 	for {
 		performCellActions()
-		r.renderDungeon(dung, plr)
-		key := r.readKey()
+		io.renderDungeon(dung, plr)
+		key := io.readKey()
 		switch key {
 		case "ESCAPE":
 			return
@@ -56,7 +56,7 @@ func onCellEntry(vx, vy int) bool {
 			lines = append(lines, t.getName())
 		}
 		lines = append(lines, "   Enter the combat?")
-		return r.showYNSelect("  You see here enemies:", lines)
+		return io.showYNSelect("  You see here enemies:", lines)
 	}
 	return true
 }

@@ -5,13 +5,13 @@ import (
 	_ "github.com/gdamore/tcell/v2"
 )
 
-type cliIO struct {
+type consoleIO struct {
 	screen                        tcell.Screen
 	style                         tcell.Style
 	CONSOLE_WIDTH, CONSOLE_HEIGHT int
 }
 
-func (c *cliIO) init() {
+func (c *consoleIO) init() {
 	tcell.SetEncodingFallback(tcell.EncodingFallbackASCII)
 	var e error
 	c.screen, e = tcell.NewScreen()
@@ -27,11 +27,11 @@ func (c *cliIO) init() {
 	c.CONSOLE_WIDTH, c.CONSOLE_HEIGHT = c.screen.Size()
 }
 
-func (c *cliIO) close() {
+func (c *consoleIO) close() {
 	c.screen.Fini()
 }
 
-func (c *cliIO) renderDungeon(d *dungeon, p *player) {
+func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	c.screen.Clear()
 	chars := *d.layout.WholeMapToCharArray(false, false, false)
 	for x := 0; x < len(chars); x++ {
@@ -61,7 +61,7 @@ func (c *cliIO) renderDungeon(d *dungeon, p *player) {
 	c.screen.Show()
 }
 
-func (c *cliIO) readKey() string {
+func (c *consoleIO) readKey() string {
 	for {
 		ev := c.screen.PollEvent()
 		switch ev := ev.(type) {
@@ -74,7 +74,7 @@ func (c *cliIO) readKey() string {
 	}
 }
 
-func (c *cliIO) showYNSelect(title string, lines []string) bool {
+func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 	c.screen.Clear()
 	cursor := 0
 	for {
@@ -108,7 +108,7 @@ func (c *cliIO) showYNSelect(title string, lines []string) bool {
 	}
 }
 
-func (c *cliIO) showSelectWindow(title string, lines []string) int {
+func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	cursor := 0
 	for {
 		c.putString(title, 1, 0)
@@ -162,15 +162,15 @@ func eventToKeyString(ev *tcell.EventKey) string {
 	}
 }
 
-func (c *cliIO) putChar(chr rune, x, y int) {
+func (c *consoleIO) putChar(chr rune, x, y int) {
 	c.screen.SetCell(x, y, c.style, chr)
 }
 
-func (c *cliIO) resetStyle() {
+func (c *consoleIO) resetStyle() {
 	c.style = c.style.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack)
 }
 
-func (c *cliIO) putString(str string, x, y int) {
+func (c *consoleIO) putString(str string, x, y int) {
 	for i := 0; i < len(str); i++ {
 		c.screen.SetCell(x+i, y, c.style, rune(str[i]))
 	}
