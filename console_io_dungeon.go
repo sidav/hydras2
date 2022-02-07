@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
-	"github.com/sidav/cyclicdungeongenerator/generator/layout_generation"
 	"strconv"
 )
 
@@ -32,14 +31,14 @@ func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	for rx := range d.rooms {
 		for ry := range d.rooms[rx] {
 			if d.rooms[rx][ry].isVisited && d.rooms[rx][ry].isCleared() {
-				c.renderRoom(rx, ry, d.layout.GetElement(rx, ry), d.rooms[rx][ry])
+				c.renderRoom(rx, ry, d)
 			}
 		}
 	}
 	for rx := range d.rooms {
 		for ry := range d.rooms[rx] {
 			if d.rooms[rx][ry].isVisited && !d.rooms[rx][ry].isCleared() {
-				c.renderRoom(rx, ry, d.layout.GetElement(rx, ry), d.rooms[rx][ry])
+				c.renderRoom(rx, ry, d)
 			}
 		}
 	}
@@ -50,7 +49,8 @@ func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	c.screen.Show()
 }
 
-func (c *consoleIO) renderRoom(rx, ry int, element *layout_generation.Element, cell *dungeonCell) {
+func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
+	cell := d.rooms[rx][ry]
 	// render room outline.
 	if cell.isCleared() {
 		c.style = c.style.Background(tcell.ColorDarkBlue)
@@ -59,35 +59,37 @@ func (c *consoleIO) renderRoom(rx, ry int, element *layout_generation.Element, c
 	}
 	topLeftX := rx*(roomW+1)+dung_x_offset
 	topLeftY := ry*(roomH+1)+dung_y_offset
-	for x := topLeftX; x < topLeftX+roomW+1; x++ {
-		c.putChar(' ', x, ry*(roomH+1)+dung_y_offset)
-		c.putChar(' ', x, (ry+1)*(roomH+1)+dung_y_offset)
-	}
-	for y := topLeftY; y <= topLeftY+roomH+1; y++ {
-		c.putChar(' ', rx*(roomW+1), y)
-		c.putChar(' ', (rx+1)*(roomW+1), y)
-	}
-	// render connections...
-	c.resetStyle()
-	centerX, centerY := topLeftX+roomW/2+1, topLeftY+roomH/2+1
-	doorXOffset := roomW/2+1
-	doorYOffset := roomH/2+1
-	conns := element.GetAllConnectionsCoords()
-	for _, connCoords := range conns {
-		conn := element.GetConnectionByCoords(connCoords[0], connCoords[1])
-		connChar := ' '
-		switch conn.LockNum {
-		case 0:
-			connChar = '+'
-		case 1:
-			connChar = '='
+	runemap := d.layout.CellToCharArray(rx, ry, false, false, false)
+	for x := range runemap {
+		for y := range runemap[x] {
+			runeToDraw := '?'
+			switch runemap[x][y] {
+			case '#':
+				if cell.isCleared() {
+					c.setStyle(tcell.ColorBlack, tcell.ColorDarkBlue)
+				} else {
+					c.setStyle(tcell.ColorBlack, tcell.ColorDarkRed)
+				}
+				runeToDraw = ' '
+			case '1', '2', '3':
+				c.setStyle(tcell.ColorBlack, tcell.ColorBlue)
+				runeToDraw = '='
+			default:
+				runeToDraw = runemap[x][y]
+				c.resetStyle()
+			}
+			c.putChar(runeToDraw, x+topLeftX, y+topLeftY)
 		}
-		c.putChar(connChar, centerX+doorXOffset*connCoords[0], centerY+doorYOffset*connCoords[1])
 	}
 
 	enemiesCountStr := strconv.Itoa(len(cell.enemies))
 	if enemiesCountStr != "0" {
 		c.setStyle(tcell.ColorRed, tcell.ColorBlack)
 		c.putString(enemiesCountStr, topLeftX+1, topLeftY+1)
+	}
+	treasureCountStr := strconv.Itoa(len(cell.treasure))
+	if treasureCountStr != "0" {
+		c.setStyle(tcell.ColorGreen, tcell.ColorBlack)
+		c.putString(treasureCountStr, topLeftX+roomW, topLeftY+1)
 	}
 }
