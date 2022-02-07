@@ -78,7 +78,7 @@ func offerCombatToPlayer(room *dungeonCell) bool {
 		}
 	}
 	if room.hasKey > 0 {
-		lines = append(lines, "There is a key!")
+		lines = append(lines, " !There is a key!")
 	}
 	lines = append(lines, "")
 	lines = append(lines, "  Enter the combat?")
