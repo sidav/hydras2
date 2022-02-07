@@ -74,6 +74,10 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 			cursor++
 		case "ENTER":
 			return cursor == 0
+		case "y":
+			return true
+		case "n":
+			return false
 		}
 	}
 }

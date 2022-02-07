@@ -25,17 +25,11 @@ func dungeonMode() {
 		}
 		io.renderDungeon(dung, plr)
 		key := io.readKey()
+		vx, vy := readKeyToVector(key)
+		movePlayerByVector(vx, vy)
 		switch key {
 		case "ESCAPE":
 			return
-		case "UP":
-			movePlayerByVector(0, -1)
-		case "DOWN":
-			movePlayerByVector(0, 1)
-		case "LEFT":
-			movePlayerByVector(-1, 0)
-		case "RIGHT":
-			movePlayerByVector(1, 0)
 		}
 	}
 }
@@ -68,7 +62,9 @@ func onCellEntry(vx, vy int) bool {
 			if len(b.enemies) == 0 {
 				dung.rooms[x][y].enemies = []*enemy{}
 			}
+			return true
 		}
+		return false
 	}
 	return true
 }
