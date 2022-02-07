@@ -21,14 +21,14 @@ func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 
 	for rx := range d.rooms {
 		for ry := range d.rooms[rx] {
-			if d.rooms[rx][ry].isVisited && d.rooms[rx][ry].isCleared() {
+			if d.rooms[rx][ry].wasSeen && d.rooms[rx][ry].isCleared() {
 				c.renderRoom(rx, ry, d)
 			}
 		}
 	}
 	for rx := range d.rooms {
 		for ry := range d.rooms[rx] {
-			if d.rooms[rx][ry].isVisited && !d.rooms[rx][ry].isCleared() {
+			if d.rooms[rx][ry].wasSeen && !d.rooms[rx][ry].isCleared() {
 				c.renderRoom(rx, ry, d)
 			}
 		}

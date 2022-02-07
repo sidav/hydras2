@@ -11,8 +11,8 @@ github.com/mattn/go-runewidth v0.0.10 h1:CoZ3S2P7pvtP45xOtBw+/mDL2z0RKI576gSkzRR
 github.com/mattn/go-runewidth v0.0.10/go.mod h1:RAqKPSqVFrSLVXbA8x7dzmKdmGzieGRCM46jaSJTDAk=
 github.com/rivo/uniseg v0.1.0 h1:+2KBaVoUmb9XzDsrx/Ct0W/EYOSFf/nWTauy++DprtY=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
-github.com/sidav/cyclicdungeongenerator v0.0.0-20220207204343-f090e4714e83 h1:aP2CUjAJwq50vl8advbKLnybtPoOqvgF/JLCMhuLZ4s=
-github.com/sidav/cyclicdungeongenerator v0.0.0-20220207204343-f090e4714e83/go.mod h1:wBLfn3uk6/pWkU8Jh5b+BOw9usWTIxsnPbPF7KrakL0=
+github.com/sidav/cyclicdungeongenerator v0.0.0-20220207233828-cd12045bc726 h1:xPlSo/91JLE+7uS9K0W3iZdZB312L4B5N+s0nSqSd7o=
+github.com/sidav/cyclicdungeongenerator v0.0.0-20220207233828-cd12045bc726/go.mod h1:wBLfn3uk6/pWkU8Jh5b+BOw9usWTIxsnPbPF7KrakL0=
 github.com/sidav/sidavgorandom v0.0.0-20220207144420-8e8616024f4e h1:wSDHARZfduivzxZejrmAwArJwciEMNd9gR2wqONphYM=
 github.com/sidav/sidavgorandom v0.0.0-20220207144420-8e8616024f4e/go.mod h1:8gUW9pQQbl1BM+UGgHH6sr8jZAmRnAM/v3unTNZLam0=
 golang.org/x/sys v0.0.0-20190626150813-e07cf5db2756/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

@@ -20,7 +20,7 @@ func runGame() {
 
 func dungeonMode() {
 	for {
-		performCellActions()
+		performPreTurnCellActions()
 		if plr.hitpoints <= 0 {
 			io.showYNSelect("YOU DIED", []string{"Try again?"})
 			return
@@ -36,9 +36,9 @@ func dungeonMode() {
 	}
 }
 
-func performCellActions() {
+func performPreTurnCellActions() {
+	dung.generateAndRevealRoomsAroundPlayer(plr)
 	room := dung.rooms[plr.dungX][plr.dungY]
-	room.isVisited = true
 	if room.hasKey > 0 {
 		plr.keys[room.hasKey] = true
 		room.hasKey = 0
@@ -48,10 +48,7 @@ func performCellActions() {
 func onCellEntry(vx, vy int) bool {
 	x, y := plr.dungX+vx, plr.dungY+vy
 	room := dung.rooms[x][y]
-	if !room.isGenerated {
-		room.generateDungeonCell()
-	}
-	room.isVisited = true
+	room.wasSeen = true
 	// enter combat?
 	if !room.isCleared() {
 		if offerCombatToPlayer(room) {

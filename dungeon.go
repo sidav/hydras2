@@ -22,7 +22,7 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 	for x := range d.rooms {
 		for y := range d.rooms[x] {
 			d.rooms[x][y] = &dungeonCell{
-				isRoom:      d.layout.GetElement(x, y).IsNode(),
+				isRoom: d.layout.GetElement(x, y).IsNode(),
 			}
 			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("start") {
 				d.rooms[x][y].isGenerated = true
@@ -38,6 +38,20 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 		}
 	}
 	return playerx, playery
+}
+
+func (d *dungeon) generateAndRevealRoomsAroundPlayer(p *player) {
+	for x := -1; x <= 1; x++ {
+		for y := -1; y <= 1; y++ {
+			if (x == 0 || y == 0) && d.canPlayerMoveFromByVector(p, x, y) {
+				rx, ry := p.dungX+x, p.dungY+y
+				d.rooms[rx][ry].wasSeen = true
+				if !d.rooms[rx][ry].isGenerated {
+					d.rooms[rx][ry].generateDungeonCell()
+				}
+			}
+		}
+	}
 }
 
 func (d *dungeon) canPlayerMoveFromByVector(p *player, vx, vy int) bool {

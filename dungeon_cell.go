@@ -5,7 +5,7 @@ import "hydras2/entities"
 type dungeonCell struct {
 	isRoom      bool
 	isGenerated bool
-	isVisited   bool
+	wasSeen     bool
 
 	enemies  []*enemy
 	treasure []*entities.Item
