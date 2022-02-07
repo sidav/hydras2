@@ -22,43 +22,13 @@ func (c *consoleIO) init() {
 		panic(e)
 	}
 	// c.screen.EnableMouse()
-	c.style = tcell.StyleDefault.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack)
+	c.setStyle(tcell.ColorWhite, tcell.ColorBlack)
 	c.screen.SetStyle(c.style)
 	c.CONSOLE_WIDTH, c.CONSOLE_HEIGHT = c.screen.Size()
 }
 
 func (c *consoleIO) close() {
 	c.screen.Fini()
-}
-
-func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
-	c.screen.Clear()
-	chars := *d.layout.WholeMapToCharArray(false, false, false)
-	for x := 0; x < len(chars); x++ {
-		for y := 0; y < len((chars)[0]); y++ {
-			chr := chars[x][y]
-			lx, ly := x/5, y/5 // coords of dungeonCell IN LAYOUT
-			if !d.rooms[lx][ly].isVisited {
-				continue
-			}
-			switch chr {
-			case '#':
-				if d.rooms[lx][ly].isCleared() {
-					c.style = c.style.Background(tcell.ColorDarkBlue)
-				} else {
-					c.style = c.style.Background(tcell.ColorDarkRed)
-				}
-				chr = ' '
-				break
-			default:
-				c.style = c.style.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack)
-			}
-			c.putChar(chr, x, y)
-		}
-	}
-	c.style = c.style.Foreground(tcell.ColorBlue).Background(tcell.ColorBlack)
-	c.screen.SetCell(p.dungX*5+2, p.dungY*5+2, c.style, '@')
-	c.screen.Show()
 }
 
 func (c *consoleIO) readKey() string {
@@ -84,13 +54,13 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 			c.putString(l+ "  ", 0, 1+i)
 		}
 		if cursor == 0 {
-			c.style = c.style.Foreground(tcell.ColorBlack).Background(tcell.ColorWhite)
+			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
 		} else {
 			c.resetStyle()
 		}
 		c.putString("YES", 1, len(lines)+3)
 		if cursor == 1 {
-			c.style = c.style.Foreground(tcell.ColorBlack).Background(tcell.ColorWhite)
+			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
 		} else {
 			c.resetStyle()
 		}
@@ -166,8 +136,12 @@ func (c *consoleIO) putChar(chr rune, x, y int) {
 	c.screen.SetCell(x, y, c.style, chr)
 }
 
+func (c *consoleIO) setStyle(fg, bg tcell.Color) {
+	c.style = c.style.Background(bg).Foreground(fg)
+}
+
 func (c *consoleIO) resetStyle() {
-	c.style = c.style.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack)
+	c.setStyle(tcell.ColorWhite, tcell.ColorBlack)
 }
 
 func (c *consoleIO) putString(str string, x, y int) {
