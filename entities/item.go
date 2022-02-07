@@ -3,7 +3,7 @@ package entities
 import "github.com/sidav/sidavgorandom/fibrandom"
 
 type Item struct {
-	AsConsumable *consumableItemInfo
+	AsConsumable *ItemConsumable
 	AsWeapon     *ItemWeapon
 }
 
@@ -11,14 +11,22 @@ func (i *Item) IsConsumable() bool {
 	return i.AsConsumable != nil
 }
 
+func (i *Item) IsWeapon() bool {
+	return i.AsWeapon != nil
+}
+
 func (i *Item) GetName() string {
 	if i.AsConsumable != nil {
-		return i.AsConsumable.name
+		return consumablesData[i.AsConsumable.Code].name
 	}
 	if i.AsWeapon != nil {
 		return i.AsWeapon.GetName()
 	}
 	return "NO NAME"
+}
+
+func (i *Item) IsStackable() bool {
+	return i.IsConsumable()
 }
 
 func GenerateRandomItem(rnd *fibrandom.FibRandom) *Item {
@@ -28,7 +36,10 @@ func GenerateRandomItem(rnd *fibrandom.FibRandom) *Item {
 		}
 	}
 	return &Item{
-		AsConsumable: consumablesData[GetWeightedRandomConsumableCode(rnd)],
+		AsConsumable: &ItemConsumable{
+			Code:   GetWeightedRandomConsumableCode(rnd),
+			Amount: 1,
+		},
 		AsWeapon:     nil,
 	}
 }

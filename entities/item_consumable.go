@@ -22,7 +22,12 @@ const (
 	TOTAL_ITEM_TYPES_NUMBER // for generators
 )
 
-type consumableItemInfo struct {
+type ItemConsumable struct {
+	Code int
+	Amount int
+}
+
+type ConsumableItemInfo struct {
 	consumableType uint8
 	name, info     string
 	frequency      int
@@ -35,10 +40,10 @@ func GetWeightedRandomConsumableCode(rnd *fibrandom.FibRandom) int {
 	)
 }
 
-var consumablesData = []*consumableItemInfo{
+var consumablesData = []*ConsumableItemInfo{
 	{
 		consumableType: ITEM_HEAL,
-		name:           "Healing powder",
+		name:           "Healing flask",
 		frequency:      2,
 		info:           "Can be used to recover HP.",
 	},

@@ -4,9 +4,11 @@ import "hydras2/entities"
 
 type player struct {
 	dungX, dungY  int
-	currentWeapon *entities.Item
-	currentItem   *entities.Item
-	inventory     []*entities.Item
+
+	currentWeapon     *entities.Item
+	currentConsumable *entities.Item
+	inventory         []*entities.Item
+
 	hitpoints     int
 
 	// stats
@@ -36,7 +38,14 @@ func (p *player) init() {
 			Damage:     1,
 		},
 	})
+	p.inventory = append(p.inventory, &entities.Item{
+		AsConsumable: &entities.ItemConsumable{
+			Code:   entities.ITEM_HEAL,
+			Amount: 2,
+		},
+	})
 	p.cycleToNextWeapon()
+	p.cycleToNextConsumable()
 }
 
 func (p *player) getMaxHp() int {
@@ -47,7 +56,7 @@ func (p *player) cycleToNextWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.currentWeapon == nil
 	for i := 0; ; i=(i+1)%len(p.inventory) {
-		if p.inventory[i].AsWeapon != nil && selectNextWeapon {
+		if p.inventory[i].IsWeapon() && selectNextWeapon {
 			p.currentWeapon = p.inventory[i]
 			return
 		}
@@ -56,3 +65,18 @@ func (p *player) cycleToNextWeapon() {
 		}
 	}
 }
+
+func (p *player) cycleToNextConsumable() {
+	// shitty code ahead
+	selectNextItem := p.currentConsumable == nil
+	for i := 0; ; i=(i+1)%len(p.inventory) {
+		if p.inventory[i].IsConsumable() && selectNextItem {
+			p.currentConsumable = p.inventory[i]
+			return
+		}
+		if p.inventory[i] == p.currentConsumable {
+			selectNextItem = true
+		}
+	}
+}
+
