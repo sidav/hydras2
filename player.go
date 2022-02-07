@@ -34,17 +34,17 @@ func (p *player) init() {
 			damage:     1,
 		},
 	})
-	p.selectNextWeapon()
+	p.cycleToNextWeapon()
 }
 
 func (p *player) getMaxHp() int {
 	return p.vitality/2
 }
 
-func (p *player) selectNextWeapon() {
+func (p *player) cycleToNextWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.currentWeapon == nil
-	for i := 0; ; i++ {
+	for i := 0; ; i=(i+1)%len(p.inventory) {
 		if p.inventory[i].asWeapon != nil && selectNextWeapon {
 			p.currentWeapon = p.inventory[i]
 			return

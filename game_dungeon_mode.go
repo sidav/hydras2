@@ -20,7 +20,7 @@ func dungeonMode() {
 	for {
 		performCellActions()
 		if plr.hitpoints <= 0 {
-			io.showYNSelect("YOU DIED", []string{})
+			io.showYNSelect("YOU DIED", []string{"Try again?"})
 			return
 		}
 		io.renderDungeon(dung, plr)
@@ -50,6 +50,7 @@ func onCellEntry(vx, vy int) bool {
 		dung.rooms[x][y].generateDungeonCell()
 	}
 	dung.rooms[x][y].isVisited = true
+	// enter combat?
 	if !dung.rooms[x][y].isCleared() {
 		var lines []string
 		for _, e := range dung.rooms[x][y].enemies {
@@ -63,6 +64,10 @@ func onCellEntry(vx, vy int) bool {
 		if io.showYNSelect("  You see here enemies:", lines) {
 			b := generateBattlefield(dung.rooms[x][y], plr)
 			b.startCombatLoop()
+			// clear room enemies if player defeated them
+			if len(b.enemies) == 0 {
+				dung.rooms[x][y].enemies = []*enemy{}
+			}
 		}
 	}
 	return true

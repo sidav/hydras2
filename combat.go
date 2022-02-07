@@ -72,6 +72,9 @@ func (b *battlefield) workPlayerInput() {
 			correctInputKeyPressed = true
 			b.battleEnded = true
 			return
+		case "1":
+			b.player.cycleToNextWeapon()
+			return
 		default:
 			vx, vy := readKeyToVector(key)
 			if vx != 0 || vy != 0 {
@@ -130,14 +133,14 @@ func (b *battlefield) enemyHitsPlayer(e *enemy) {
 }
 
 func (b *battlefield) endTurnCleanup() {
-	for i := range b.enemies {
+	for i := 0; i < len(b.enemies); i++ {
 		if b.enemies[i].heads <= 0 {
 			b.enemies[i] = b.enemies[len(b.enemies)-1]
 			b.enemies = b.enemies[:len(b.enemies)-1]
 			i--
 		}
 	}
-	if b.player.hitpoints <= 0 {
+	if b.player.hitpoints <= 0 || len(b.enemies) == 0 {
 		b.battleEnded = true
 	}
 }
