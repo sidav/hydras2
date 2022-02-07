@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
 	"strconv"
@@ -15,18 +16,8 @@ const (
 func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	c.screen.Clear()
 
-	//dw := len(d.rooms)*(roomW+1)
-	//dh := len(d.rooms[0])*(roomH+1)
-	//// render outline:
-	//c.style = c.style.Background(tcell.ColorDarkBlue)
-	//for x := 0; x <= dw; x++ {
-	//	c.putChar(' ', x, dung_y_offset)
-	//	c.putChar(' ', x, dh+dung_y_offset)
-	//}
-	//for y := 0; y <= dh; y++ {
-	//	c.putChar(' ', 0, y+dung_y_offset)
-	//	c.putChar(' ', dw, y+dung_y_offset)
-	//}
+	// dw := len(d.rooms)*(roomW+1)
+	dh := len(d.rooms[0])*(roomH+1)
 
 	for rx := range d.rooms {
 		for ry := range d.rooms[rx] {
@@ -46,6 +37,7 @@ func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	c.style = c.style.Foreground(tcell.ColorBlue).Background(tcell.ColorBlack)
 	// render player's @
 	c.screen.SetCell(p.dungX*(roomW+1)+(roomW+2)/2+dung_x_offset, p.dungY*(roomH+1)+(roomH+2)/2+dung_y_offset, c.style, '@')
+	c.renderPlayerDungeonUI(dh+2, d)
 	c.screen.Show()
 }
 
@@ -91,5 +83,22 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 	if treasureCountStr != "0" {
 		c.setStyle(tcell.ColorGreen, tcell.ColorBlack)
 		c.putString(treasureCountStr, topLeftX+roomW, topLeftY+1)
+	}
+}
+
+func (c *consoleIO) renderPlayerDungeonUI(yCoord int, d *dungeon) {
+	c.resetStyle()
+	var lines = []string{
+		fmt.Sprintf("HP: %d/%d ", plr.hitpoints, plr.getMaxHp()),
+	}
+	if len(plr.keys) > 0 {
+		keyLine := "Keys: "
+		for k, _ := range plr.keys {
+			keyLine += fmt.Sprintf("%d ", k)
+		}
+		lines = append(lines, keyLine)
+	}
+	for i := range lines {
+		c.putString(lines[i], 0, yCoord+i)
 	}
 }

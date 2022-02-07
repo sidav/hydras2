@@ -29,16 +29,26 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 				playerx = x
 				playery = y
 			}
+			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("ky1") {
+				d.rooms[x][y].hasKey = 1
+			}
+			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("ky2") {
+				d.rooms[x][y].hasKey = 2
+			}
 		}
 	}
 	return playerx, playery
 }
 
 func (d *dungeon) canPlayerMoveFromByVector(p *player, vx, vy int) bool {
-	conns := d.layout.GetElement(p.dungX, p.dungY).GetAllConnectionsCoords()
+	elem := d.layout.GetElement(p.dungX, p.dungY)
+	conns := elem.GetAllConnectionsCoords()
 	for c := 0; c < len(conns); c++ {
 		if conns[c][0] == vx && conns[c][1] == vy {
-			return true
+			conn := elem.GetConnectionByCoords(vx, vy)
+			if !conn.IsLocked || p.keys[conn.LockNum] {
+				return true
+			}
 		}
 	}
 	return false

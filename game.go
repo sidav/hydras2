@@ -37,21 +37,27 @@ func dungeonMode() {
 }
 
 func performCellActions() {
-	dung.rooms[plr.dungX][plr.dungY].isVisited = true
+	room := dung.rooms[plr.dungX][plr.dungY]
+	room.isVisited = true
+	if room.hasKey > 0 {
+		plr.keys[room.hasKey] = true
+		room.hasKey = 0
+	}
 }
 
 func onCellEntry(vx, vy int) bool {
 	x, y := plr.dungX+vx, plr.dungY+vy
-	if !dung.rooms[x][y].isGenerated {
-		dung.rooms[x][y].generateDungeonCell()
+	room := dung.rooms[x][y]
+	if !room.isGenerated {
+		room.generateDungeonCell()
 	}
-	dung.rooms[x][y].isVisited = true
+	room.isVisited = true
 	// enter combat?
-	if !dung.rooms[x][y].isCleared() {
-		if offerCombatToPlayer(dung.rooms[x][y]) {
-			b := generateBattlefield(dung.rooms[x][y], plr)
+	if !room.isCleared() {
+		if offerCombatToPlayer(room) {
+			b := generateBattlefield(room, plr)
 			b.startCombatLoop()
-			onCombatEnd(b, dung.rooms[x][y])
+			onCombatEnd(b, room)
 			return true
 		}
 		return false
@@ -71,6 +77,9 @@ func offerCombatToPlayer(room *dungeonCell) bool {
 			lines = append(lines, t.GetName())
 		}
 	}
+	if room.hasKey > 0 {
+		lines = append(lines, "There is a key!")
+	}
 	lines = append(lines, "")
 	lines = append(lines, "  Enter the combat?")
 	return io.showYNSelect(" ENCOUNTER ", lines)
@@ -83,7 +92,11 @@ func onCombatEnd(b *battlefield, room *dungeonCell) {
 			soulsAcquired += room.enemies[i].headsOnGeneration
 		}
 		lines := []string {
+			fmt.Sprintf("%d hydras slain.", len(room.enemies)),
 			fmt.Sprintf("You acquired %d hydra essense", soulsAcquired),
+		}
+		if room.hasKey > 0 {
+			lines = append(lines, fmt.Sprintf("Acquired key %d", room.hasKey))
 		}
 		io.showInfoWindow("VICTORY ACHIEVED", lines)
 		room.enemies = []*enemy{}

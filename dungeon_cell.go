@@ -9,6 +9,7 @@ type dungeonCell struct {
 
 	enemies  []*enemy
 	treasure []*entities.Item
+	hasKey   int
 }
 
 func (dc *dungeonCell) generateDungeonCell() {

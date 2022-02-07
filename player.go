@@ -3,13 +3,14 @@ package main
 import "hydras2/entities"
 
 type player struct {
-	dungX, dungY  int
+	dungX, dungY int
 
 	currentWeapon     *entities.Item
 	currentConsumable *entities.Item
 	inventory         []*entities.Item
+	keys              map[int]bool
 
-	hitpoints     int
+	hitpoints int
 
 	// stats
 	strength int // how many items can be carried
@@ -23,6 +24,8 @@ func (p *player) init() {
 	p.strength = 5
 	p.vitality = 20
 	p.hitpoints = p.getMaxHp()
+
+	p.keys = make(map[int]bool, 0)
 
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: nil,
@@ -49,13 +52,13 @@ func (p *player) init() {
 }
 
 func (p *player) getMaxHp() int {
-	return p.vitality/2
+	return p.vitality / 2
 }
 
 func (p *player) cycleToNextWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.currentWeapon == nil
-	for i := 0; ; i=(i+1)%len(p.inventory) {
+	for i := 0; ; i = (i + 1) % len(p.inventory) {
 		if p.inventory[i].IsWeapon() && selectNextWeapon {
 			p.currentWeapon = p.inventory[i]
 			return
@@ -69,7 +72,7 @@ func (p *player) cycleToNextWeapon() {
 func (p *player) cycleToNextConsumable() {
 	// shitty code ahead
 	selectNextItem := p.currentConsumable == nil
-	for i := 0; ; i=(i+1)%len(p.inventory) {
+	for i := 0; ; i = (i + 1) % len(p.inventory) {
 		if p.inventory[i].IsConsumable() && selectNextItem {
 			p.currentConsumable = p.inventory[i]
 			return
@@ -79,4 +82,3 @@ func (p *player) cycleToNextConsumable() {
 		}
 	}
 }
-
