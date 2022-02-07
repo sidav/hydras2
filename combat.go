@@ -80,7 +80,7 @@ func (b *battlefield) workPlayerInput() {
 		case "ENTER":
 			b.usePlayerConsumable()
 			return
-		case "SPACE":
+		case " ":
 			return
 		default:
 			vx, vy := readKeyToVector(key)
