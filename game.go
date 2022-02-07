@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 var (
 	dung *dungeon
 	plr  *player
@@ -46,26 +48,10 @@ func onCellEntry(vx, vy int) bool {
 	dung.rooms[x][y].isVisited = true
 	// enter combat?
 	if !dung.rooms[x][y].isCleared() {
-		var lines []string
-		lines = append(lines, "   Enemies:")
-		for _, e := range dung.rooms[x][y].enemies {
-			lines = append(lines, e.getName())
-		}
-		if len(dung.rooms[x][y].treasure) > 0 {
-			lines = append(lines, "   Treasure:")
-			for _, t := range dung.rooms[x][y].treasure {
-				lines = append(lines, t.GetName())
-			}
-		}
-		lines = append(lines, "")
-		lines = append(lines, "  Enter the combat?")
-		if io.showYNSelect(" ENCOUNTER ", lines) {
+		if offerCombatToPlayer(dung.rooms[x][y]) {
 			b := generateBattlefield(dung.rooms[x][y], plr)
 			b.startCombatLoop()
-			// clear room enemies if player defeated them
-			if len(b.enemies) == 0 {
-				dung.rooms[x][y].enemies = []*enemy{}
-			}
+			onCombatEnd(b, dung.rooms[x][y])
 			return true
 		}
 		return false
@@ -73,8 +59,37 @@ func onCellEntry(vx, vy int) bool {
 	return true
 }
 
-func onCombatEnd() {
+func offerCombatToPlayer(room *dungeonCell) bool {
+	var lines []string
+	lines = append(lines, "   Enemies:")
+	for _, e := range room.enemies {
+		lines = append(lines, e.getName())
+	}
+	if len(room.treasure) > 0 {
+		lines = append(lines, "   Treasure:")
+		for _, t := range room.treasure {
+			lines = append(lines, t.GetName())
+		}
+	}
+	lines = append(lines, "")
+	lines = append(lines, "  Enter the combat?")
+	return io.showYNSelect(" ENCOUNTER ", lines)
+}
 
+func onCombatEnd(b *battlefield, room *dungeonCell) {
+	if len(b.enemies) == 0 {
+		soulsAcquired := 0
+		for i := range room.enemies {
+			soulsAcquired += room.enemies[i].headsOnGeneration
+		}
+		lines := []string {
+			fmt.Sprintf("You acquired %d hydra essense", soulsAcquired),
+		}
+		io.showInfoWindow("VICTORY ACHIEVED", lines)
+		room.enemies = []*enemy{}
+	} else {
+
+	}
 }
 
 func movePlayerByVector(vx, vy int) {

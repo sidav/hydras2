@@ -15,10 +15,7 @@ func (dc *dungeonCell) generateDungeonCell() {
 	if dc.isRoom {
 		numEnemies := rnd.RandInRange(0, 3)
 		for i := 0; i < numEnemies; i++ {
-			dc.enemies = append(dc.enemies, &enemy{
-				enemyType: ENEMY_HYDRA,
-				heads:     rnd.RandInRange(1, 5),
-			})
+			dc.enemies = append(dc.enemies, generateRandomEnemy())
 		}
 		numItems := rnd.RandInRange(0, 3)
 		for i := 0; i < numItems; i++ {

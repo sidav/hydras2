@@ -122,6 +122,33 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	}
 }
 
+func (c *consoleIO) showInfoWindow(title string, lines []string) {
+	longestLineLen := len(title)
+	for i := range lines {
+		if len(lines[i]) > longestLineLen {
+			longestLineLen = len(lines[i])
+		}
+	}
+	for {
+		c.setStyle(tcell.ColorBlack, tcell.ColorBlack)
+		c.drawFilledRect(0, 0, longestLineLen+1, len(lines)+2)
+		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+		c.drawRect(0, 0, longestLineLen+1, len(lines)+2)
+		c.resetStyle()
+		c.drawStringCenteredAround(title, longestLineLen/2, 0)
+		for i, l := range lines {
+			c.putString(l, 1, 1+i)
+		}
+		c.drawStringCenteredAround("<OK>", longestLineLen/2, len(lines)+2)
+		c.screen.Show()
+		k := c.readKey()
+		switch k {
+		case "ENTER":
+			return
+		}
+	}
+}
+
 func eventToKeyString(ev *tcell.EventKey) string {
 	switch ev.Key() {
 	case tcell.KeyUp:
@@ -168,6 +195,14 @@ func (c *consoleIO) resetStyle() {
 func (c *consoleIO) putString(str string, x, y int) {
 	for i := 0; i < len(str); i++ {
 		c.screen.SetCell(x+i, y, c.style, rune(str[i]))
+	}
+}
+
+func (c *consoleIO) drawFilledRect(fx, fy, w, h int) {
+	for x := fx; x <= fx+w; x++ {
+		for y := fy; y <= fy+h; y++ {
+			c.putChar(' ', x, y)
+		}
 	}
 }
 
