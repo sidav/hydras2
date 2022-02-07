@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 const (
 	TILE_FLOOR = iota
 	TILE_WALL
@@ -78,10 +80,11 @@ func (b *battlefield) workPlayerInput() {
 					if b.tiles[newPlrX][newPlrY] != TILE_WALL {
 						enemyAt := b.getEnemyAt(newPlrX, newPlrY)
 						if enemyAt != nil {
-							return
+							b.playerHitsEnemy(enemyAt)
+						} else {
+							b.player.x += vx
+							b.player.y += vy
 						}
-						b.player.x += vx
-						b.player.y += vy
 					}
 				}
 			}
@@ -98,13 +101,14 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 	}
 	newX, newY := e.x + e.dirx, e.y+e.diry
 	// if random or if the cell is unpassable, rotate randomly
-	if !b.areCoordsValid(newX, newY) || b.tiles[newX][newY] == TILE_WALL || rnd.OneChanceFrom(faceChangePeriod) || e.dirx == 0 && e.diry == 0 {
+	if !b.areCoordsValid(newX, newY) || b.tiles[newX][newY] == TILE_WALL || rnd.OneChanceFrom(faceChangePeriod) ||
+		e.dirx == 0 && e.diry == 0 || b.getEnemyAt(newX, newY) != nil {
 		e.dirx, e.diry = rnd.RandomUnitVectorInt(false)
 	}
 	newX, newY = e.x + e.dirx, e.y+e.diry
 	if b.areCoordsValid(newX, newY) && b.tiles[newX][newY] != TILE_WALL {
 		if b.player.x == newX && b.player.y == newY {
-
+			b.enemyHitsPlayer(e)
 		} else {
 			e.x += e.dirx
 			e.y += e.diry
@@ -114,4 +118,12 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 
 func (b *battlefield) areCoordsValid(x, y int) bool {
 	return x >= 0 && x < len(b.tiles) && y >= 0 && y < len(b.tiles[0])
+}
+
+func (b *battlefield) playerHitsEnemy(e *enemy) {
+	e.heads -= b.player.currentWeapon.asWeapon.getDamageOnHeads(e.heads)
+}
+
+func (b *battlefield) enemyHitsPlayer(e *enemy) {
+	b.player.hitpoints -= int(math.Log2(float64(e.heads+1)))
 }

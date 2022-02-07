@@ -72,3 +72,20 @@ func (w *itemWeapon) getName() string {
 	return name
 }
 
+func (iw *itemWeapon) getDamageOnHeads(heads int) int {
+	switch iw.weaponType {
+	case WTYPE_SUBSTRACTOR:
+		if heads < iw.damage {
+			return 0
+		}
+		return iw.damage
+	case WTYPE_DIVISOR:
+		if iw.damage % heads > 0 {
+			return 0
+		}
+		return heads-(heads/iw.damage)
+	case WTYPE_LOGARITHMER:
+		panic("No logarithmer implemented!")
+	}
+	return 0
+}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gdamore/tcell"
 	"strconv"
 )
@@ -43,16 +44,35 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	}
 	c.resetStyle()
 	c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
+	c.renderPlayerBattlefieldUI(bf_x_offset+bfW+1, b)
 	c.screen.Show()
 }
 
 func (c *consoleIO) renderEnemy(e *enemy) {
-	strForHeads := "?"
-	if e.heads < 10 {
-		strForHeads = strconv.Itoa(e.heads)
-	} else if e.heads < 16 {
-		strForHeads = []string{"A", "B", "C", "D", "E", "F"}[e.heads-10]
-	}
+	strForHeads := c.getCharForEnemy(e.heads)
 	c.style = c.style.Foreground(tcell.ColorRed).Background(tcell.ColorBlack)
-	c.putString(strForHeads, e.x+bf_x_offset, e.y+bf_y_offset)
+	c.putChar(strForHeads, e.x+bf_x_offset, e.y+bf_y_offset)
+}
+
+func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
+	var lines = []string{
+		fmt.Sprintf("HP: %d/%d", b.player.hitpoints, b.player.getMaxHp()),
+		fmt.Sprintf("Wpn: %s", b.player.currentWeapon.getName()),
+		"ENEMIES:",
+	}
+	for i := range b.enemies {
+		lines = append(lines, fmt.Sprintf("%s %s", string(c.getCharForEnemy(b.enemies[i].heads)), b.enemies[i].getName()))
+	}
+	for i := range lines {
+		c.putString(lines[i], xCoord, i+1)
+	}
+}
+
+func (c *consoleIO) getCharForEnemy(heads int) rune {
+	if heads < 10 {
+		return rune(strconv.Itoa(heads)[0])
+	} else if heads < 16 {
+		return []rune{'A', 'B', 'C', 'D', 'E', 'F'}[heads-10]
+	}
+	return '?'
 }
