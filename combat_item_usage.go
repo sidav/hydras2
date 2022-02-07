@@ -9,7 +9,9 @@ func (b *battlefield) usePlayerConsumable() {
 	switch b.player.currentConsumable.AsConsumable.Code {
 	case entities.ITEM_HEAL:
 		b.player.hitpoints += 5
-		b.player.hitpoints = b.player.hitpoints % b.player.getMaxHp()
+		if b.player.hitpoints > b.player.getMaxHp() {
+			b.player.hitpoints = b.player.getMaxHp()
+		}
 	}
 	b.player.currentConsumable.AsConsumable.Amount--
 }

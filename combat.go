@@ -117,7 +117,7 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 		e.dirx, e.diry = rnd.RandomUnitVectorInt(false)
 	}
 	newX, newY = e.x + e.dirx, e.y+e.diry
-	if b.areCoordsValid(newX, newY) && b.tiles[newX][newY] != TILE_WALL {
+	if b.areCoordsValid(newX, newY) && b.tiles[newX][newY] != TILE_WALL && b.getEnemyAt(newX, newY) == nil {
 		if b.player.x == newX && b.player.y == newY {
 			b.enemyHitsPlayer(e)
 		} else {
