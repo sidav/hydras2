@@ -5,10 +5,11 @@ import (
 )
 
 var io consoleIO
-var rnd fibrandom.FibRandom
+var rnd *fibrandom.FibRandom
 
 func main() {
 	io.init()
+	rnd = &fibrandom.FibRandom{}
 	rnd.InitDefault()
 	runGame()
 	io.close()

@@ -125,7 +125,7 @@ func (b *battlefield) areCoordsValid(x, y int) bool {
 }
 
 func (b *battlefield) playerHitsEnemy(e *enemy) {
-	e.heads -= b.player.currentWeapon.asWeapon.getDamageOnHeads(e.heads)
+	e.heads -= b.player.currentWeapon.AsWeapon.GetDamageOnHeads(e.heads)
 }
 
 func (b *battlefield) enemyHitsPlayer(e *enemy) {

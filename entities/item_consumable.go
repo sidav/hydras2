@@ -1,4 +1,6 @@
-package main
+package entities
+
+import "github.com/sidav/sidavgorandom/fibrandom"
 
 const (
 	ITEM_HEAL = iota
@@ -20,7 +22,13 @@ const (
 	TOTAL_ITEM_TYPES_NUMBER // for generators
 )
 
-func getWeightedRandomConsumableCode() int {
+type consumableItemInfo struct {
+	consumableType uint8
+	name, info     string
+	frequency      int
+}
+
+func GetWeightedRandomConsumableCode(rnd *fibrandom.FibRandom) int {
 	return rnd.SelectRandomIndexFromWeighted (
 		TOTAL_ITEM_TYPES_NUMBER,
 		func(x int) int {return consumablesData[x].frequency},
@@ -73,25 +81,25 @@ var consumablesData = []*consumableItemInfo{
 	{
 		consumableType: ITEM_CHANGE_ELEMENT_RANDOM,
 		name:           "Glyph of randomize element",
-		info:           "Changes hydra's or item's element.",
+		info:           "Changes hydra's or Item's element.",
 		frequency:      1,
 	},
 	{
 		consumableType: ITEM_CHANGE_ELEMENT_SPECIFIC,
 		name:           "Glyph of ", // not an error!
-		info:           "Changes hydra's or item's element.",
+		info:           "Changes hydra's or Item's element.",
 		frequency:      1,
 	},
 	{
 		consumableType: ITEM_BRANDING_RANDOM,
 		name:           "Glyph of imbue random brand",
-		info:           "Used to imbue a random brand onto item.",
+		info:           "Used to imbue a random brand onto Item.",
 		frequency:      1,
 	},
 	{
 		consumableType: ITEM_BRANDING_SPECIFIC,
 		name:           "Glyph of imbue ", // not an error
-		info:           "Used to imbue a specific brand onto item.",
+		info:           "Used to imbue a specific brand onto Item.",
 		frequency:      1,
 	},
 	{
@@ -124,10 +132,4 @@ var consumablesData = []*consumableItemInfo{
 		info:           "Used with chargeable items.",
 		frequency:      2,
 	},
-}
-
-type consumableItemInfo struct {
-	consumableType uint8
-	name, info     string
-	frequency      int
 }

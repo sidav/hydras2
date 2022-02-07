@@ -1,12 +1,14 @@
 package main
 
+import "hydras2/entities"
+
 type dungeonCell struct {
 	isRoom      bool
 	isGenerated bool
 	isVisited   bool
 
 	enemies  []*enemy
-	treasure []*item
+	treasure []*entities.Item
 }
 
 func (dc *dungeonCell) generateDungeonCell() {
@@ -20,7 +22,7 @@ func (dc *dungeonCell) generateDungeonCell() {
 		}
 		numItems := rnd.RandInRange(0, 3)
 		for i := 0; i < numItems; i++ {
-			dc.treasure = append(dc.treasure, generateRandomItem())
+			dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
 		}
 	} else {
 	}

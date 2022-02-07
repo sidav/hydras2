@@ -57,7 +57,7 @@ func (c *consoleIO) renderEnemy(e *enemy) {
 func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 	var lines = []string{
 		fmt.Sprintf("HP: %d/%d", b.player.hitpoints, b.player.getMaxHp()),
-		fmt.Sprintf("Wpn: %s", b.player.currentWeapon.getName()),
+		fmt.Sprintf("Wpn: %s", b.player.currentWeapon.GetName()),
 		"ENEMIES:",
 	}
 	for i := range b.enemies {

@@ -1,10 +1,12 @@
 package main
 
+import "hydras2/entities"
+
 type player struct {
 	dungX, dungY  int
-	currentWeapon *item
-	currentItem   *item
-	inventory     []*item
+	currentWeapon *entities.Item
+	currentItem   *entities.Item
+	inventory     []*entities.Item
 	hitpoints     int
 
 	// stats
@@ -20,18 +22,18 @@ func (p *player) init() {
 	p.vitality = 20
 	p.hitpoints = p.getMaxHp()
 
-	p.inventory = append(p.inventory, &item{
-		asConsumable: nil,
-		asWeapon: &itemWeapon{
-			weaponType: WTYPE_SUBSTRACTOR,
-			damage:     2,
+	p.inventory = append(p.inventory, &entities.Item{
+		AsConsumable: nil,
+		AsWeapon: &entities.ItemWeapon{
+			WeaponType: entities.WTYPE_SUBSTRACTOR,
+			Damage:     2,
 		},
 	})
-	p.inventory = append(p.inventory, &item{
-		asConsumable: nil,
-		asWeapon: &itemWeapon{
-			weaponType: WTYPE_SUBSTRACTOR,
-			damage:     1,
+	p.inventory = append(p.inventory, &entities.Item{
+		AsConsumable: nil,
+		AsWeapon: &entities.ItemWeapon{
+			WeaponType: entities.WTYPE_SUBSTRACTOR,
+			Damage:     1,
 		},
 	})
 	p.cycleToNextWeapon()
@@ -45,7 +47,7 @@ func (p *player) cycleToNextWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.currentWeapon == nil
 	for i := 0; ; i=(i+1)%len(p.inventory) {
-		if p.inventory[i].asWeapon != nil && selectNextWeapon {
+		if p.inventory[i].AsWeapon != nil && selectNextWeapon {
 			p.currentWeapon = p.inventory[i]
 			return
 		}

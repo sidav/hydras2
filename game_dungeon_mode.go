@@ -7,7 +7,7 @@ var (
 
 func runGame() {
 	dung = &dungeon{}
-	x, y := dung.initAndGenerate("patterns/explore_or_fight.ptn")
+	x, y := dung.initAndGenerate("dungeon_generation_patterns/explore_or_fight.ptn")
 	plr = &player{
 		dungX: x,
 		dungY: y,
@@ -52,7 +52,7 @@ func onCellEntry(vx, vy int) bool {
 		}
 		lines = append(lines, "   Treasure:")
 		for _, t := range dung.rooms[x][y].treasure {
-			lines = append(lines, t.getName())
+			lines = append(lines, t.GetName())
 		}
 		lines = append(lines, "   Enter the combat?")
 		if io.showYNSelect("  You see here enemies:", lines) {
