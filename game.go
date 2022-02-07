@@ -47,15 +47,19 @@ func onCellEntry(vx, vy int) bool {
 	// enter combat?
 	if !dung.rooms[x][y].isCleared() {
 		var lines []string
+		lines = append(lines, "   Enemies:")
 		for _, e := range dung.rooms[x][y].enemies {
 			lines = append(lines, e.getName())
 		}
-		lines = append(lines, "   Treasure:")
-		for _, t := range dung.rooms[x][y].treasure {
-			lines = append(lines, t.GetName())
+		if len(dung.rooms[x][y].treasure) > 0 {
+			lines = append(lines, "   Treasure:")
+			for _, t := range dung.rooms[x][y].treasure {
+				lines = append(lines, t.GetName())
+			}
 		}
-		lines = append(lines, "   Enter the combat?")
-		if io.showYNSelect("  You see here enemies:", lines) {
+		lines = append(lines, "")
+		lines = append(lines, "  Enter the combat?")
+		if io.showYNSelect(" ENCOUNTER ", lines) {
 			b := generateBattlefield(dung.rooms[x][y], plr)
 			b.startCombatLoop()
 			// clear room enemies if player defeated them
@@ -67,6 +71,10 @@ func onCellEntry(vx, vy int) bool {
 		return false
 	}
 	return true
+}
+
+func onCombatEnd() {
+
 }
 
 func movePlayerByVector(vx, vy int) {

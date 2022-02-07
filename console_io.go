@@ -47,24 +47,32 @@ func (c *consoleIO) readKey() string {
 func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 	c.screen.Clear()
 	cursor := 0
+	longestLineLen := len(title)
+	for i := range lines {
+		if len(lines[i]) > longestLineLen {
+			longestLineLen = len(lines[i])
+		}
+	}
 	for {
+		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+		c.drawRect(0, 0, longestLineLen+2, len(lines)+2)
 		c.resetStyle()
-		c.putString(title, 1, 0)
+		c.drawStringCenteredAround(title, longestLineLen/2, 0)
 		for i, l := range lines {
-			c.putString(l+ "  ", 0, 1+i)
+			c.putString(l, 1, 1+i)
 		}
 		if cursor == 0 {
 			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
 		} else {
 			c.resetStyle()
 		}
-		c.putString("YES", 1, len(lines)+3)
+		c.drawStringCenteredAround("YES", longestLineLen/3, len(lines)+2)
 		if cursor == 1 {
 			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
 		} else {
 			c.resetStyle()
 		}
-		c.putString("NO", 7, len(lines)+3)
+		c.drawStringCenteredAround("NO", 2*longestLineLen/3, len(lines)+2)
 		c.screen.Show()
 		k := c.readKey()
 		switch k {
@@ -84,8 +92,17 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	cursor := 0
+	longestLineLen := len(title)
+	for i := range lines {
+		if len(lines[i]) > longestLineLen {
+			longestLineLen = len(lines[i])
+		}
+	}
 	for {
-		c.putString(title, 1, 0)
+		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+		c.drawRect(0, 0, longestLineLen, len(lines)+1)
+		c.resetStyle()
+		c.drawStringCenteredAround(title, longestLineLen/2, 0)
 		for i, l := range lines {
 			if i == cursor {
 				l = "> " + l
@@ -163,4 +180,8 @@ func (c *consoleIO) drawRect(fx, fy, w, h int) {
 		c.putChar(' ', fx, y)
 		c.putChar(' ', fx+w, y)
 	}
+}
+
+func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
+	c.putString(s, x-len(s)/2, y)
 }
