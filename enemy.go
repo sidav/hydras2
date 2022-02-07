@@ -12,6 +12,7 @@ type enemy struct {
 
 	// battlefield-only vars:
 	x, y          int
+	dirx, diry    int
 	nextTickToAct int
 }
 

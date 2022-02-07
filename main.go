@@ -13,3 +13,20 @@ func main() {
 	runGame()
 	io.close()
 }
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func vectorToUnitVector(x, y int) (int, int) {
+	if x != 0 {
+		x = x/abs(x)
+	}
+	if y != 0 {
+		y = y/abs(y)
+	}
+	return x, y
+}
