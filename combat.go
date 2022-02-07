@@ -49,6 +49,7 @@ func (b *battlefield) startCombatLoop() {
 		for _, e := range b.enemies {
 			b.actAsEnemy(e)
 		}
+		b.endTurnCleanup()
 		b.currentTick++
 	}
 }
@@ -126,4 +127,17 @@ func (b *battlefield) playerHitsEnemy(e *enemy) {
 
 func (b *battlefield) enemyHitsPlayer(e *enemy) {
 	b.player.hitpoints -= int(math.Log2(float64(e.heads+1)))
+}
+
+func (b *battlefield) endTurnCleanup() {
+	for i := range b.enemies {
+		if b.enemies[i].heads <= 0 {
+			b.enemies[i] = b.enemies[len(b.enemies)-1]
+			b.enemies = b.enemies[:len(b.enemies)-1]
+			i--
+		}
+	}
+	if b.player.hitpoints <= 0 {
+		b.battleEnded = true
+	}
 }

@@ -19,6 +19,10 @@ func runGame() {
 func dungeonMode() {
 	for {
 		performCellActions()
+		if plr.hitpoints <= 0 {
+			io.showYNSelect("YOU DIED", []string{})
+			return
+		}
 		io.renderDungeon(dung, plr)
 		key := io.readKey()
 		switch key {
