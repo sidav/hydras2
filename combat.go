@@ -69,11 +69,18 @@ func (b *battlefield) workPlayerInput() {
 		key := io.readKey()
 		switch key {
 		case "ESCAPE":
-			correctInputKeyPressed = true
 			b.battleEnded = true
 			return
 		case "1":
 			b.player.cycleToNextWeapon()
+			return
+		case "2":
+			b.player.cycleToNextConsumable()
+			return
+		case "ENTER":
+			b.usePlayerConsumable()
+			return
+		case "SPACE":
 			return
 		default:
 			vx, vy := readKeyToVector(key)
