@@ -17,15 +17,8 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	bfW, bfH := len(b.tiles), len(b.tiles[0])
 
 	// render outline:
-	c.style = c.style.Background(tcell.ColorDarkRed)
-	for x := 0; x <= bfW+1; x++ {
-		c.putChar(' ', x, 1)
-		c.putChar(' ', x, bfH+2)
-	}
-	for y := 0; y <= bfH+1; y++ {
-		c.putChar(' ', 0, y+1)
-		c.putChar(' ', bfW+1, y+1)
-	}
+	c.setStyle(tcell.ColorWhite, tcell.ColorDarkRed)
+	c.drawRect(0, 1, bfW+1, bfH+1)
 	// render the battlefield itself
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
@@ -58,7 +51,9 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 	var lines = []string{
 		fmt.Sprintf("HP: %d/%d", b.player.hitpoints, b.player.getMaxHp()),
 		fmt.Sprintf("1) Wpn: %s", b.player.currentWeapon.GetName()),
-		fmt.Sprintf("2) Itm: %s", b.player.currentConsumable.GetName()),
+		fmt.Sprintf("2) Itm: %dx %s",
+			b.player.currentConsumable.AsConsumable.Amount,
+			b.player.currentConsumable.GetName()),
 		"ENEMIES:",
 	}
 	for i := range b.enemies {

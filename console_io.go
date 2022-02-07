@@ -154,3 +154,13 @@ func (c *consoleIO) putString(str string, x, y int) {
 	}
 }
 
+func (c *consoleIO) drawRect(fx, fy, w, h int) {
+	for x := fx; x <= fx+w; x++ {
+		c.putChar(' ', x, fy)
+		c.putChar(' ', x, fy+h)
+	}
+	for y := fy; y <= fy+h; y++ {
+		c.putChar(' ', fx, y)
+		c.putChar(' ', fx+w, y)
+	}
+}
