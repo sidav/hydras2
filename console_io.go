@@ -59,7 +59,7 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 		c.resetStyle()
 		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
 		for i, l := range lines {
-			c.putString(l, 1, 1+i)
+			c.putColorTaggedString(l, 1, 1+i)
 		}
 		if cursor == 0 {
 			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
@@ -110,7 +110,7 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 			} else {
 				c.resetStyle()
 			}
-			c.putString(l, 1, 1+i)
+			c.putColorTaggedString(l, 1, 1+i)
 		}
 		c.screen.Show()
 		k := c.readKey()
@@ -142,7 +142,7 @@ func (c *consoleIO) showInfoWindow(title string, lines []string) {
 		c.resetStyle()
 		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
 		for i, l := range lines {
-			c.putString(l, 1, 1+i)
+			c.putColorTaggedString(l, 1, 1+i)
 		}
 		c.drawStringCenteredAround("<OK>", (longestLineLen+2)/2, len(lines)+2)
 		c.screen.Show()
@@ -189,18 +189,18 @@ func (c *consoleIO) putChar(chr rune, x, y int) {
 	c.screen.SetCell(x, y, c.style, chr)
 }
 
+func (c *consoleIO) putUncoloredString(str string, x, y int) {
+	for i := 0; i < len(str); i++ {
+		c.screen.SetCell(x+i, y, c.style, rune(str[i]))
+	}
+}
+
 func (c *consoleIO) setStyle(fg, bg tcell.Color) {
 	c.style = c.style.Background(bg).Foreground(fg)
 }
 
 func (c *consoleIO) resetStyle() {
 	c.setStyle(tcell.ColorWhite, tcell.ColorBlack)
-}
-
-func (c *consoleIO) putString(str string, x, y int) {
-	for i := 0; i < len(str); i++ {
-		c.screen.SetCell(x+i, y, c.style, rune(str[i]))
-	}
 }
 
 func (c *consoleIO) drawFilledRect(char rune, fx, fy, w, h int) {
@@ -223,5 +223,5 @@ func (c *consoleIO) drawRect(fx, fy, w, h int) {
 }
 
 func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
-	c.putString(s, x-len(s)/2, y)
+	c.putColorTaggedString(s, x-len(s)/2, y)
 }

@@ -39,8 +39,12 @@ func (e *Element) GetName() string {
 	return elementsTable[e.Code].name
 }
 
+func (e *Element) GetColorTags() []string {
+	return elementsTable[e.Code].colorTags
+}
+
 func GetWeightedRandomElementCode(rnd *fibrandom.FibRandom) int {
-	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int {return elementsTable[x].frequency})
+	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int { return elementsTable[x].frequency })
 }
 
 type elementData struct {
@@ -49,6 +53,7 @@ type elementData struct {
 
 	susceptibleToDamageFrom []int
 	attunedWith             []int
+	colorTags               []string
 }
 
 var elementsTable = []elementData{
@@ -61,24 +66,28 @@ var elementsTable = []elementData{
 		frequency:               1,
 		susceptibleToDamageFrom: []int{ELEMENT_ICE},
 		attunedWith:             []int{},
+		colorTags:               []string{"RED"},
 		name:                    "Flaming",
 	},
 	ELEMENT_ICE: {
 		frequency:               1,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE},
 		attunedWith:             []int{},
+		colorTags:               []string{"BLUE"},
 		name:                    "Ice",
 	},
 	ELEMENT_AIR: {
 		frequency:               1,
 		susceptibleToDamageFrom: []int{ELEMENT_EARTH},
 		attunedWith:             []int{},
+		colorTags:               []string{"CYAN"},
 		name:                    "Storm",
 	},
 	ELEMENT_EARTH: {
 		frequency:               1,
 		susceptibleToDamageFrom: []int{ELEMENT_AIR},
 		attunedWith:             []int{},
+		colorTags:               []string{"DARKGRAY"},
 		name:                    "Stone",
 	},
 }

@@ -13,7 +13,7 @@ const (
 
 func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.screen.Clear()
-	c.putString("COMBAT: ", 0, 0)
+	c.putColorTaggedString("COMBAT: ", 0, 0)
 	bfW, bfH := len(b.tiles), len(b.tiles[0])
 
 	// render outline:
@@ -60,7 +60,7 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 		lines = append(lines, fmt.Sprintf("%s %s", string(c.getCharForEnemy(b.enemies[i].heads)), b.enemies[i].getName()))
 	}
 	for i := range lines {
-		c.putString(lines[i], xCoord, i+1)
+		c.putColorTaggedString(lines[i], xCoord, i+1)
 	}
 }
 

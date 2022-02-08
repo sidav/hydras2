@@ -79,12 +79,12 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 	enemiesCountStr := strconv.Itoa(len(cell.enemies))
 	if enemiesCountStr != "0" {
 		c.setStyle(tcell.ColorRed, tcell.ColorBlack)
-		c.putString(enemiesCountStr, topLeftX+1, topLeftY+1)
+		c.putColorTaggedString(enemiesCountStr, topLeftX+1, topLeftY+1)
 	}
 	treasureCountStr := strconv.Itoa(len(cell.treasure))
 	if treasureCountStr != "0" {
 		c.setStyle(tcell.ColorGreen, tcell.ColorBlack)
-		c.putString(treasureCountStr, topLeftX+roomW, topLeftY+1)
+		c.putColorTaggedString(treasureCountStr, topLeftX+roomW, topLeftY+1)
 	}
 }
 
@@ -101,6 +101,6 @@ func (c *consoleIO) renderPlayerDungeonUI(yCoord int, d *dungeon) {
 		lines = append(lines, keyLine)
 	}
 	for i := range lines {
-		c.putString(lines[i], 0, yCoord+i)
+		c.putColorTaggedString(lines[i], 0, yCoord+i)
 	}
 }

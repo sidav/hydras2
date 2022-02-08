@@ -77,7 +77,7 @@ func (w *ItemWeapon) GetName() string {
 	default:
 		panic("No ItemWeapon name")
 	}
-	return name
+	return MakeStringColorTagged(name, w.WeaponElement.GetColorTags())
 }
 
 func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {
