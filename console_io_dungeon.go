@@ -91,11 +91,11 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 func (c *consoleIO) renderPlayerDungeonUI(yCoord int, d *dungeon) {
 	c.resetStyle()
 	var lines = []string{
-		fmt.Sprintf("HP: %d/%d ", plr.hitpoints, plr.getMaxHp()),
+		fmt.Sprintf("HP: %d/%d ", d.plr.hitpoints, d.plr.getMaxHp()),
 	}
-	if len(plr.keys) > 0 {
+	if len(d.plr.keys) > 0 {
 		keyLine := "Keys: "
-		for k, _ := range plr.keys {
+		for k, _ := range d.plr.keys {
 			keyLine += fmt.Sprintf("%d ", k)
 		}
 		lines = append(lines, keyLine)

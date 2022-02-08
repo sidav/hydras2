@@ -2,61 +2,57 @@ package main
 
 import "fmt"
 
-var (
-	dung *dungeon
-	plr  *player
-)
-
 func runGame() {
-	dung = &dungeon{}
+	dung := &dungeon{}
 	x, y := dung.initAndGenerate("dungeon_generation_patterns/explore_or_fight.ptn")
-	plr = &player{
+	plr := &player{
 		dungX: x,
 		dungY: y,
 	}
 	plr.init()
-	dungeonMode()
+	dung.plr = plr
+	dung.startDungeonLoop()
 }
 
-func dungeonMode() {
+func (d *dungeon) startDungeonLoop() {
 	for {
-		performPreTurnCellActions()
-		if plr.hitpoints <= 0 {
+		d.performPreTurnCellActions()
+		if d.plr.hitpoints <= 0 {
 			io.showYNSelect("YOU DIED", []string{"Try again?"})
 			return
 		}
-		io.renderDungeon(dung, plr)
+		io.renderDungeon(d, d.plr)
 		key := io.readKey()
 		vx, vy := readKeyToVector(key)
-		movePlayerByVector(vx, vy)
+		d.movePlayerByVector(vx, vy)
 		switch key {
 		case "ENTER":
-			pickUpFromRoom(dung.rooms[plr.dungX][plr.dungY])
+			d.pickUpFromRoom(d.getPlayerRoom())
 		case "ESCAPE":
 			return
 		}
 	}
 }
 
-func performPreTurnCellActions() {
-	dung.generateAndRevealRoomsAroundPlayer(plr)
-	room := dung.rooms[plr.dungX][plr.dungY]
+func (d *dungeon) performPreTurnCellActions() {
+	d.generateAndRevealRoomsAroundPlayer()
+	room := d.getPlayerRoom()
 	if room.hasKey > 0 {
-		plr.keys[room.hasKey] = true
+		d.plr.keys[room.hasKey] = true
 		room.hasKey = 0
 	}
 }
 
-func onCellEntry(vx, vy int) bool {
-	x, y := plr.dungX+vx, plr.dungY+vy
-	room := dung.rooms[x][y]
+func (d *dungeon) doesPlayerEnterRoom(vx, vy int) bool {
+	x, y := d.plr.dungX+vx, d.plr.dungY+vy
+	room := d.rooms[x][y]
 	room.wasSeen = true
 	// enter combat?
 	if !room.isCleared() {
-		if offerCombatToPlayer(room) {
-			b := generateBattlefield(room, plr)
+		if d.offerCombatToPlayer(room) {
+			b := generateBattlefield(room, d.plr)
 			b.startCombatLoop()
-			onCombatEnd(b, room)
+			d.onCombatEnd(b, room)
 			return true
 		}
 		return false
@@ -64,7 +60,7 @@ func onCellEntry(vx, vy int) bool {
 	return true
 }
 
-func offerCombatToPlayer(room *dungeonCell) bool {
+func (d *dungeon) offerCombatToPlayer(room *dungeonCell) bool {
 	var lines []string
 	lines = append(lines, "   Enemies:")
 	for _, e := range room.enemies {
@@ -84,7 +80,7 @@ func offerCombatToPlayer(room *dungeonCell) bool {
 	return io.showYNSelect(" ENCOUNTER ", lines)
 }
 
-func onCombatEnd(b *battlefield, room *dungeonCell) {
+func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) {
 	if len(b.enemies) == 0 {
 		soulsAcquired := 0
 		for i := range room.enemies {
@@ -99,13 +95,13 @@ func onCombatEnd(b *battlefield, room *dungeonCell) {
 		}
 		io.showInfoWindow("VICTORY ACHIEVED", lines)
 		room.enemies = []*enemy{}
-		pickUpFromRoom(room)
+		d.pickUpFromRoom(room)
 	} else {
 
 	}
 }
 
-func pickUpFromRoom(r *dungeonCell) {
+func (d *dungeon) pickUpFromRoom(r *dungeonCell) {
 	for len(r.treasure) > 0 {
 		lines := []string{}
 		for _, i := range r.treasure {
@@ -119,16 +115,16 @@ func pickUpFromRoom(r *dungeonCell) {
 		if picked == -1 {
 			break
 		}
-		plr.acquireItem(r.treasure[picked])
+		d.plr.acquireItem(r.treasure[picked])
 		r.treasure = append(r.treasure[:picked], r.treasure[picked+1:]...)
 	}
 }
 
-func movePlayerByVector(vx, vy int) {
-	if dung.canPlayerMoveFromByVector(plr, vx, vy) {
-		if onCellEntry(vx, vy) {
-			plr.dungX += vx
-			plr.dungY += vy
+func (d *dungeon) movePlayerByVector(vx, vy int) {
+	if d.canPlayerMoveFromByVector(vx, vy) {
+		if d.doesPlayerEnterRoom(vx, vy) {
+			d.plr.dungX += vx
+			d.plr.dungY += vy
 		}
 	}
 }

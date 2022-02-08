@@ -128,6 +128,57 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	}
 }
 
+func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines []string,
+		enabled func(int)bool, showDisabled bool) int {
+	c.screen.Clear()
+	cursor := 0
+	for i := 0; i < len(lines); i++ {
+		if !enabled(cursor) {
+			cursor++
+		}
+	}
+	longestLineLen := entities.TaggedStringLength(title)+2
+	for i := range lines {
+		if len(lines[i]) > longestLineLen {
+			longestLineLen = entities.TaggedStringLength(lines[i])
+		}
+	}
+	for {
+		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+		c.drawRect(0, 0, longestLineLen+1, len(lines)+1)
+		c.resetStyle()
+		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
+		currentPosition := 0
+		for i, l := range lines {
+			if enabled(i) {
+				if i == cursor {
+					c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
+				} else {
+					c.resetStyle()
+				}
+				c.putColorTaggedString(l, 1, 1+currentPosition)
+				currentPosition++
+			} else if showDisabled {
+				c.setStyle(tcell.ColorDarkGray, tcell.ColorBlack)
+				c.putColorTaggedString(l, 1, 1+currentPosition)
+				currentPosition++
+			}
+		}
+		c.screen.Show()
+		k := c.readKey()
+		switch k {
+		case "UP":
+			cursor--
+		case "DOWN":
+			cursor++
+		case "ENTER":
+			return cursor
+		case "ESCAPE":
+			return -1
+		}
+	}
+}
+
 func (c *consoleIO) showInfoWindow(title string, lines []string) {
 	longestLineLen := entities.TaggedStringLength(title)+2
 	for i := range lines {
