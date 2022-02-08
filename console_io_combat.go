@@ -57,7 +57,11 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 		"ENEMIES:",
 	}
 	for i := range b.enemies {
-		lines = append(lines, fmt.Sprintf("%s %s", string(c.getCharForEnemy(b.enemies[i].heads)), b.enemies[i].getName()))
+		lines = append(lines, fmt.Sprintf("%s %s (%s)",
+			string(c.getCharForEnemy(b.enemies[i].heads)),
+			b.enemies[i].getName(),
+			getAttackDescriptionString(b.player.currentWeapon, b.enemies[i]),
+		))
 	}
 	for i := range lines {
 		c.putColorTaggedString(lines[i], xCoord, i+1)
