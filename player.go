@@ -55,6 +55,24 @@ func (p *player) getMaxHp() int {
 	return p.vitality / 2
 }
 
+func (p *player) acquireItem(i *entities.Item) {
+	if i.IsWeapon() {
+		p.inventory = append(p.inventory, i)
+		return
+	}
+	if i.IsConsumable() {
+		for ind := range p.inventory {
+			if p.inventory[ind].IsConsumable() && p.inventory[ind].AsConsumable.Code == i.AsConsumable.Code {
+				p.inventory[ind].AsConsumable.Amount += i.AsConsumable.Amount
+				return
+			}
+		}
+		p.inventory = append(p.inventory, i)
+		return
+	}
+	panic("NO ITEM TYPE")
+}
+
 func (p *player) cycleToNextWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.currentWeapon == nil

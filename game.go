@@ -30,6 +30,8 @@ func dungeonMode() {
 		vx, vy := readKeyToVector(key)
 		movePlayerByVector(vx, vy)
 		switch key {
+		case "ENTER":
+			pickUpFromRoom(dung.rooms[plr.dungX][plr.dungY])
 		case "ESCAPE":
 			return
 		}
@@ -97,8 +99,28 @@ func onCombatEnd(b *battlefield, room *dungeonCell) {
 		}
 		io.showInfoWindow("VICTORY ACHIEVED", lines)
 		room.enemies = []*enemy{}
+		pickUpFromRoom(room)
 	} else {
 
+	}
+}
+
+func pickUpFromRoom(r *dungeonCell) {
+	for len(r.treasure) > 0 {
+		lines := []string{}
+		for _, i := range r.treasure {
+			if i.IsConsumable() {
+				lines = append(lines, fmt.Sprintf("%dx %s", i.AsConsumable.Amount, i.GetName()))
+			} else {
+				lines = append(lines, fmt.Sprintf(i.GetName()))
+			}
+		}
+		picked := io.showSelectWindow("Pick up:", lines)
+		if picked == -1 {
+			break
+		}
+		plr.acquireItem(r.treasure[picked])
+		r.treasure = append(r.treasure[:picked], r.treasure[picked+1:]...)
 	}
 }
 

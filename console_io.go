@@ -47,7 +47,7 @@ func (c *consoleIO) readKey() string {
 func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := len(title)
+	longestLineLen := len(title)+2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
 			longestLineLen = len(lines[i])
@@ -91,8 +91,9 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 }
 
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
+	c.screen.Clear()
 	cursor := 0
-	longestLineLen := len(title)
+	longestLineLen := len(title)+2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
 			longestLineLen = len(lines[i])
@@ -105,9 +106,11 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
 		for i, l := range lines {
 			if i == cursor {
-				l = "> " + l
+				c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
+			} else {
+				c.resetStyle()
 			}
-			c.putString(l+ "  ", 0, 1+i)
+			c.putString(l, 0, 1+i)
 		}
 		c.screen.Show()
 		k := c.readKey()
@@ -118,12 +121,14 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 			cursor++
 		case "ENTER":
 			return cursor
+		case "ESCAPE":
+			return -1
 		}
 	}
 }
 
 func (c *consoleIO) showInfoWindow(title string, lines []string) {
-	longestLineLen := len(title)
+	longestLineLen := len(title)+2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
 			longestLineLen = len(lines[i])
