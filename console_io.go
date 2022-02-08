@@ -131,7 +131,7 @@ func (c *consoleIO) showInfoWindow(title string, lines []string) {
 	}
 	for {
 		c.setStyle(tcell.ColorBlack, tcell.ColorBlack)
-		c.drawFilledRect(0, 0, longestLineLen+1, len(lines)+2)
+		c.drawFilledRect(' ',0, 0, longestLineLen+1, len(lines)+2)
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
 		c.drawRect(0, 0, longestLineLen+1, len(lines)+2)
 		c.resetStyle()
@@ -198,10 +198,10 @@ func (c *consoleIO) putString(str string, x, y int) {
 	}
 }
 
-func (c *consoleIO) drawFilledRect(fx, fy, w, h int) {
+func (c *consoleIO) drawFilledRect(char rune, fx, fy, w, h int) {
 	for x := fx; x <= fx+w; x++ {
 		for y := fy; y <= fy+h; y++ {
-			c.putChar(' ', x, y)
+			c.putChar(char, x, y)
 		}
 	}
 }

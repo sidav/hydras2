@@ -3,9 +3,9 @@ package main
 import "hydras2/entities"
 
 type dungeonCell struct {
-	isRoom      bool
-	isGenerated bool
-	wasSeen     bool
+	isRoom            bool
+	contentsGenerated bool
+	wasSeen           bool
 
 	enemies  []*enemy
 	treasure []*entities.Item
@@ -24,9 +24,9 @@ func (dc *dungeonCell) generateDungeonCell() {
 		}
 	} else {
 	}
-	dc.isGenerated = true
+	dc.contentsGenerated = true
 }
 
 func (dc *dungeonCell) isCleared() bool {
-	return !dc.isGenerated || len(dc.enemies) == 0
+	return !dc.contentsGenerated || len(dc.enemies) == 0
 }

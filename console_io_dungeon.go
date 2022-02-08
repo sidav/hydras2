@@ -16,8 +16,10 @@ const (
 func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	c.screen.Clear()
 
-	// dw := len(d.rooms)*(roomW+1)
+	dw := len(d.rooms)*(roomW+1)
 	dh := len(d.rooms[0])*(roomH+1)
+	c.setStyle(tcell.ColorDarkGray, tcell.ColorBlack)
+	c.drawFilledRect('.', dung_x_offset, dung_y_offset, dw, dh)
 
 	for rx := range d.rooms {
 		for ry := range d.rooms[rx] {
@@ -34,8 +36,8 @@ func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 		}
 	}
 
-	c.style = c.style.Foreground(tcell.ColorBlue).Background(tcell.ColorBlack)
 	// render player's @
+	c.style = c.style.Foreground(tcell.ColorDarkGreen).Background(tcell.ColorBlack)
 	c.screen.SetCell(p.dungX*(roomW+1)+(roomW+2)/2+dung_x_offset, p.dungY*(roomH+1)+(roomH+2)/2+dung_y_offset, c.style, '@')
 	c.renderPlayerDungeonUI(dh+2, d)
 	c.screen.Show()
