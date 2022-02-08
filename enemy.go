@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"hydras2/entities"
+)
 
 const (
 	ENEMY_HYDRA = iota
@@ -9,6 +12,7 @@ const (
 type enemy struct {
 	enemyType         int
 	heads             int
+	element           *entities.Element
 	headsOnGeneration int // for resetting rooms to initial state
 
 	// battlefield-only vars:
@@ -18,13 +22,14 @@ type enemy struct {
 }
 
 func (e *enemy) getName() string {
-	return fmt.Sprintf("%d-headed hydra", e.heads)
+	return fmt.Sprintf("%d-headed %s hydra", e.heads, e.element.GetName())
 }
 
 func generateRandomEnemy() *enemy {
 	e := &enemy{
 		enemyType: ENEMY_HYDRA,
 		heads:     rnd.RandInRange(1, 5),
+		element: &entities.Element{Code: entities.GetWeightedRandomElementCode(rnd)},
 	}
 	e.headsOnGeneration = e.heads
 	return e

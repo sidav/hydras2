@@ -18,7 +18,7 @@ func (dc *dungeonCell) generateDungeonCell() {
 		for i := 0; i < numEnemies; i++ {
 			dc.enemies = append(dc.enemies, generateRandomEnemy())
 		}
-		numItems := rnd.RandInRange(0, 3)
+		numItems := rnd.RandInRange(0, numEnemies+1)
 		for i := 0; i < numItems; i++ {
 			dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
 		}

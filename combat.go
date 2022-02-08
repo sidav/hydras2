@@ -133,6 +133,16 @@ func (b *battlefield) areCoordsValid(x, y int) bool {
 
 func (b *battlefield) playerHitsEnemy(e *enemy) {
 	e.heads -= b.player.currentWeapon.AsWeapon.GetDamageOnHeads(e.heads)
+	playerWeaponElement := b.player.currentWeapon.AsWeapon.WeaponElement
+	hydraElement := e.element
+	switch playerWeaponElement.GetEffectivenessAgainstElement(hydraElement) {
+	case -1:
+		e.heads *= 2
+	case 0:
+		if e.heads > 0 {
+			e.heads++
+		}
+	}
 }
 
 func (b *battlefield) enemyHitsPlayer(e *enemy) {

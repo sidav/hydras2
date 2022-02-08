@@ -38,15 +38,17 @@ var weaponsStaticData = []*WeaponTypeStaticData{
 }
 
 type ItemWeapon struct {
-	WeaponType weaponType
-	Damage     int
+	WeaponType    weaponType
+	WeaponElement Element
+	Damage        int
 }
 
 func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 	index := rnd.SelectRandomIndexFromWeighted(len(weaponsStaticData), func(i int) int { return weaponsStaticData[i].Frequency })
 	iw := ItemWeapon{
 		WeaponType: weaponType(index),
-		Damage:     rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+ 2),
+		WeaponElement: Element{GetWeightedRandomElementCode(rnd)},
+		Damage:     rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+2),
 	}
 	return &iw
 }
@@ -83,10 +85,10 @@ func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {
 		}
 		return iw.Damage
 	case WTYPE_DIVISOR:
-		if iw.Damage% heads > 0 {
+		if iw.Damage%heads > 0 {
 			return 0
 		}
-		return heads-(heads/iw.Damage)
+		return heads - (heads / iw.Damage)
 	case WTYPE_LOGARITHMER:
 		panic("No logarithmer implemented!")
 	}
