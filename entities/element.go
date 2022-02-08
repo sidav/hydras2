@@ -8,6 +8,8 @@ const (
 	ELEMENT_ICE
 	ELEMENT_EARTH
 	ELEMENT_AIR
+	ELEMENT_MAGMA
+	ELEMENT_STEAM
 )
 
 type Element struct {
@@ -22,16 +24,18 @@ func (e *Element) GetEffectivenessAgainstElement(e2 *Element) int {
 	if e.Code == e2.Code {
 		return -1
 	}
+
 	for _, e2code := range elementsTable[e.Code].susceptibleToDamageFrom {
 		if e2.Code == e2code {
 			return 1
 		}
 	}
-	for _, e2code := range elementsTable[e.Code].attunedWith {
+	for _, e2code := range elementsTable[e.Code].isBoth {
 		if e2.Code == e2code {
 			return -1
 		}
 	}
+
 	return 0
 }
 
@@ -44,50 +48,80 @@ func (e *Element) GetColorTags() []string {
 }
 
 func GetWeightedRandomElementCode(rnd *fibrandom.FibRandom) int {
-	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int { return elementsTable[x].frequency })
+	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int { return elementsTable[x].frequencyUsual })
 }
 
 type elementData struct {
-	frequency int
-	name      string
+	frequencyUsual        int
+	frequencyIfPreferRare int
+	frequencyIfPreferEpic int
+	name                  string
 
 	susceptibleToDamageFrom []int
-	attunedWith             []int
+	isBoth                  []int
 	colorTags               []string
 }
 
 var elementsTable = []elementData{
 	ELEMENT_NONE: {
-		frequency:               8,
+		frequencyUsual:          8,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   0,
 		susceptibleToDamageFrom: []int{},
-		attunedWith:             []int{},
+		isBoth:                  []int{},
 	},
 	ELEMENT_FIRE: {
-		frequency:               1,
+		frequencyUsual:          1,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_ICE},
-		attunedWith:             []int{},
+		isBoth:                  []int{},
 		colorTags:               []string{"RED"},
 		name:                    "Flaming",
 	},
 	ELEMENT_ICE: {
-		frequency:               1,
+		frequencyUsual:          1,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE},
-		attunedWith:             []int{},
+		isBoth:                  []int{},
 		colorTags:               []string{"BLUE"},
 		name:                    "Ice",
 	},
 	ELEMENT_AIR: {
-		frequency:               1,
+		frequencyUsual:          1,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_EARTH},
-		attunedWith:             []int{},
+		isBoth:                  []int{},
 		colorTags:               []string{"CYAN"},
 		name:                    "Storm",
 	},
 	ELEMENT_EARTH: {
-		frequency:               1,
+		frequencyUsual:          1,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_AIR},
-		attunedWith:             []int{},
+		isBoth:                  []int{},
 		colorTags:               []string{"DARKGRAY"},
 		name:                    "Stone",
+	},
+	ELEMENT_MAGMA: {
+		frequencyUsual:          100,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   1,
+		susceptibleToDamageFrom: []int{ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM},
+		isBoth:                  []int{ELEMENT_FIRE, ELEMENT_EARTH},
+		colorTags:               []string{"RED", "DARKGRAY"},
+		name:                    "Magmatic",
+	},
+	ELEMENT_STEAM: {
+		frequencyUsual:          100,
+		frequencyIfPreferRare:   4,
+		frequencyIfPreferEpic:   2,
+		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_EARTH, ELEMENT_MAGMA},
+		isBoth:                  []int{ELEMENT_AIR, ELEMENT_ICE},
+		colorTags:               []string{"BLUE", "CYAN"},
+		name:                    "Steaming",
 	},
 }

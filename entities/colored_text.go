@@ -45,5 +45,15 @@ func MakeStringColorTagged(s string, tagsNames []string) string {
 	case 1:
 		return ColorTagsTable[tagsNames[0]] + s
 	}
+	// maybe calculate this when rendering?.. Why consume memory?
+	newStr := ""
+	const step = 2
+	for i := 0; i < len(s); i++ {
+		if i % step == 0 {
+			newStr += ColorTagsTable[tagsNames[(i/step)%len(tagsNames)]]
+		}
+		newStr += string(s[i])
+	}
+	return newStr
 	panic("Y U NO IMPLEMENT")
 }
