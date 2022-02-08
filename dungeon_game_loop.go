@@ -38,7 +38,7 @@ func (d *dungeon) doesPlayerEnterRoom(vx, vy int) bool {
 	// enter combat?
 	if !room.isCleared() {
 		if d.offerCombatToPlayer(room) {
-			b := generateBattlefield(room, d.plr)
+			b := generateBattlefield(d.plr, room.enemies)
 			b.startCombatLoop()
 			d.onCombatEnd(b, room)
 			return true
@@ -83,7 +83,6 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) {
 		}
 		io.showInfoWindow("VICTORY ACHIEVED", lines)
 		room.enemies = []*enemy{}
-		d.pickUpFromPlayerRoom()
 	} else {
 
 	}

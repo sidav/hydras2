@@ -16,7 +16,7 @@ type battlefield struct {
 	battleEnded bool
 }
 
-func generateBattlefield(dc *dungeonCell, p *player) *battlefield {
+func generateBattlefield(p *player, enemies []*enemy) *battlefield {
 	b := &battlefield{}
 	bfW := rnd.RandInRange(3, 5) * 2 + 1
 	bfH := rnd.RandInRange(5, 9)
@@ -30,8 +30,8 @@ func generateBattlefield(dc *dungeonCell, p *player) *battlefield {
 		b.tiles[x][y] = TILE_WALL
 	}
 
-	for i := range dc.enemies {
-		b.enemies = append(b.enemies, dc.enemies[i])
+	for i := range enemies {
+		b.enemies = append(b.enemies, enemies[i])
 		b.enemies[i].nextTickToAct = 0
 		b.enemies[i].x = i*2+1
 		b.enemies[i].y = 0
@@ -40,18 +40,6 @@ func generateBattlefield(dc *dungeonCell, p *player) *battlefield {
 	b.player.x = bfW/2
 	b.player.y = bfH-2
 	return b
-}
-
-func (b *battlefield) startCombatLoop() {
-	for !b.battleEnded {
-		io.renderBattlefield(b)
-		b.workPlayerInput()
-		for _, e := range b.enemies {
-			b.actAsEnemy(e)
-		}
-		b.endTurnCleanup()
-		b.currentTick++
-	}
 }
 
 func (b *battlefield) getEnemyAt(x, y int) *enemy {
