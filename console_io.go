@@ -132,10 +132,8 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 		enabled func(int)bool, showDisabled bool) int {
 	c.screen.Clear()
 	cursor := 0
-	for i := 0; i < len(lines); i++ {
-		if !enabled(cursor) {
-			cursor++
-		}
+	for i := 0; i < len(lines) && !enabled(cursor); i++ {
+		cursor++
 	}
 	longestLineLen := entities.TaggedStringLength(title)+2
 	for i := range lines {
@@ -168,9 +166,19 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 		k := c.readKey()
 		switch k {
 		case "UP":
-			cursor--
+			for i := 0; i == 0 || i < len(lines) && !enabled(cursor); i++ {
+				cursor--
+				if cursor < 0 {
+					cursor = len(lines)-1
+				}
+			}
 		case "DOWN":
-			cursor++
+			for i := 0; i == 0 || i < len(lines) && !enabled(cursor); i++ {
+				cursor++
+				if cursor >= len(lines) {
+					cursor = 0
+				}
+			}
 		case "ENTER":
 			return cursor
 		case "ESCAPE":
