@@ -16,10 +16,12 @@ func (c *consoleIO) putColorTaggedString(str string, x, y int) {
 		switch entities.GetColorTagNameInStringAtPosition(str, i) {
 		case "RED":
 			c.setStyle(tcell.ColorRed, tcell.ColorBlack)
+		case "YELLOW":
+			c.setStyle(tcell.ColorYellow, tcell.ColorBlack)
 		case "BLUE":
 			c.setStyle(tcell.ColorBlue, tcell.ColorBlack)
 		case "CYAN":
-			c.setStyle(tcell.ColorDarkCyan, tcell.ColorBlack)
+			c.setStyle(tcell.ColorLightCyan, tcell.ColorBlack)
 		case "DARKGRAY":
 			c.setStyle(tcell.ColorDarkGray, tcell.ColorBlack)
 		case "RESET":

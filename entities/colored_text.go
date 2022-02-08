@@ -1,16 +1,17 @@
 package entities
 
 const (
-	COLOR_TAG_LENGTH = 5
-	TAG_SYMBOL = "@"
+	COLOR_TAG_LENGTH = 4
+	TAG_SYMBOL       = "`"
 )
 
 var ColorTagsTable = map[string]string{
-	"RED":      "@red@",
-	"BLUE":     "@blu@",
-	"CYAN":     "@cyn@",
-	"DARKGRAY": "@dgr@",
-	"RESET":    "@nil@",
+	"RED":      "`red",
+	"YELLOW":   "`ylw",
+	"BLUE":     "`blu",
+	"CYAN":     "`cyn",
+	"DARKGRAY": "`dgr",
+	"RESET":    "`nil",
 }
 
 func GetColorTagNameInStringAtPosition(s string, pos int) string {
@@ -27,6 +28,27 @@ func GetColorTagNameInStringAtPosition(s string, pos int) string {
 		}
 	}
 	return ""
+}
+
+func UntagStringFromColors(s string) string {
+	newString := ""
+	for i := 0; i < len(s); i++ {
+		if string(s[i]) == TAG_SYMBOL {
+			i += COLOR_TAG_LENGTH
+		}
+		newString += string(s[i])
+	}
+	return newString
+}
+
+func TaggedStringLength(s string) int {
+	tags := 0
+	for i := 0; i < len(s); i++ {
+		if string(s[i]) == TAG_SYMBOL {
+			tags += 1
+		}
+	}
+	return len(s) - tags*COLOR_TAG_LENGTH
 }
 
 func IsStringColorTagged(s string) bool {
@@ -47,9 +69,9 @@ func MakeStringColorTagged(s string, tagsNames []string) string {
 	}
 	// maybe calculate this when rendering?.. Why consume memory?
 	newStr := ""
-	const step = 2
+	const step = 3
 	for i := 0; i < len(s); i++ {
-		if i % step == 0 {
+		if i%step == 0 {
 			newStr += ColorTagsTable[tagsNames[(i/step)%len(tagsNames)]]
 		}
 		newStr += string(s[i])

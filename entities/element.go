@@ -94,7 +94,7 @@ var elementsTable = []elementData{
 		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_EARTH},
 		isBoth:                  []int{},
-		colorTags:               []string{"CYAN"},
+		colorTags:               []string{"YELLOW"},
 		name:                    "Storm",
 	},
 	ELEMENT_EARTH: {
@@ -121,7 +121,7 @@ var elementsTable = []elementData{
 		frequencyIfPreferEpic:   2,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_EARTH, ELEMENT_MAGMA},
 		isBoth:                  []int{ELEMENT_AIR, ELEMENT_ICE},
-		colorTags:               []string{"BLUE", "CYAN"},
+		colorTags:               []string{"BLUE", "YELLOW"},
 		name:                    "Steaming",
 	},
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
+	"hydras2/entities"
 )
 
 type consoleIO struct {
@@ -47,10 +48,10 @@ func (c *consoleIO) readKey() string {
 func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := len(title)+2
+	longestLineLen := entities.TaggedStringLength(title)+2
 	for i := range lines {
-		if len(lines[i]) > longestLineLen {
-			longestLineLen = len(lines[i])
+		if entities.TaggedStringLength(lines[i]) > longestLineLen {
+			longestLineLen = entities.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -93,10 +94,10 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := len(title)+2
+	longestLineLen := entities.TaggedStringLength(title)+2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
-			longestLineLen = len(lines[i])
+			longestLineLen = entities.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -128,10 +129,10 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 }
 
 func (c *consoleIO) showInfoWindow(title string, lines []string) {
-	longestLineLen := len(title)+2
+	longestLineLen := entities.TaggedStringLength(title)+2
 	for i := range lines {
-		if len(lines[i]) > longestLineLen {
-			longestLineLen = len(lines[i])
+		if entities.TaggedStringLength(lines[i]) > longestLineLen {
+			longestLineLen = entities.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -223,5 +224,5 @@ func (c *consoleIO) drawRect(fx, fy, w, h int) {
 }
 
 func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
-	c.putColorTaggedString(s, x-len(s)/2, y)
+	c.putColorTaggedString(s, x-entities.TaggedStringLength(s)/2, y)
 }
