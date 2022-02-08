@@ -71,7 +71,7 @@ var elementsTable = []elementData{
 		isBoth:                  []int{},
 	},
 	ELEMENT_FIRE: {
-		frequencyUsual:          1,
+		frequencyUsual:          2,
 		frequencyIfPreferRare:   4,
 		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_ICE},
@@ -80,7 +80,7 @@ var elementsTable = []elementData{
 		name:                    "Flaming",
 	},
 	ELEMENT_ICE: {
-		frequencyUsual:          1,
+		frequencyUsual:          2,
 		frequencyIfPreferRare:   4,
 		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE},
@@ -89,7 +89,7 @@ var elementsTable = []elementData{
 		name:                    "Ice",
 	},
 	ELEMENT_AIR: {
-		frequencyUsual:          1,
+		frequencyUsual:          2,
 		frequencyIfPreferRare:   4,
 		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_EARTH},
@@ -98,7 +98,7 @@ var elementsTable = []elementData{
 		name:                    "Storm",
 	},
 	ELEMENT_EARTH: {
-		frequencyUsual:          1,
+		frequencyUsual:          2,
 		frequencyIfPreferRare:   4,
 		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_AIR},
@@ -107,7 +107,7 @@ var elementsTable = []elementData{
 		name:                    "Stone",
 	},
 	ELEMENT_MAGMA: {
-		frequencyUsual:          100,
+		frequencyUsual:          1,
 		frequencyIfPreferRare:   4,
 		frequencyIfPreferEpic:   1,
 		susceptibleToDamageFrom: []int{ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM},
@@ -116,7 +116,7 @@ var elementsTable = []elementData{
 		name:                    "Magmatic",
 	},
 	ELEMENT_STEAM: {
-		frequencyUsual:          100,
+		frequencyUsual:          1,
 		frequencyIfPreferRare:   4,
 		frequencyIfPreferEpic:   2,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_EARTH, ELEMENT_MAGMA},
