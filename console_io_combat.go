@@ -32,8 +32,8 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 			}
 		}
 	}
-	for i := range b.enemies {
-		c.renderEnemy(b.enemies[i])
+	for _, e := range b.enemies {
+		c.renderEnemyAtCoords(e, b.currentTick, e.x+bf_x_offset, e.y+bf_y_offset)
 	}
 	c.resetStyle()
 	c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
@@ -41,10 +41,19 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.screen.Show()
 }
 
-func (c *consoleIO) renderEnemy(e *enemy) {
+func (c *consoleIO) renderEnemyAtCoords(e *enemy, tick, x, y int) {
 	strForHeads := c.getCharForEnemy(e.heads)
-	c.style = c.style.Foreground(tcell.ColorRed).Background(tcell.ColorBlack)
-	c.putChar(strForHeads, e.x+bf_x_offset, e.y+bf_y_offset)
+	colorTags := e.element.GetColorTags()
+	switch len(colorTags) {
+	case 0:
+		c.resetStyle()
+	case 1:
+		c.setFgColorByColorTag(colorTags[0])
+	default:
+		// magic number 3 is just randomly chosen small prime. 5 or 7 or 11 would also work.
+		c.setFgColorByColorTag(colorTags[tick/3%len(colorTags)])
+	}
+	c.putChar(strForHeads, x, y)
 }
 
 func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
@@ -56,15 +65,19 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 			b.player.currentConsumable.GetName()),
 		"ENEMIES:",
 	}
+	enemiesLinesStart := len(lines)
 	for i := range b.enemies {
-		lines = append(lines, fmt.Sprintf("%s %s (%s)",
-			string(c.getCharForEnemy(b.enemies[i].heads)),
+		lines = append(lines, fmt.Sprintf("  %s (%s)",
 			b.enemies[i].getName(),
 			getAttackDescriptionString(b.player.currentWeapon, b.enemies[i]),
 		))
 	}
 	for i := range lines {
 		c.putColorTaggedString(lines[i], xCoord, i+1)
+	}
+	// render enemies for those enemy lines
+	for i, e := range b.enemies {
+		c.renderEnemyAtCoords(e, b.currentTick, xCoord, enemiesLinesStart+i+1)
 	}
 }
 
