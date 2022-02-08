@@ -101,7 +101,7 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	}
 	for {
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.drawRect(0, 0, longestLineLen, len(lines)+1)
+		c.drawRect(0, 0, longestLineLen+1, len(lines)+1)
 		c.resetStyle()
 		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
 		for i, l := range lines {
@@ -110,7 +110,7 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 			} else {
 				c.resetStyle()
 			}
-			c.putString(l, 0, 1+i)
+			c.putString(l, 1, 1+i)
 		}
 		c.screen.Show()
 		k := c.readKey()

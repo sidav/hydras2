@@ -54,7 +54,10 @@ func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 }
 
 func (w *ItemWeapon) GetName() string {
-	name := ""
+	name := w.WeaponElement.GetName()
+	if len(name) > 0 {
+		name += " "
+	}
 	switch w.WeaponType {
 	case WTYPE_SUBSTRACTOR:
 		name += fmt.Sprintf("-%d Substractor", w.Damage)
