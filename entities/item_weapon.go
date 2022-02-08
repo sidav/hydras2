@@ -88,7 +88,7 @@ func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {
 		}
 		return iw.Damage
 	case WTYPE_DIVISOR:
-		if iw.Damage%heads > 0 {
+		if heads%iw.Damage > 0 {
 			return 0
 		}
 		return heads - (heads / iw.Damage)
