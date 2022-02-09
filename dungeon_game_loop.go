@@ -94,11 +94,12 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
 			io.showInfoWindow("YOU HAVE FLED", []string{fmt.Sprintf("You have lost %d essence.", d.plr.souls)})
 			d.plr.dungX, d.plr.dungY = d.startX, d.startY
 			d.plr.souls = 0
+			for i := range room.enemies {
+				room.enemies[i].heads = room.enemies[i].headsOnGeneration
+			}
+			return false
 		}
-		for i := range room.enemies {
-			room.enemies[i].heads = room.enemies[i].headsOnGeneration
-		}
-		return false
+		return true // todo: remove this cheat
 	}
 }
 

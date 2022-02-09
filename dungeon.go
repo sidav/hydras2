@@ -41,6 +41,7 @@ func (d *dungeon) initAndGenerate(patternFileName string) {
 		}
 	}
 	d.placeFeatureInRandomRoom(DRF_ALTAR)
+	d.placeFeatureInRandomRoom(DRF_TINKER)
 }
 
 func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {
