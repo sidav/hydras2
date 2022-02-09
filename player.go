@@ -76,6 +76,10 @@ func (p *player) acquireItem(i *entities.Item) {
 		p.inventory = append(p.inventory, i)
 		return
 	}
+	if i.IsMaterial() {
+		p.inventory = append(p.inventory, i)
+		return
+	}
 	panic("NO ITEM TYPE")
 }
 
