@@ -7,15 +7,16 @@ func (b *battlefield) usePlayerConsumable() {
 		return
 	}
 	switch b.player.currentConsumable.AsConsumable.Code {
-	case entities.ITEM_HEAL:
+	case entities.CONSUMABLE_HEAL:
 		if b.player.hitpoints == b.player.getMaxHp() {
 			return
 		}
-		b.player.hitpoints += 4
+		healAmount := 3 + b.player.currentConsumable.AsConsumable.Enchantment
+		b.player.hitpoints += healAmount
 		if b.player.hitpoints > b.player.getMaxHp() {
 			b.player.hitpoints = b.player.getMaxHp()
 		}
-	case entities.ITEM_RETREAT:
+	case entities.CONSUMABLE_RETREAT:
 		if io.showYNSelect("Flee?", []string{"You will lose all essence!"}) {
 			b.playerFled = true
 			b.battleEnded = true

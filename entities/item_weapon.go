@@ -6,43 +6,41 @@ import (
 	"hydras2/text_colors"
 )
 
-type weaponType uint8
-
 const (
-	WTYPE_SUBSTRACTOR weaponType = iota
+	WTYPE_SUBSTRACTOR = iota
 	WTYPE_DIVISOR
 	WTYPE_LOGARITHMER
 )
 
 type WeaponTypeStaticData struct {
-	Wtype                  weaponType
+	WeaponTypeCode         int
 	Frequency              int
 	MinDamageForGeneration int
 }
 
 var weaponsStaticData = []*WeaponTypeStaticData{
 	{
-		Wtype:                  WTYPE_SUBSTRACTOR,
+		WeaponTypeCode:         WTYPE_SUBSTRACTOR,
 		Frequency:              4,
 		MinDamageForGeneration: 1,
 	},
 	{
-		Wtype:                  WTYPE_DIVISOR,
+		WeaponTypeCode:         WTYPE_DIVISOR,
 		Frequency:              2,
 		MinDamageForGeneration: 2,
 	},
 	{
-		Wtype:                  WTYPE_LOGARITHMER,
+		WeaponTypeCode:         WTYPE_LOGARITHMER,
 		Frequency:              1,
 		MinDamageForGeneration: 2,
 	},
 }
 
 type ItemWeapon struct {
-	WeaponType    weaponType
-	WeaponElement Element
-	Brand         *Brand
-	Damage        int
+	WeaponTypeCode int
+	WeaponElement  Element
+	Brand          *Brand
+	Damage         int
 }
 
 func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
@@ -54,10 +52,10 @@ func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 		}
 	}
 	iw := ItemWeapon{
-		WeaponType:    weaponType(index),
-		WeaponElement: Element{GetWeightedRandomElementCode(rnd)},
-		Brand:         brand,
-		Damage:        rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+2),
+		WeaponTypeCode: index,
+		WeaponElement:  Element{GetWeightedRandomElementCode(rnd)},
+		Brand:          brand,
+		Damage:         rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+2),
 	}
 	return &iw
 }
@@ -67,7 +65,7 @@ func (w *ItemWeapon) GetName() string {
 	if len(name) > 0 {
 		name += " "
 	}
-	switch w.WeaponType {
+	switch w.WeaponTypeCode {
 	case WTYPE_SUBSTRACTOR:
 		name += fmt.Sprintf("-%d Substractor", w.Damage)
 	case WTYPE_DIVISOR:
@@ -93,7 +91,7 @@ func (w *ItemWeapon) GetName() string {
 }
 
 func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {
-	switch iw.WeaponType {
+	switch iw.WeaponTypeCode {
 	case WTYPE_SUBSTRACTOR:
 		if heads < iw.Damage {
 			return 0

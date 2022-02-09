@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"hydras2/entities"
+)
 
 func (d *dungeon) selectPlayerRoomAction() {
 	room := d.getPlayerRoom()
@@ -100,12 +103,24 @@ func (d *dungeon) tinkerWithItems() {
 	if selectedMaterial == nil {
 		return
 	}
-	selectedWeapon := selectAnItemFromList("SELECT WEAPON TO APPLY "+ selectedMaterial.GetName(), d.plr.getAllWeapons())
-	if selectedWeapon == nil {
-		return
+
+	var selectedItem *entities.Item
+	// upgrading flask is a separate thing
+	if selectedMaterial.AsMaterial.Code == entities.MATERIAL_ENCHANT_CONSUMABLE {
+		itms := d.plr.getAllItemsOfTypeAndCode(entities.ITEM_CONSUMABLE, entities.CONSUMABLE_HEAL)
+		if len(itms) > 1 {
+			panic("What? More than one flask?!")
+		}
+		selectedItem = itms[0]
+	} else { // weapon
+		selectedItem = selectAnItemFromList("SELECT WEAPON TO APPLY "+selectedMaterial.GetName(), d.plr.getAllWeapons())
+		if selectedItem == nil {
+			return
+		}
 	}
-	preTinkerWeaponName := selectedWeapon.GetName()
-	applyMaterialToItem(selectedMaterial, selectedWeapon)
-	io.showInfoWindow("SUCCESS", []string{fmt.Sprintf("You made %s into %s", preTinkerWeaponName, selectedWeapon.GetName())})
+	preTinkerWeaponName := selectedItem.GetName()
+	applyMaterialToItem(selectedMaterial, selectedItem)
+	io.showInfoWindow("SUCCESS", []string{fmt.Sprintf("You made %s into %s",
+		preTinkerWeaponName, selectedItem.GetName())})
 	d.plr.removeItemFromInventory(selectedMaterial)
 }

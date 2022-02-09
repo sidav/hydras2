@@ -3,14 +3,15 @@ package entities
 import "github.com/sidav/sidavgorandom/fibrandom"
 
 const (
-	ITEM_HEAL = iota
-	ITEM_RETREAT
-	TOTAL_ITEM_TYPES_NUMBER // for generators
+	CONSUMABLE_HEAL = iota
+	CONSUMABLE_RETREAT
+	TOTAL_CONSUMABLE_TYPES_NUMBER // for generators
 )
 
 type ItemConsumable struct {
-	Code int
-	Amount int
+	Code        int
+	Amount      int
+	Enchantment int
 }
 
 type ConsumableItemInfo struct {
@@ -20,21 +21,21 @@ type ConsumableItemInfo struct {
 }
 
 func GetWeightedRandomConsumableCode(rnd *fibrandom.FibRandom) int {
-	return rnd.SelectRandomIndexFromWeighted (
-		TOTAL_ITEM_TYPES_NUMBER,
-		func(x int) int {return consumablesData[x].frequency},
+	return rnd.SelectRandomIndexFromWeighted(
+		TOTAL_CONSUMABLE_TYPES_NUMBER,
+		func(x int) int { return consumablesData[x].frequency },
 	)
 }
 
 var consumablesData = []*ConsumableItemInfo{
 	{
-		consumableType: ITEM_HEAL,
+		consumableType: CONSUMABLE_HEAL,
 		name:           "Healing flask",
 		frequency:      2,
 		info:           "Can be used to recover HP.",
 	},
 	{
-		consumableType: ITEM_RETREAT,
+		consumableType: CONSUMABLE_RETREAT,
 		name:           "Escape vial",
 		frequency:      1,
 		info:           "Use it to flee from combat.",

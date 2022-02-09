@@ -17,6 +17,8 @@ func applyMaterialToItem(mat, item *entities.Item) bool {
 		item.AsWeapon.WeaponElement.Code = mat.AsMaterial.AppliesElement.Code
 	case entities.MATERIAL_ENCHANT:
 		item.AsWeapon.Damage += mat.AsMaterial.EnchantAmount
+	case entities.MATERIAL_ENCHANT_CONSUMABLE:
+		item.AsConsumable.Enchantment++
 	}
 	return applied
 }

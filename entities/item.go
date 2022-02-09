@@ -1,6 +1,15 @@
 package entities
 
-import "github.com/sidav/sidavgorandom/fibrandom"
+import (
+	"fmt"
+	"github.com/sidav/sidavgorandom/fibrandom"
+)
+
+const (
+	ITEM_WEAPON = iota
+	ITEM_CONSUMABLE
+	ITEM_MATERIAL
+)
 
 type Item struct {
 	AsConsumable *ItemConsumable
@@ -20,9 +29,26 @@ func (i *Item) IsMaterial() bool {
 	return i.AsMaterial != nil
 }
 
+func (i *Item) GetTypeAndCode() (int, int) {
+	if i.IsWeapon() {
+		return ITEM_WEAPON, i.AsWeapon.WeaponTypeCode
+	}
+	if i.IsConsumable() {
+		return ITEM_CONSUMABLE, i.AsConsumable.Code
+	}
+	if i.IsMaterial() {
+		return ITEM_MATERIAL, i.AsMaterial.Code
+	}
+	panic("What the heck is this item?!")
+}
+
 func (i *Item) GetName() string {
 	if i.AsConsumable != nil {
-		return consumablesData[i.AsConsumable.Code].name
+		name := consumablesData[i.AsConsumable.Code].name
+		if i.AsConsumable.Enchantment > 0 {
+			name += fmt.Sprintf(" +%d", i.AsConsumable.Enchantment)
+		}
+		return name
 	}
 	if i.AsWeapon != nil {
 		return i.AsWeapon.GetName()
@@ -38,7 +64,7 @@ func (i *Item) IsStackable() bool {
 }
 
 func GenerateRandomItem(rnd *fibrandom.FibRandom) *Item {
-	typeFrequencies := []int{1, 2, 1}
+	typeFrequencies := []int{2, 3, 3}
 	whatToGen := rnd.SelectRandomIndexFromWeighted(len(typeFrequencies), func(x int) int { return typeFrequencies[x] })
 	switch whatToGen {
 	case 0: // weapon

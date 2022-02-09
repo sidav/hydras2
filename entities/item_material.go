@@ -11,6 +11,7 @@ const (
 	MATERIAL_IMPROVE_BRAND
 	MATERIAL_APPLY_ELEMENT
 	MATERIAL_ENCHANT
+	MATERIAL_ENCHANT_CONSUMABLE
 )
 
 type ItemMaterial struct {
@@ -36,12 +37,14 @@ func (im *ItemMaterial) GetName() string {
 		} else {
 			return fmt.Sprintf("Sharpener (%d)", im.EnchantAmount)
 		}
+	case MATERIAL_ENCHANT_CONSUMABLE:
+		return "Bezoar"
 	}
 	panic("No GetName")
 }
 
 func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
-	typeFrequencies := []int{2, 1, 1, 1, 3}
+	typeFrequencies := []int{2, 1, 1, 1, 3, 1}
 	whatToGen := rnd.SelectRandomIndexFromWeighted(len(typeFrequencies), func(x int) int { return typeFrequencies[x] })
 	switch whatToGen {
 	case 0:
@@ -68,6 +71,10 @@ func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
 		return &ItemMaterial{
 			Code:          MATERIAL_ENCHANT,
 			EnchantAmount: enchantAmount-len(enchantProbabilities)/2,
+		}
+	case 5:
+		return &ItemMaterial{
+			Code: MATERIAL_ENCHANT_CONSUMABLE,
 		}
 	default:
 		panic("Wrong generate")

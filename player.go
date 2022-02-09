@@ -35,22 +35,22 @@ func (p *player) init() {
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: nil,
 		AsWeapon: &entities.ItemWeapon{
-			WeaponType: entities.WTYPE_SUBSTRACTOR,
-			Damage:     2,
+			WeaponTypeCode: entities.WTYPE_SUBSTRACTOR,
+			Damage:         2,
 		},
 	})
 	p.primaryWeapon = p.inventory[0]
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: nil,
 		AsWeapon: &entities.ItemWeapon{
-			WeaponType: entities.WTYPE_SUBSTRACTOR,
-			Damage:     1,
+			WeaponTypeCode: entities.WTYPE_SUBSTRACTOR,
+			Damage:         1,
 		},
 	})
 	p.secondaryWeapon = p.inventory[1]
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: &entities.ItemConsumable{
-			Code:   entities.ITEM_HEAL,
+			Code:   entities.CONSUMABLE_HEAL,
 			Amount: 2,
 		},
 	})
@@ -147,32 +147,32 @@ func (p *player) removeItemFromInventory(itmToRemove *entities.Item) {
 	panic("No such item to remove!")
 }
 
-func (p *player) getAllWeapons() []*entities.Item {
-	var weps []*entities.Item
+func (p *player) getAllItemsOfType(itype int) []*entities.Item {
+	var items []*entities.Item
 	for _, i := range p.inventory {
-		if i.IsWeapon() {
-			weps = append(weps, i)
+		t, _ := i.GetTypeAndCode()
+		if t == itype {
+			items = append(items, i)
 		}
 	}
-	return weps
+	return items
+}
+
+func (p *player) getAllItemsOfTypeAndCode(itype, icode int) []*entities.Item {
+	var items []*entities.Item
+	for _, i := range p.inventory {
+		t, c := i.GetTypeAndCode()
+		if t == itype && c == icode {
+			items = append(items, i)
+		}
+	}
+	return items
+}
+
+func (p *player) getAllWeapons() []*entities.Item {
+	return p.getAllItemsOfType(entities.ITEM_WEAPON)
 }
 
 func (p *player) getAllMaterials() []*entities.Item {
-	var mats []*entities.Item
-	for _, i := range p.inventory {
-		if i.IsMaterial() {
-			mats = append(mats, i)
-		}
-	}
-	return mats
-}
-
-func (p *player) getAllMaterialsOfCode(code int) []*entities.Item {
-	var mats []*entities.Item
-	for _, i := range p.inventory {
-		if i.IsMaterial() && i.AsMaterial.Code == code {
-			mats = append(mats, i)
-		}
-	}
-	return mats
+	return p.getAllItemsOfType(entities.ITEM_MATERIAL)
 }

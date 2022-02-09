@@ -22,7 +22,7 @@ func readKeyToVector(key string) (int, int) {
 func getAttackDescriptionString(weapon *entities.Item, target *enemy) string {
 	attackStr := fmt.Sprintf("%d", target.heads)
 	damageNum := weapon.AsWeapon.GetDamageOnHeads(target.heads)
-	switch weapon.AsWeapon.WeaponType {
+	switch weapon.AsWeapon.WeaponTypeCode {
 	case entities.WTYPE_DIVISOR:
 		attackStr += fmt.Sprintf("/%d", weapon.AsWeapon.Damage)
 	default:
