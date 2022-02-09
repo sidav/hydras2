@@ -5,11 +5,12 @@ import (
 )
 
 type dungeon struct {
-	plr            *player
-	startX, startY int
-	name           string
-	layout         generator.LayoutInterface
-	rooms          [][]*dungeonCell
+	plr              *player
+	startX, startY   int
+	totalOpenedRooms int
+	name             string
+	layout           generator.LayoutInterface
+	rooms            [][]*dungeonCell
 }
 
 func (d *dungeon) initAndGenerate(patternFileName string) {
@@ -67,7 +68,10 @@ func (d *dungeon) generateAndRevealRoomsAroundPlayer() {
 				rx, ry := d.plr.dungX+x, d.plr.dungY+y
 				d.rooms[rx][ry].wasSeen = true
 				if !d.rooms[rx][ry].contentsGenerated {
-					d.rooms[rx][ry].generateDungeonCell()
+					if d.rooms[rx][ry].isRoom {
+						d.totalOpenedRooms++
+					}
+					d.rooms[rx][ry].generateDungeonCell(d.totalOpenedRooms)
 				}
 			}
 		}

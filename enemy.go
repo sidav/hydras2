@@ -31,7 +31,7 @@ func (e *enemy) getName() string {
 	return text_colors.MakeStringColorTagged(name, e.element.GetColorTags())
 }
 
-func generateRandomEnemy() *enemy {
+func generateRandomEnemy(minHeads, maxHeads int) *enemy {
 	e := &enemy{
 		enemyType: ENEMY_HYDRA,
 		heads:     rnd.RandInRange(1, 5),

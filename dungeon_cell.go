@@ -13,13 +13,14 @@ type dungeonCell struct {
 	hasKey   int
 }
 
-func (dc *dungeonCell) generateDungeonCell() {
+func (dc *dungeonCell) generateDungeonCell(num int) {
 	if dc.isRoom {
-		numEnemies := rnd.RandInRange(0, 3)
+		numEnemies := rnd.RandInRange(0, num/3+1)
+		minHeads, maxHeads := num/3+1, num/3+3
 		for i := 0; i < numEnemies; i++ {
-			dc.enemies = append(dc.enemies, generateRandomEnemy())
+			dc.enemies = append(dc.enemies, generateRandomEnemy(minHeads, maxHeads))
 		}
-		numItems := rnd.RandInRange(0, numEnemies+1)
+		numItems := rnd.RandInRange(0, 3)
 		for i := 0; i < numItems; i++ {
 			dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
 		}
