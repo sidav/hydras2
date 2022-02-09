@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/sidav/sidavgorandom/fibrandom"
 	"hydras2/text_colors"
+	"math"
 )
 
 const (
@@ -103,7 +104,14 @@ func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {
 		}
 		return heads - (heads / iw.Damage)
 	case WTYPE_LOGARITHMER:
-		panic("No logarithmer implemented!")
+		// log_x(a) = log_y(a)/log_y(x)
+		logResult := math.Log2(float64(heads))/math.Log2(float64(iw.Damage))
+		// check if result is int
+		if logResult == float64(int(logResult)) {
+			return heads - int(logResult)
+		} else {
+			return 0
+		}
 	}
-	return 0
+	panic("Unknown weapon type!")
 }
