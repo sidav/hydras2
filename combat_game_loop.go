@@ -9,7 +9,7 @@ func (b *battlefield) startCombatLoop() {
 		for _, e := range b.enemies {
 			b.actAsEnemy(e)
 		}
-		b.activateBrandsOnPlayerItems()
+		b.activatePassiveBrandsOnPlayerItems()
 		b.currentTick++
 	}
 	log.Clear()
@@ -59,4 +59,13 @@ func (b *battlefield) workPlayerInput() {
 			}
 		}
 	}
+}
+
+func (b *battlefield) playerHitsEnemy(e *enemy) {
+	weaponToAttackWith := b.player.primaryWeapon
+	if b.player.primaryWeapon.AsWeapon.GetDamageOnHeads(e.heads) == 0 {
+		weaponToAttackWith = b.player.secondaryWeapon
+	}
+	b.performWeaponStrikeOnEnemy(weaponToAttackWith.AsWeapon, e)
+	b.activateOnHitBrandOnItem(weaponToAttackWith, e)
 }

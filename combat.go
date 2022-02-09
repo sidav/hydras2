@@ -1,6 +1,7 @@
 package main
 
 import (
+	"hydras2/entities"
 	"hydras2/text_colors"
 	"math"
 )
@@ -83,18 +84,14 @@ func (b *battlefield) areCoordsValid(x, y int) bool {
 	return x >= 0 && x < len(b.tiles) && y >= 0 && y < len(b.tiles[0])
 }
 
-func (b *battlefield) playerHitsEnemy(e *enemy) {
-	weaponToAttackWith := b.player.primaryWeapon
-	if b.player.primaryWeapon.AsWeapon.GetDamageOnHeads(e.heads) == 0 {
-		weaponToAttackWith = b.player.secondaryWeapon
-	}
-	dmg := weaponToAttackWith.AsWeapon.GetDamageOnHeads(e.heads)
+func (b *battlefield) performWeaponStrikeOnEnemy(weapon *entities.ItemWeapon, e *enemy) {
+	dmg := weapon.GetDamageOnHeads(e.heads)
 	log.AppendMessagef("You cut %d heads off %s!", dmg, e.getName())
 	if e.heads <= dmg {
 		log.AppendMessagef("%s drops dead!", e.getName())
 	}
 	e.heads -= dmg
-	playerWeaponElement := weaponToAttackWith.AsWeapon.WeaponElement
+	playerWeaponElement := weapon.WeaponElement
 	hydraElement := e.element
 	if e.heads > 0 {
 		switch playerWeaponElement.GetEffectivenessAgainstElement(hydraElement) {

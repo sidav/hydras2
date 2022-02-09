@@ -2,12 +2,25 @@ package main
 
 import "hydras2/entities"
 
-func (b *battlefield) activateBrandsOnPlayerItems() {
-	b.activateBrandOnItem(b.player.primaryWeapon)
-	b.activateBrandOnItem(b.player.secondaryWeapon)
+func (b *battlefield) activatePassiveBrandsOnPlayerItems() {
+	b.activatePassiveBrandOnItem(b.player.primaryWeapon)
+	b.activatePassiveBrandOnItem(b.player.secondaryWeapon)
 }
 
-func (b *battlefield) activateBrandOnItem(item *entities.Item) {
+func (b *battlefield) activateOnHitBrandOnItem(item *entities.Item, hitEnemy *enemy) {
+	if item.IsWeapon() {
+		if item.AsWeapon.Brand == nil {
+			return
+		}
+		switch item.AsWeapon.Brand.Code {
+		case entities.BRAND_DOUBLE_STRIKE:
+			log.AppendMessage("The weapon hits twice!")
+			b.performWeaponStrikeOnEnemy(item.AsWeapon, hitEnemy)
+		}
+	}
+}
+
+func (b *battlefield) activatePassiveBrandOnItem(item *entities.Item) {
 	if item.IsWeapon() {
 		if item.AsWeapon.Brand == nil {
 			return

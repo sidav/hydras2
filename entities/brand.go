@@ -11,13 +11,16 @@ func (b *Brand) GetName() string {
 const (
 	BRAND_PASSIVE_ELEMENTS_SHIFTING = iota
 	BRAND_PASSIVE_DISTORTION
+	BRAND_DOUBLE_STRIKE
+	BRAND_FAST_STRIKE
 )
 
 type BrandData struct {
-	canBeOnWeapon bool
-	canBeOnRing   bool
-	isActivatable bool
-	name, info    string
+	canBeOnWeapon       bool
+	canBeOnRing         bool
+	isActivatable       bool
+	upgradedVersionCode int
+	name, info          string
 }
 
 var BrandsTable = map[int]*BrandData{
@@ -29,10 +32,21 @@ var BrandsTable = map[int]*BrandData{
 		info:          "Changes its element each turn randomly.",
 	},
 	BRAND_PASSIVE_DISTORTION: {
-		canBeOnWeapon:        true,
-		name:                 "distortion",
-		info:                 "Changes its damage each turn randomly.",
+		canBeOnWeapon: true,
+		name:          "distortion",
+		info:          "Changes its damage each turn randomly.",
 	},
+	BRAND_DOUBLE_STRIKE: {
+		canBeOnWeapon:       true,
+		name:                "double strike",
+		info:                "Hits twice.",
+		upgradedVersionCode: BRAND_FAST_STRIKE,
+	},
+	//BRAND_FAST_STRIKE: {
+	//	canBeOnWeapon: true,
+	//	name:          "swift strike",
+	//	info:          "Hits faster.",
+	//},
 }
 
 //func GetWeightedRandomBrandCode(rnd *fibrandom.FibRandom) int {
