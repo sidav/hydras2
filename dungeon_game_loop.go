@@ -45,8 +45,7 @@ func (d *dungeon) doesPlayerEnterRoom(vx, vy int) bool {
 		if d.offerCombatToPlayer(room) {
 			b := generateBattlefield(d.plr, room.enemies)
 			b.startCombatLoop()
-			d.onCombatEnd(b, room)
-			return true
+			return d.onCombatEnd(b, room)
 		}
 		return false
 	}
@@ -73,7 +72,7 @@ func (d *dungeon) offerCombatToPlayer(room *dungeonCell) bool {
 	return io.showYNSelect(" ENCOUNTER ", lines)
 }
 
-func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) {
+func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
 	if len(b.enemies) == 0 {
 		soulsAcquired := 0
 		for i := range room.enemies {
@@ -89,8 +88,17 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) {
 		}
 		io.showInfoWindow("VICTORY ACHIEVED", lines)
 		room.enemies = []*enemy{}
+		return true
 	} else {
-
+		if b.playerFled {
+			io.showInfoWindow("YOU HAVE FLED", []string{fmt.Sprintf("You have lost %d essence.", d.plr.souls)})
+			d.plr.dungX, d.plr.dungY = d.startX, d.startY
+			d.plr.souls = 0
+		}
+		for i := range room.enemies {
+			room.enemies[i].heads = room.enemies[i].headsOnGeneration
+		}
+		return false
 	}
 }
 

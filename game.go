@@ -2,10 +2,10 @@ package main
 
 func runGame() {
 	dung := &dungeon{}
-	x, y := dung.initAndGenerate("dungeon_generation_patterns/explore_or_fight.ptn")
+	dung.initAndGenerate("dungeon_generation_patterns/explore_or_fight.ptn")
 	plr := &player{
-		dungX: x,
-		dungY: y,
+		dungX: dung.startX,
+		dungY: dung.startY,
 	}
 	plr.init()
 	dung.plr = plr

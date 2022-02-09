@@ -17,6 +17,7 @@ type battlefield struct {
 	currentTick int
 
 	battleEnded bool
+	playerFled  bool
 }
 
 func generateBattlefield(p *player, enemies []*enemy) *battlefield {

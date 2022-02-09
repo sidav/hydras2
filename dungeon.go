@@ -5,15 +5,15 @@ import (
 )
 
 type dungeon struct {
-	plr    *player
-	name   string
-	layout generator.LayoutInterface
-	rooms  [][]*dungeonCell
+	plr            *player
+	startX, startY int
+	name           string
+	layout         generator.LayoutInterface
+	rooms          [][]*dungeonCell
 }
 
-func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
+func (d *dungeon) initAndGenerate(patternFileName string) {
 	const sizew, sizeh = 7, 4
-	playerx, playery := 0, 0
 	gen := generator.InitGeneratorsWrapper()
 	d.layout, _ = gen.GenerateLayout(sizew, sizeh, patternFileName)
 	d.rooms = make([][]*dungeonCell, sizew)
@@ -28,8 +28,8 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("start") {
 				d.rooms[x][y].contentsGenerated = true
 				d.rooms[x][y].feature = &dungeonRoomFeature{featureCode: DRF_BONFIRE}
-				playerx = x
-				playery = y
+				d.startX = x
+				d.startY = y
 			}
 			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("ky1") {
 				d.rooms[x][y].hasKey = 1
@@ -40,7 +40,6 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 		}
 	}
 	d.placeFeatureInRandomRoom(DRF_ALTAR)
-	return playerx, playery
 }
 
 func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {

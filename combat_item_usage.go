@@ -15,7 +15,15 @@ func (b *battlefield) usePlayerConsumable() {
 		if b.player.hitpoints > b.player.getMaxHp() {
 			b.player.hitpoints = b.player.getMaxHp()
 		}
+	case entities.ITEM_RETREAT:
+		if io.showYNSelect("Flee?", []string{"You will lose all essence!"}) {
+			b.playerFled = true
+			b.battleEnded = true
+		} else {
+			return
+		}
 	}
+
 	log.AppendMessagef("%s used.", b.player.currentConsumable.GetName())
 	b.player.currentConsumable.AsConsumable.Amount--
 }

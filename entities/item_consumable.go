@@ -4,6 +4,7 @@ import "github.com/sidav/sidavgorandom/fibrandom"
 
 const (
 	ITEM_HEAL = iota
+	ITEM_RETREAT
 	TOTAL_ITEM_TYPES_NUMBER // for generators
 )
 
@@ -31,6 +32,12 @@ var consumablesData = []*ConsumableItemInfo{
 		name:           "Healing flask",
 		frequency:      2,
 		info:           "Can be used to recover HP.",
+	},
+	{
+		consumableType: ITEM_RETREAT,
+		name:           "Escape vial",
+		frequency:      1,
+		info:           "Use it to flee from combat.",
 	},
 	//{
 	//	consumableType: ITEM_ENCHANTER,
