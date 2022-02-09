@@ -16,6 +16,9 @@ type dungeonCell struct {
 func (dc *dungeonCell) generateDungeonCell(num int) {
 	if dc.isRoom {
 		numEnemies := rnd.RandInRange(0, num/3+1)
+		if numEnemies > 5 {
+			numEnemies = 5
+		}
 		minHeads, maxHeads := num/3+1, num/3+3
 		for i := 0; i < numEnemies; i++ {
 			dc.enemies = append(dc.enemies, generateRandomEnemy(minHeads, maxHeads))
