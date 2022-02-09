@@ -114,7 +114,7 @@ func (b *battlefield) enemyHitsPlayer(e *enemy) {
 	log.AppendMessagef("%s bites you for %d damage!", e.getName(), dmg)
 }
 
-func (b *battlefield) endTurnCleanup() {
+func (b *battlefield) cleanup() {
 	for i := 0; i < len(b.enemies); i++ {
 		if b.enemies[i].heads <= 0 {
 			b.enemies[i] = b.enemies[len(b.enemies)-1]
