@@ -7,9 +7,6 @@ func (d *dungeon) selectPlayerRoomAction() {
 	var actions []string
 	var allowed []bool
 	var actionFuncs []func()
-	actions = append(actions, "Nothing")
-	allowed = append(allowed, true)
-	actionFuncs = append(actionFuncs, func(){})
 
 	actions = append(actions, "Pick up treasure")
 	allowed = append(allowed, len(room.treasure)>0)
@@ -17,9 +14,17 @@ func (d *dungeon) selectPlayerRoomAction() {
 
 	actions = append(actions, "Rest")
 	allowed = append(allowed, false)
+	actionFuncs = append(actionFuncs, func(){})
+
+	actions = append(actions, "Nothing")
+	allowed = append(allowed, true)
+	actionFuncs = append(actionFuncs, func(){})
+
 	chosenActionNum := io.showSelectWindowWithDisableableOptions(
 		"Select an action:", actions, func(x int) bool{return allowed[x]}, false)
-	actionFuncs[chosenActionNum]()
+	if chosenActionNum != -1 {
+		actionFuncs[chosenActionNum]()
+	}
 }
 
 func (d *dungeon) pickUpFromPlayerRoom() {
