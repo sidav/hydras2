@@ -44,7 +44,8 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 }
 
 func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {
-	for x, y := rnd.Rand(len(d.rooms)), rnd.Rand(len(d.rooms[0]));; {
+	for try := 0; try < 1000; try++ {
+		x, y := rnd.Rand(len(d.rooms)), rnd.Rand(len(d.rooms[0]))
 		if !d.rooms[x][y].isRoom || d.rooms[x][y].feature != nil {
 			continue
 		}
@@ -53,6 +54,7 @@ func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {
 		}
 		return
 	}
+	panic("Feature can't be placed!")
 }
 
 func (d *dungeon) getPlayerRoom() *dungeonCell {

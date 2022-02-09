@@ -89,6 +89,16 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 		c.setStyle(tcell.ColorGreen, tcell.ColorBlack)
 		c.putColorTaggedString(treasureCountStr, topLeftX+roomW, topLeftY+1)
 	}
+	if cell.feature != nil {
+		c.setStyle(tcell.ColorDarkGray, tcell.ColorBlack)
+		featureString := ""
+		switch cell.feature.featureType {
+		case DRF_BONFIRE: featureString = "bnf"
+		case DRF_ALTAR: featureString = "alt"
+		default: panic("no cell feature string")
+		}
+		c.putColorTaggedString(featureString, topLeftX+1, topLeftY+roomH)
+	}
 }
 
 func (c *consoleIO) renderPlayerDungeonUI(d *dungeon, yCoord int) {
