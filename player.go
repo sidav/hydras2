@@ -136,3 +136,43 @@ func (p *player) cycleToNextConsumable() {
 		}
 	}
 }
+
+func (p *player) removeItemFromInventory(itmToRemove *entities.Item) {
+	for i, item := range p.inventory {
+		if item == itmToRemove {
+			p.inventory = append(p.inventory[:i], p.inventory[i+1:]...)
+			return
+		}
+	}
+	panic("No such item to remove!")
+}
+
+func (p *player) getAllWeapons() []*entities.Item {
+	var weps []*entities.Item
+	for _, i := range p.inventory {
+		if i.IsWeapon() {
+			weps = append(weps, i)
+		}
+	}
+	return weps
+}
+
+func (p *player) getAllMaterials() []*entities.Item {
+	var mats []*entities.Item
+	for _, i := range p.inventory {
+		if i.IsMaterial() {
+			mats = append(mats, i)
+		}
+	}
+	return mats
+}
+
+func (p *player) getAllMaterialsOfCode(code int) []*entities.Item {
+	var mats []*entities.Item
+	for _, i := range p.inventory {
+		if i.IsMaterial() && i.AsMaterial.Code == code {
+			mats = append(mats, i)
+		}
+	}
+	return mats
+}

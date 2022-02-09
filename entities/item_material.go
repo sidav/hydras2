@@ -6,11 +6,11 @@ import (
 )
 
 const (
-	IMTYPE_CLEAR_BRAND = iota
-	IMTYPE_IMBUE_BRAND
-	IMTYPE_IMPROVE_BRAND
-	IMTYPE_APPLY_ELEMENT
-	IMTYPE_ENCHANT
+	MATERIAL_CLEAR_BRAND = iota
+	MATERIAL_IMBUE_BRAND
+	MATERIAL_IMPROVE_BRAND
+	MATERIAL_APPLY_ELEMENT
+	MATERIAL_ENCHANT
 )
 
 type ItemMaterial struct {
@@ -22,15 +22,15 @@ type ItemMaterial struct {
 
 func (im *ItemMaterial) GetName() string {
 	switch im.Code {
-	case IMTYPE_CLEAR_BRAND:
+	case MATERIAL_CLEAR_BRAND:
 		return "Clear quartz"
-	case IMTYPE_IMBUE_BRAND:
+	case MATERIAL_IMBUE_BRAND:
 		return "Glyph of " + im.ImbuesBrand.GetName()
-	case IMTYPE_IMPROVE_BRAND:
+	case MATERIAL_IMPROVE_BRAND:
 		return "Stone of power"
-	case IMTYPE_APPLY_ELEMENT:
+	case MATERIAL_APPLY_ELEMENT:
 		return im.AppliesElement.GetName() + " gem"
-	case IMTYPE_ENCHANT:
+	case MATERIAL_ENCHANT:
 		if im.EnchantAmount > 0 {
 			return fmt.Sprintf("Sharpener (+%d)", im.EnchantAmount)
 		} else {
@@ -46,27 +46,27 @@ func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
 	switch whatToGen {
 	case 0:
 		return &ItemMaterial{
-			Code:           IMTYPE_CLEAR_BRAND,
+			Code: MATERIAL_CLEAR_BRAND,
 		}
 	case 1:
 		return &ItemMaterial{
-			Code: IMTYPE_IMBUE_BRAND,
-			ImbuesBrand:    &Brand{rnd.Rand(len(BrandsTable))},
+			Code:        MATERIAL_IMBUE_BRAND,
+			ImbuesBrand: &Brand{rnd.Rand(len(BrandsTable))},
 		}
 	case 2:
 		return &ItemMaterial{
-			Code: IMTYPE_IMPROVE_BRAND,
+			Code: MATERIAL_IMPROVE_BRAND,
 		}
 	case 3:
 		return &ItemMaterial{
-			Code: IMTYPE_APPLY_ELEMENT,
+			Code:           MATERIAL_APPLY_ELEMENT,
 			AppliesElement: &Element{GetWeightedRandomElementCode(rnd)},
 		}
 	case 4:
 		enchantProbabilities := []int{1, 2, 0, 3, 1}
 		enchantAmount := rnd.SelectRandomIndexFromWeighted(len(enchantProbabilities), func(x int) int { return enchantProbabilities[x] })
 		return &ItemMaterial{
-			Code: IMTYPE_ENCHANT,
+			Code:          MATERIAL_ENCHANT,
 			EnchantAmount: enchantAmount-len(enchantProbabilities)/2,
 		}
 	default:

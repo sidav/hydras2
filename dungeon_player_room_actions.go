@@ -20,6 +20,10 @@ func (d *dungeon) selectPlayerRoomAction() {
 	allowed = append(allowed, room.hasFeature(DRF_ALTAR))
 	actionFuncs = append(actionFuncs, d.buyPlayerStatUpgrades)
 
+	actions = append(actions, "Craft")
+	allowed = append(allowed, room.hasFeature(DRF_TINKER))
+	actionFuncs = append(actionFuncs, d.tinkerWithItems)
+
 	actions = append(actions, "Nothing")
 	allowed = append(allowed, true)
 	actionFuncs = append(actionFuncs, func(){})
@@ -67,6 +71,14 @@ func (d *dungeon) playerRest() {
 
 func (d *dungeon) buyPlayerStatUpgrades() {
 	upgradeCost := d.plr.level * 75 / 10
+
+	if d.plr.souls < upgradeCost {
+		io.showInfoWindow("NOTHING TO OFFER", []string{
+			fmt.Sprintf("You need %d more essence to offer.", upgradeCost - d.plr.souls),
+		})
+		return
+	}
+
 	lines := []string{
 		fmt.Sprintf("You have %d hydra essense.", d.plr.souls),
 		fmt.Sprintf("Spend %d to upgrade vitality?", upgradeCost),
@@ -77,4 +89,23 @@ func (d *dungeon) buyPlayerStatUpgrades() {
 		d.plr.vitality += 2
 		d.plr.level += 1
 	}
+}
+
+func (d *dungeon) tinkerWithItems() {
+	if len(d.plr.getAllMaterials()) == 0 {
+		io.showInfoWindow("NO MATERIALS", []string{"You have no materials to tinker with."})
+		return
+	}
+	selectedMaterial := selectAnItemFromList("SELECT MATERIAL:", d.plr.getAllMaterials())
+	if selectedMaterial == nil {
+		return
+	}
+	selectedWeapon := selectAnItemFromList("SELECT WEAPON TO APPLY "+ selectedMaterial.GetName(), d.plr.getAllWeapons())
+	if selectedWeapon == nil {
+		return
+	}
+	preTinkerWeaponName := selectedWeapon.GetName()
+	applyMaterialToItem(selectedMaterial, selectedWeapon)
+	io.showInfoWindow("SUCCESS", []string{fmt.Sprintf("You made %s into %s", preTinkerWeaponName, selectedWeapon.GetName())})
+	d.plr.removeItemFromInventory(selectedMaterial)
 }
