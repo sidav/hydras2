@@ -13,14 +13,14 @@ const (
 	BRAND_PASSIVE_DISTORTION
 )
 
-type BrandType struct {
+type BrandData struct {
 	canBeOnWeapon bool
 	canBeOnRing   bool
 	isActivatable bool
 	name, info    string
 }
 
-var BrandsTable = map[int]*BrandType{
+var BrandsTable = map[int]*BrandData{
 	BRAND_PASSIVE_ELEMENTS_SHIFTING: {
 		canBeOnWeapon: true,
 		canBeOnRing:   false,

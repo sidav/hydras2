@@ -48,7 +48,7 @@ type ItemWeapon struct {
 func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 	index := rnd.SelectRandomIndexFromWeighted(len(weaponsStaticData), func(i int) int { return weaponsStaticData[i].Frequency })
 	var brand *Brand
-	if rnd.OneChanceFrom(1) { // TODO: actual chance
+	if rnd.OneChanceFrom(3) { // TODO: actual chance
 		brand = &Brand{
 			Code: rnd.Rand(len(BrandsTable)),
 		}
