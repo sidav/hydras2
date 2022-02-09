@@ -1,4 +1,4 @@
-package entities
+package text_colors
 
 const (
 	COLOR_TAG_LENGTH = 4

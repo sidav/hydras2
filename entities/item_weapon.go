@@ -3,6 +3,7 @@ package entities
 import (
 	"fmt"
 	"github.com/sidav/sidavgorandom/fibrandom"
+	"hydras2/text_colors"
 )
 
 type weaponType uint8
@@ -77,7 +78,7 @@ func (w *ItemWeapon) GetName() string {
 	default:
 		panic("No ItemWeapon name")
 	}
-	return MakeStringColorTagged(name, w.WeaponElement.GetColorTags())
+	return text_colors.MakeStringColorTagged(name, w.WeaponElement.GetColorTags())
 }
 
 func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
-	"hydras2/entities"
+	"hydras2/text_colors"
 	"strconv"
 )
 
@@ -99,7 +99,7 @@ func (c *consoleIO) renderPlayerDungeonUI(d *dungeon, yCoord int) {
 		for i := 0; i < 3; i++ {
 			if d.plr.keys[i] {
 				colorTag := c.getColorTagForKeyNumber(i)
-				keyLine += entities.MakeStringColorTagged(fmt.Sprintf("%d ", i), []string{colorTag})
+				keyLine += text_colors.MakeStringColorTagged(fmt.Sprintf("%d ", i), []string{colorTag})
 			}
 		}
 	}

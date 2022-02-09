@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"hydras2/entities"
+	"hydras2/text_colors"
 )
 
 const (
@@ -27,7 +28,7 @@ func (e *enemy) getName() string {
 		name += " "
 	}
 	name += fmt.Sprintf("%d-headed hydra", e.heads)
-	return entities.MakeStringColorTagged(name, e.element.GetColorTags())
+	return text_colors.MakeStringColorTagged(name, e.element.GetColorTags())
 }
 
 func generateRandomEnemy() *enemy {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gdamore/tcell"
-	"hydras2/entities"
+	"hydras2/text_colors"
 )
 
 func (c *consoleIO) getColorByColorTag(tag string) tcell.Color {
@@ -39,16 +39,16 @@ func (c *consoleIO) setBgColorByColorTag(tagName string) {
 }
 
 func (c *consoleIO) putColorTaggedString(str string, x, y int) {
-	if !entities.IsStringColorTagged(str) {
+	if !text_colors.IsStringColorTagged(str) {
 		c.putUncoloredString(str, x, y)
 		return
 	}
 	offset := 0
 	for i := 0; i < len(str); i++ {
-		tag := entities.GetColorTagNameInStringAtPosition(str, i)
+		tag := text_colors.GetColorTagNameInStringAtPosition(str, i)
 		if tag != "" {
-			i += entities.COLOR_TAG_LENGTH
-			offset += entities.COLOR_TAG_LENGTH
+			i += text_colors.COLOR_TAG_LENGTH
+			offset += text_colors.COLOR_TAG_LENGTH
 			c.setFgColorByColorTag(tag)
 		}
 		c.screen.SetCell(x+i-offset+c.offsetX, y+c.offsetY, c.style, rune(str[i]))

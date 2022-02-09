@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
-	"hydras2/entities"
 	"hydras2/game_log"
+	"hydras2/text_colors"
 )
 
 type consoleIO struct {
@@ -55,10 +55,10 @@ func (c *consoleIO) setOffsets(x, y int) {
 func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := entities.TaggedStringLength(title) + 2
+	longestLineLen := text_colors.TaggedStringLength(title) + 2
 	for i := range lines {
-		if entities.TaggedStringLength(lines[i]) > longestLineLen {
-			longestLineLen = entities.TaggedStringLength(lines[i])
+		if text_colors.TaggedStringLength(lines[i]) > longestLineLen {
+			longestLineLen = text_colors.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -101,10 +101,10 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := entities.TaggedStringLength(title) + 2
+	longestLineLen := text_colors.TaggedStringLength(title) + 2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
-			longestLineLen = entities.TaggedStringLength(lines[i])
+			longestLineLen = text_colors.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -142,10 +142,10 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 	for i := 0; i < len(lines) && !enabled(cursor); i++ {
 		cursor++
 	}
-	longestLineLen := entities.TaggedStringLength(title) + 2
+	longestLineLen := text_colors.TaggedStringLength(title) + 2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
-			longestLineLen = entities.TaggedStringLength(lines[i])
+			longestLineLen = text_colors.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -195,10 +195,10 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 }
 
 func (c *consoleIO) showInfoWindow(title string, lines []string) {
-	longestLineLen := entities.TaggedStringLength(title) + 2
+	longestLineLen := text_colors.TaggedStringLength(title) + 2
 	for i := range lines {
-		if entities.TaggedStringLength(lines[i]) > longestLineLen {
-			longestLineLen = entities.TaggedStringLength(lines[i])
+		if text_colors.TaggedStringLength(lines[i]) > longestLineLen {
+			longestLineLen = text_colors.TaggedStringLength(lines[i])
 		}
 	}
 	for {
@@ -290,7 +290,7 @@ func (c *consoleIO) drawRect(fx, fy, w, h int) {
 }
 
 func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
-	c.putColorTaggedString(s, x-entities.TaggedStringLength(s)/2, y)
+	c.putColorTaggedString(s, x-text_colors.TaggedStringLength(s)/2, y)
 }
 
 
