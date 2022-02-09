@@ -1,6 +1,7 @@
 package main
 
 import (
+	"hydras2/text_colors"
 	"math"
 )
 
@@ -112,6 +113,9 @@ func (b *battlefield) enemyHitsPlayer(e *enemy) {
 	dmg := int(math.Log2(float64(e.heads + 1)))
 	b.player.hitpoints -= dmg
 	log.AppendMessagef("%s bites you for %d damage!", e.getName(), dmg)
+	if b.player.hitpoints <= b.player.getMaxHp()/3 {
+		log.AppendMessage(text_colors.MakeStringColorTagged("!!LOW HITPOINT WARNING!!", []string{"RED"}))
+	}
 }
 
 func (b *battlefield) cleanup() {

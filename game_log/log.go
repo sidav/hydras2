@@ -8,7 +8,6 @@ import (
 type logMessage struct {
 	Message string
 	count   int
-	color   int
 }
 
 func (m *logMessage) GetText() string {
@@ -30,6 +29,10 @@ func (l *GameLog) Init(length int) {
 
 func (l *GameLog) Clear() {
 	l.LastMessages = make([]logMessage, len(l.LastMessages))
+	//for i := range l.LastMessages {
+	//	l.LastMessages[i].count = 0
+	//	l.LastMessages[i].Message = ""
+	//}
 }
 
 func (l *GameLog) AppendMessage(msg string) {

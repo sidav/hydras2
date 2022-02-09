@@ -23,12 +23,16 @@ func (d *dungeon) startDungeonLoop() {
 }
 
 func (d *dungeon) performPreTurnCellActions() {
+	log.Clear()
 	d.generateAndRevealRoomsAroundPlayer()
 	room := d.getPlayerRoom()
 	if room.hasKey > 0 {
 		log.AppendMessagef("You picked up key %d", room.hasKey)
 		d.plr.keys[room.hasKey] = true
 		room.hasKey = 0
+	}
+	if room.feature != nil {
+		log.AppendMessagef("There is %s here.", getDungeonRoomFeatureNameByCode(room.feature.featureCode))
 	}
 }
 
