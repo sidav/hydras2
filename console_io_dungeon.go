@@ -11,14 +11,14 @@ import (
 const (
 	dung_x_offset = 0
 	dung_y_offset = 1
-	roomW, roomH = 3, 3 // not counting walls
+	roomW, roomH  = 3, 3 // not counting walls
 )
 
 func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	c.screen.Clear()
 
-	dw := len(d.rooms)*(roomW+1)
-	dh := len(d.rooms[0])*(roomH+1)
+	dw := len(d.rooms) * (roomW + 1)
+	dh := len(d.rooms[0]) * (roomH + 1)
 	c.setStyle(tcell.ColorDarkGray, tcell.ColorBlack)
 	c.drawFilledRect('.', dung_x_offset, dung_y_offset, dw, dh)
 
@@ -53,8 +53,8 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 	} else {
 		c.style = c.style.Background(tcell.ColorDarkRed)
 	}
-	topLeftX := rx*(roomW+1)+dung_x_offset
-	topLeftY := ry*(roomH+1)+dung_y_offset
+	topLeftX := rx*(roomW+1) + dung_x_offset
+	topLeftY := ry*(roomH+1) + dung_y_offset
 	runemap := d.layout.CellToCharArray(rx, ry, false, false, false)
 	for x := range runemap {
 		for y := range runemap[x] {
@@ -96,9 +96,11 @@ func (c *consoleIO) renderPlayerDungeonUI(d *dungeon, yCoord int) {
 	keyLine := ""
 	if len(d.plr.keys) > 0 {
 		keyLine = "Keys: "
-		for i := 0; i < len(d.plr.keys); i++ {
-			colorTag := c.getColorTagForKeyNumber(i+1)
-			keyLine += entities.MakeStringColorTagged(fmt.Sprintf("%d ", i+1), []string{colorTag})
+		for i := 0; i < 3; i++ {
+			if d.plr.keys[i] {
+				colorTag := c.getColorTagForKeyNumber(i)
+				keyLine += entities.MakeStringColorTagged(fmt.Sprintf("%d ", i), []string{colorTag})
+			}
 		}
 	}
 	var lines = []string{
@@ -110,10 +112,14 @@ func (c *consoleIO) renderPlayerDungeonUI(d *dungeon, yCoord int) {
 }
 
 func (c *consoleIO) getColorTagForKeyNumber(num int) string {
-	switch num{
-	case 1: return "BLUE"
-	case 2: return "RED"
-	case 3: return "YELLOW"
-	default: panic("y u no")
+	switch num {
+	case 1:
+		return "BLUE"
+	case 2:
+		return "RED"
+	case 3:
+		return "YELLOW"
+	default:
+		panic("y u no")
 	}
 }
