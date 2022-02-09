@@ -11,14 +11,14 @@ func (d *dungeon) startDungeonLoop() {
 		}
 		io.renderDungeon(d, d.plr)
 		key := io.readKey()
-		vx, vy := readKeyToVector(key)
-		d.movePlayerByVector(vx, vy)
 		switch key {
 		case "ENTER":
 			d.selectPlayerRoomAction()
 		case "ESCAPE":
 			return
 		}
+		vx, vy := readKeyToVector(key)
+		d.movePlayerByVector(vx, vy)
 	}
 }
 

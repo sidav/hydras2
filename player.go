@@ -79,6 +79,9 @@ func (p *player) cycleToNextPrimaryWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.primaryWeapon == nil
 	for i := 0; ; i = (i + 1) % len(p.inventory) {
+		if p.inventory[i] == p.secondaryWeapon {
+			continue
+		}
 		if p.inventory[i].IsWeapon() && selectNextWeapon {
 			p.primaryWeapon = p.inventory[i]
 			return
@@ -93,6 +96,9 @@ func (p *player) cycleToNextSecondaryWeapon() {
 	// shitty code ahead
 	selectNextWeapon := p.secondaryWeapon == nil
 	for i := 0; ; i = (i + 1) % len(p.inventory) {
+		if p.inventory[i] == p.primaryWeapon {
+			continue
+		}
 		if p.inventory[i].IsWeapon() && selectNextWeapon {
 			p.secondaryWeapon = p.inventory[i]
 			return
