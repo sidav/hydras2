@@ -9,6 +9,7 @@ type dungeonCell struct {
 
 	enemies  []*enemy
 	treasure []*entities.Item
+	feature  *dungeonRoomFeature
 	hasKey   int
 }
 

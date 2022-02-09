@@ -27,6 +27,7 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 			}
 			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("start") {
 				d.rooms[x][y].contentsGenerated = true
+				d.rooms[x][y].feature = &dungeonRoomFeature{featureType: DRF_BONFIRE}
 				playerx = x
 				playery = y
 			}
@@ -38,7 +39,20 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 			}
 		}
 	}
+	d.placeFeatureInRandomRoom(DRF_ALTAR)
 	return playerx, playery
+}
+
+func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {
+	for x, y := rnd.Rand(len(d.rooms)), rnd.Rand(len(d.rooms[0]));; {
+		if !d.rooms[x][y].isRoom || d.rooms[x][y].feature != nil {
+			continue
+		}
+		d.rooms[x][y].feature = &dungeonRoomFeature{
+			featureType: featureCode,
+		}
+		return
+	}
 }
 
 func (d *dungeon) getPlayerRoom() *dungeonCell {
