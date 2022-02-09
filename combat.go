@@ -53,46 +53,6 @@ func (b *battlefield) getEnemyAt(x, y int) *enemy {
 	return nil
 }
 
-func (b *battlefield) workPlayerInput() {
-	correctInputKeyPressed := false
-	for !correctInputKeyPressed {
-		key := io.readKey()
-		switch key {
-		case "ESCAPE":
-			b.battleEnded = true
-			return
-		case "1":
-			b.player.cycleToNextWeapon()
-			return
-		case "2":
-			b.player.cycleToNextConsumable()
-			return
-		case "ENTER":
-			b.usePlayerConsumable()
-			return
-		case " ":
-			return
-		default:
-			vx, vy := readKeyToVector(key)
-			if vx != 0 || vy != 0 {
-				correctInputKeyPressed = true
-				newPlrX, newPlrY := b.player.x+vx, b.player.y+vy
-				if b.areCoordsValid(newPlrX, newPlrY) {
-					if b.tiles[newPlrX][newPlrY] != TILE_WALL {
-						enemyAt := b.getEnemyAt(newPlrX, newPlrY)
-						if enemyAt != nil {
-							b.playerHitsEnemy(enemyAt)
-						} else {
-							b.player.x += vx
-							b.player.y += vy
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
 func (b *battlefield) actAsEnemy(e *enemy) {
 	const faceChangePeriod = 10
 	// first, check if we're in same row or col with the player
@@ -122,13 +82,17 @@ func (b *battlefield) areCoordsValid(x, y int) bool {
 }
 
 func (b *battlefield) playerHitsEnemy(e *enemy) {
-	dmg := b.player.currentWeapon.AsWeapon.GetDamageOnHeads(e.heads)
+	weaponToAttackWith := b.player.primaryWeapon
+	if b.player.primaryWeapon.AsWeapon.GetDamageOnHeads(e.heads) == 0 {
+		weaponToAttackWith = b.player.secondaryWeapon
+	}
+	dmg := weaponToAttackWith.AsWeapon.GetDamageOnHeads(e.heads)
 	log.AppendMessagef("You cut %d heads off %s!", dmg, e.getName())
 	if e.heads <= dmg {
 		log.AppendMessagef("%s drops dead!", e.getName())
 	}
 	e.heads -= dmg
-	playerWeaponElement := b.player.currentWeapon.AsWeapon.WeaponElement
+	playerWeaponElement := weaponToAttackWith.AsWeapon.WeaponElement
 	hydraElement := e.element
 	if e.heads > 0 {
 		switch playerWeaponElement.GetEffectivenessAgainstElement(hydraElement) {

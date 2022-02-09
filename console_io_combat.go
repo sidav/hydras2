@@ -60,8 +60,10 @@ func (c *consoleIO) renderEnemyAtCoords(e *enemy, tick, x, y int) {
 func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 	var lines = []string{
 		fmt.Sprintf("HP: %d/%d", b.player.hitpoints, b.player.getMaxHp()),
-		fmt.Sprintf("1) Wpn: %s", b.player.currentWeapon.GetName()),
-		fmt.Sprintf("2) Itm: %dx %s",
+		fmt.Sprintf("1) Prim Wpn: %s", b.player.primaryWeapon.GetName()),
+		"   |x to swap|   ",
+		fmt.Sprintf("2) Scnd Wpn: %s", b.player.secondaryWeapon.GetName()),
+		fmt.Sprintf("3) Itm: %dx %s",
 			b.player.currentConsumable.AsConsumable.Amount,
 			b.player.currentConsumable.GetName()),
 		"ENEMIES:",
@@ -70,7 +72,7 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 	for i := range b.enemies {
 		lines = append(lines, fmt.Sprintf("  %s (%s)",
 			b.enemies[i].getName(),
-			getAttackDescriptionString(b.player.currentWeapon, b.enemies[i]),
+			getAttackDescriptionString(b.player.primaryWeapon, b.enemies[i]),
 		))
 	}
 	for i := range lines {

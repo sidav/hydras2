@@ -5,7 +5,8 @@ import "hydras2/entities"
 type player struct {
 	dungX, dungY int
 
-	currentWeapon     *entities.Item
+	primaryWeapon     *entities.Item
+	secondaryWeapon   *entities.Item
 	currentConsumable *entities.Item
 	inventory         []*entities.Item
 	keys              map[int]bool
@@ -34,6 +35,7 @@ func (p *player) init() {
 			Damage:     2,
 		},
 	})
+	p.primaryWeapon = p.inventory[0]
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: nil,
 		AsWeapon: &entities.ItemWeapon{
@@ -41,14 +43,14 @@ func (p *player) init() {
 			Damage:     1,
 		},
 	})
+	p.secondaryWeapon = p.inventory[1]
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: &entities.ItemConsumable{
 			Code:   entities.ITEM_HEAL,
 			Amount: 2,
 		},
 	})
-	p.cycleToNextWeapon()
-	p.cycleToNextConsumable()
+	p.currentConsumable = p.inventory[2]
 }
 
 func (p *player) getMaxHp() int {
@@ -73,18 +75,38 @@ func (p *player) acquireItem(i *entities.Item) {
 	panic("NO ITEM TYPE")
 }
 
-func (p *player) cycleToNextWeapon() {
+func (p *player) cycleToNextPrimaryWeapon() {
 	// shitty code ahead
-	selectNextWeapon := p.currentWeapon == nil
+	selectNextWeapon := p.primaryWeapon == nil
 	for i := 0; ; i = (i + 1) % len(p.inventory) {
 		if p.inventory[i].IsWeapon() && selectNextWeapon {
-			p.currentWeapon = p.inventory[i]
+			p.primaryWeapon = p.inventory[i]
 			return
 		}
-		if p.inventory[i] == p.currentWeapon {
+		if p.inventory[i] == p.primaryWeapon {
 			selectNextWeapon = true
 		}
 	}
+}
+
+func (p *player) cycleToNextSecondaryWeapon() {
+	// shitty code ahead
+	selectNextWeapon := p.secondaryWeapon == nil
+	for i := 0; ; i = (i + 1) % len(p.inventory) {
+		if p.inventory[i].IsWeapon() && selectNextWeapon {
+			p.secondaryWeapon = p.inventory[i]
+			return
+		}
+		if p.inventory[i] == p.secondaryWeapon {
+			selectNextWeapon = true
+		}
+	}
+}
+
+func (p *player) swapWeapons() {
+	t := p.primaryWeapon
+	p.primaryWeapon = p.secondaryWeapon
+	p.secondaryWeapon = t
 }
 
 func (p *player) cycleToNextConsumable() {
