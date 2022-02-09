@@ -14,7 +14,7 @@ func (d *dungeon) selectPlayerRoomAction() {
 
 	actions = append(actions, "Rest")
 	allowed = append(allowed, room.hasFeature(DRF_BONFIRE))
-	actionFuncs = append(actionFuncs, func(){})
+	actionFuncs = append(actionFuncs, d.playerRest)
 
 	actions = append(actions, "Pray")
 	allowed = append(allowed, room.hasFeature(DRF_ALTAR))
@@ -48,6 +48,20 @@ func (d *dungeon) pickUpFromPlayerRoom() {
 		}
 		d.plr.acquireItem(room.treasure[picked])
 		room.treasure = append(room.treasure[:picked], room.treasure[picked+1:]...)
+	}
+}
+
+func (d *dungeon) playerRest() {
+	lines := []string{
+		"Rest for some time?",
+		"It will restore your health, but the",
+		"dungeon will become dark again, and cleared",
+		"rooms may be repopulated with hydras!",
+	}
+	picked := io.showYNSelect("REST", lines)
+	if picked {
+		d.plr.hitpoints = d.plr.getMaxHp()
+		d.clearRoomsGeneratedState()
 	}
 }
 

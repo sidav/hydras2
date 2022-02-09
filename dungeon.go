@@ -78,6 +78,17 @@ func (d *dungeon) generateAndRevealRoomsAroundPlayer() {
 	}
 }
 
+func (d *dungeon) clearRoomsGeneratedState() {
+	for x := range d.rooms {
+		for y := range d.rooms[x] {
+			if d.rooms[x][y].isCleared() && !d.rooms[x][y].hasFeature(DRF_BONFIRE) {
+				d.rooms[x][y].contentsGenerated = false
+				d.rooms[x][y].wasSeen = false
+			}
+		}
+	}
+}
+
 func (d *dungeon) canPlayerMoveFromByVector(vx, vy int) bool {
 	if vx == 0 && vy == 0 {
 		return true
