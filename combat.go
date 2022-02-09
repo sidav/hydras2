@@ -145,7 +145,9 @@ func (b *battlefield) playerHitsEnemy(e *enemy) {
 }
 
 func (b *battlefield) enemyHitsPlayer(e *enemy) {
-	b.player.hitpoints -= int(math.Log2(float64(e.heads + 1)))
+	dmg := int(math.Log2(float64(e.heads + 1)))
+	b.player.hitpoints -= dmg
+	log.AppendMessagef("%s bites you for %d damage!", e.getName(), dmg)
 }
 
 func (b *battlefield) endTurnCleanup() {
