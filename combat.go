@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 const (
 	TILE_FLOOR = iota
@@ -8,9 +10,9 @@ const (
 )
 
 type battlefield struct {
-	tiles [][]int
-	enemies []*enemy
-	player *player
+	tiles       [][]int
+	enemies     []*enemy
+	player      *player
 	currentTick int
 
 	battleEnded bool
@@ -18,7 +20,7 @@ type battlefield struct {
 
 func generateBattlefield(p *player, enemies []*enemy) *battlefield {
 	b := &battlefield{}
-	bfW := rnd.RandInRange(3, 5) * 2 + 1
+	bfW := rnd.RandInRange(3, 5)*2 + 1
 	bfH := rnd.RandInRange(5, 9)
 	b.tiles = make([][]int, bfW)
 	for i := range b.tiles {
@@ -33,12 +35,12 @@ func generateBattlefield(p *player, enemies []*enemy) *battlefield {
 	for i := range enemies {
 		b.enemies = append(b.enemies, enemies[i])
 		b.enemies[i].nextTickToAct = 0
-		b.enemies[i].x = i*2+1
+		b.enemies[i].x = i*2 + 1
 		b.enemies[i].y = 0
 	}
 	b.player = p
-	b.player.x = bfW/2
-	b.player.y = bfH-2
+	b.player.x = bfW / 2
+	b.player.y = bfH - 2
 	return b
 }
 
@@ -98,13 +100,13 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 		// if so, set direction to player
 		e.dirx, e.diry = vectorToUnitVector(b.player.x-e.x, b.player.y-e.y)
 	}
-	newX, newY := e.x + e.dirx, e.y+e.diry
+	newX, newY := e.x+e.dirx, e.y+e.diry
 	// if random or if the cell is unpassable, rotate randomly
 	if !b.areCoordsValid(newX, newY) || b.tiles[newX][newY] == TILE_WALL || rnd.OneChanceFrom(faceChangePeriod) ||
 		e.dirx == 0 && e.diry == 0 || b.getEnemyAt(newX, newY) != nil {
 		e.dirx, e.diry = rnd.RandomUnitVectorInt(false)
 	}
-	newX, newY = e.x + e.dirx, e.y+e.diry
+	newX, newY = e.x+e.dirx, e.y+e.diry
 	if b.areCoordsValid(newX, newY) && b.tiles[newX][newY] != TILE_WALL && b.getEnemyAt(newX, newY) == nil {
 		if b.player.x == newX && b.player.y == newY {
 			b.enemyHitsPlayer(e)
@@ -120,21 +122,30 @@ func (b *battlefield) areCoordsValid(x, y int) bool {
 }
 
 func (b *battlefield) playerHitsEnemy(e *enemy) {
-	e.heads -= b.player.currentWeapon.AsWeapon.GetDamageOnHeads(e.heads)
+	dmg := b.player.currentWeapon.AsWeapon.GetDamageOnHeads(e.heads)
+	log.AppendMessagef("You cut %d heads off %s!", dmg, e.getName())
+	if e.heads <= dmg {
+		log.AppendMessagef("%s drops dead!", e.getName())
+	}
+	e.heads -= dmg
 	playerWeaponElement := b.player.currentWeapon.AsWeapon.WeaponElement
 	hydraElement := e.element
-	switch playerWeaponElement.GetEffectivenessAgainstElement(hydraElement) {
-	case -1:
-		e.heads *= 2
-	case 0:
-		if e.heads > 0 {
+	if e.heads > 0 {
+		switch playerWeaponElement.GetEffectivenessAgainstElement(hydraElement) {
+		case -1:
+			log.AppendMessagef("%s doubles its heads!", e.getName())
+			e.heads *= 2
+		case 0:
+			log.AppendMessagef("%s grows a head!", e.getName())
 			e.heads++
+		case 1:
+			log.AppendMessagef("%s writhes!", e.getName())
 		}
 	}
 }
 
 func (b *battlefield) enemyHitsPlayer(e *enemy) {
-	b.player.hitpoints -= int(math.Log2(float64(e.heads+1)))
+	b.player.hitpoints -= int(math.Log2(float64(e.heads + 1)))
 }
 
 func (b *battlefield) endTurnCleanup() {

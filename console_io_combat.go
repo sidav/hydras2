@@ -38,7 +38,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.resetStyle()
 	c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
 	c.renderPlayerBattlefieldUI(bf_x_offset+bfW+1, b)
-	c.renderLogAt(log, 0, bf_y_offset)
+	c.renderLogAt(log, 0, bf_y_offset+bfH+1)
 	c.screen.Show()
 }
 

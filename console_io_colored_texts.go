@@ -51,7 +51,7 @@ func (c *consoleIO) putColorTaggedString(str string, x, y int) {
 			offset += entities.COLOR_TAG_LENGTH
 			c.setFgColorByColorTag(tag)
 		}
-		c.screen.SetCell(x+i-offset, y, c.style, rune(str[i]))
+		c.screen.SetCell(x+i-offset+c.offsetX, y+c.offsetY, c.style, rune(str[i]))
 	}
 	c.resetStyle()
 }

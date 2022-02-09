@@ -297,6 +297,7 @@ func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
 func (c *consoleIO) renderLogAt(log *game_log.GameLog, x, y int) {
 	c.setOffsets(x, y)
 	for i, m := range log.LastMessages {
+		c.resetStyle()
 		c.putColorTaggedString(m.GetText(), 0, i)
 	}
 	c.setOffsets(0, 0)

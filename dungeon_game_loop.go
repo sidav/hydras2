@@ -26,6 +26,7 @@ func (d *dungeon) performPreTurnCellActions() {
 	d.generateAndRevealRoomsAroundPlayer()
 	room := d.getPlayerRoom()
 	if room.hasKey > 0 {
+		log.AppendMessagef("You picked up key %d", room.hasKey)
 		d.plr.keys[room.hasKey] = true
 		room.hasKey = 0
 	}

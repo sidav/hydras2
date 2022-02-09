@@ -1,6 +1,7 @@
 package main
 
 func (b *battlefield) startCombatLoop() {
+	log.Clear()
 	for !b.battleEnded {
 		io.renderBattlefield(b)
 		b.workPlayerInput()
@@ -10,4 +11,5 @@ func (b *battlefield) startCombatLoop() {
 		b.endTurnCleanup()
 		b.currentTick++
 	}
+	log.Clear()
 }
