@@ -30,7 +30,11 @@ func (im *ItemMaterial) GetName() string {
 	case MATERIAL_IMPROVE_BRAND:
 		return "Stone of power"
 	case MATERIAL_APPLY_ELEMENT:
-		return im.AppliesElement.GetName() + " gem"
+		if im.AppliesElement.Code == ELEMENT_NONE {
+			return "Purging gem"
+		} else {
+			return im.AppliesElement.GetName() + " gem"
+		}
 	case MATERIAL_ENCHANT:
 		if im.EnchantAmount > 0 {
 			return fmt.Sprintf("Sharpener (+%d)", im.EnchantAmount)
