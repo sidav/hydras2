@@ -24,7 +24,7 @@ type ItemMaterial struct {
 func (im *ItemMaterial) GetName() string {
 	switch im.Code {
 	case MATERIAL_CLEAR_BRAND:
-		return "Clear quartz"
+		return "Cleancing glyph"
 	case MATERIAL_IMBUE_BRAND:
 		return "Glyph of " + im.ImbuesBrand.GetName()
 	case MATERIAL_IMPROVE_BRAND:

@@ -120,7 +120,11 @@ func (d *dungeon) tinkerWithItems() {
 	}
 	preTinkerWeaponName := selectedItem.GetName()
 	applyMaterialToItem(selectedMaterial, selectedItem)
-	io.showInfoWindow("SUCCESS", []string{fmt.Sprintf("You made %s into %s",
-		preTinkerWeaponName, selectedItem.GetName())})
+	io.showInfoWindow("SUCCESS", []string{
+		"You made ",
+		preTinkerWeaponName,
+		"into",
+		selectedItem.GetName()},
+	)
 	d.plr.removeItemFromInventory(selectedMaterial)
 }

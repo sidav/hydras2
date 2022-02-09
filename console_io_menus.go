@@ -52,40 +52,7 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 }
 
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
-	c.screen.Clear()
-	cursor := 0
-	longestLineLen := text_colors.TaggedStringLength(title) + 2
-	for i := range lines {
-		if len(lines[i]) > longestLineLen {
-			longestLineLen = text_colors.TaggedStringLength(lines[i])
-		}
-	}
-	for {
-		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.drawRect(0, 0, longestLineLen+1, len(lines)+1)
-		c.resetStyle()
-		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
-		for i, l := range lines {
-			if i == cursor {
-				c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
-			} else {
-				c.resetStyle()
-			}
-			c.putColorTaggedString(l, 1, 1+i)
-		}
-		c.screen.Show()
-		k := c.readKey()
-		switch k {
-		case "UP":
-			cursor--
-		case "DOWN":
-			cursor++
-		case "ENTER":
-			return cursor
-		case "ESCAPE":
-			return -1
-		}
-	}
+	return c.showSelectWindowWithDisableableOptions(title, lines, func(x int) bool {return true}, true)
 }
 
 func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines []string,
@@ -103,16 +70,16 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 	}
 	for {
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.drawRect(0, 0, longestLineLen+1, len(lines)+1)
+		c.drawRect(0, 0, longestLineLen+4, len(lines)+1)
 		c.resetStyle()
 		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
 		currentPosition := 0
 		for i, l := range lines {
 			if enabled(i) {
 				if i == cursor {
-					c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
+					l = "->" + l // c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
 				} else {
-					c.resetStyle()
+					l = l+"  "
 				}
 				c.putColorTaggedString(l, 1, 1+currentPosition)
 				currentPosition++
@@ -156,7 +123,7 @@ func (c *consoleIO) showInfoWindow(title string, lines []string) {
 	}
 	for {
 		c.setStyle(tcell.ColorBlack, tcell.ColorBlack)
-		c.drawFilledRect(' ', 0, 0, longestLineLen+1, len(lines)+2)
+		c.drawFilledRect(' ', 0, 0, longestLineLen+2, len(lines)+1)
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
 		c.drawRect(0, 0, longestLineLen+1, len(lines)+2)
 		c.resetStyle()
