@@ -5,22 +5,36 @@ import (
 	"hydras2/entities"
 )
 
-func (c *consoleIO) setFgColorByColorTag(tagName string) {
-	switch tagName {
+func (c *consoleIO) getColorByColorTag(tag string) tcell.Color {
+	switch tag {
 	case "RED":
-		c.style = c.style.Foreground(tcell.ColorRed)
+		return tcell.ColorRed
 	case "YELLOW":
-		c.style = c.style.Foreground(tcell.ColorYellow)
+		return tcell.ColorYellow
 	case "BLUE":
-		c.style = c.style.Foreground(tcell.ColorBlue)
+		return tcell.ColorBlue
 	case "CYAN":
-		c.style = c.style.Foreground(tcell.ColorLightCyan)
+		return tcell.ColorLightCyan
 	case "DARKGRAY":
-		c.style = c.style.Foreground(tcell.ColorDarkGray)
-	case "RESET":
-		c.resetStyle()
+		return tcell.ColorDarkGray
 	default:
 		panic("Y U NO IMPLEMENT")
+	}
+} 
+
+func (c *consoleIO) setFgColorByColorTag(tagName string) {
+	if tagName == "RESET" {
+		c.resetStyle()
+	} else {
+		c.style = c.style.Foreground(c.getColorByColorTag(tagName))
+	}
+}
+
+func (c *consoleIO) setBgColorByColorTag(tagName string) {
+	if tagName == "RESET" {
+		c.resetStyle()
+	} else {
+		c.style = c.style.Background(c.getColorByColorTag(tagName))
 	}
 }
 

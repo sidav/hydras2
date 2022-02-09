@@ -4,12 +4,14 @@ import (
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
 	"hydras2/entities"
+	"hydras2/game_log"
 )
 
 type consoleIO struct {
 	screen                        tcell.Screen
 	style                         tcell.Style
 	CONSOLE_WIDTH, CONSOLE_HEIGHT int
+	offsetX, offsetY              int
 }
 
 func (c *consoleIO) init() {
@@ -45,10 +47,15 @@ func (c *consoleIO) readKey() string {
 	}
 }
 
+func (c *consoleIO) setOffsets(x, y int) {
+	c.offsetX = x
+	c.offsetY = y
+}
+
 func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := entities.TaggedStringLength(title)+2
+	longestLineLen := entities.TaggedStringLength(title) + 2
 	for i := range lines {
 		if entities.TaggedStringLength(lines[i]) > longestLineLen {
 			longestLineLen = entities.TaggedStringLength(lines[i])
@@ -94,7 +101,7 @@ func (c *consoleIO) showYNSelect(title string, lines []string) bool {
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 	c.screen.Clear()
 	cursor := 0
-	longestLineLen := entities.TaggedStringLength(title)+2
+	longestLineLen := entities.TaggedStringLength(title) + 2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
 			longestLineLen = entities.TaggedStringLength(lines[i])
@@ -129,13 +136,13 @@ func (c *consoleIO) showSelectWindow(title string, lines []string) int {
 }
 
 func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines []string,
-		enabled func(int)bool, showDisabled bool) int {
+	enabled func(int) bool, showDisabled bool) int {
 	c.screen.Clear()
 	cursor := 0
 	for i := 0; i < len(lines) && !enabled(cursor); i++ {
 		cursor++
 	}
-	longestLineLen := entities.TaggedStringLength(title)+2
+	longestLineLen := entities.TaggedStringLength(title) + 2
 	for i := range lines {
 		if len(lines[i]) > longestLineLen {
 			longestLineLen = entities.TaggedStringLength(lines[i])
@@ -169,7 +176,7 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 			for i := 0; i == 0 || i < len(lines) && !enabled(cursor); i++ {
 				cursor--
 				if cursor < 0 {
-					cursor = len(lines)-1
+					cursor = len(lines) - 1
 				}
 			}
 		case "DOWN":
@@ -188,7 +195,7 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 }
 
 func (c *consoleIO) showInfoWindow(title string, lines []string) {
-	longestLineLen := entities.TaggedStringLength(title)+2
+	longestLineLen := entities.TaggedStringLength(title) + 2
 	for i := range lines {
 		if entities.TaggedStringLength(lines[i]) > longestLineLen {
 			longestLineLen = entities.TaggedStringLength(lines[i])
@@ -196,7 +203,7 @@ func (c *consoleIO) showInfoWindow(title string, lines []string) {
 	}
 	for {
 		c.setStyle(tcell.ColorBlack, tcell.ColorBlack)
-		c.drawFilledRect(' ',0, 0, longestLineLen+1, len(lines)+2)
+		c.drawFilledRect(' ', 0, 0, longestLineLen+1, len(lines)+2)
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
 		c.drawRect(0, 0, longestLineLen+1, len(lines)+2)
 		c.resetStyle()
@@ -246,12 +253,12 @@ func eventToKeyString(ev *tcell.EventKey) string {
 }
 
 func (c *consoleIO) putChar(chr rune, x, y int) {
-	c.screen.SetCell(x, y, c.style, chr)
+	c.screen.SetCell(x+c.offsetX, y+c.offsetY, c.style, chr)
 }
 
 func (c *consoleIO) putUncoloredString(str string, x, y int) {
 	for i := 0; i < len(str); i++ {
-		c.screen.SetCell(x+i, y, c.style, rune(str[i]))
+		c.screen.SetCell(x+i+c.offsetX, y+c.offsetY, c.style, rune(str[i]))
 	}
 }
 
@@ -284,4 +291,13 @@ func (c *consoleIO) drawRect(fx, fy, w, h int) {
 
 func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
 	c.putColorTaggedString(s, x-entities.TaggedStringLength(s)/2, y)
+}
+
+
+func (c *consoleIO) renderLogAt(log *game_log.GameLog, x, y int) {
+	c.setOffsets(x, y)
+	for i, m := range log.LastMessages {
+		c.putColorTaggedString(m.GetText(), 0, i)
+	}
+	c.setOffsets(0, 0)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gdamore/tcell"
 	_ "github.com/gdamore/tcell/v2"
+	"hydras2/entities"
 	"strconv"
 )
 
@@ -39,7 +40,8 @@ func (c *consoleIO) renderDungeon(d *dungeon, p *player) {
 	// render player's @
 	c.style = c.style.Foreground(tcell.ColorDarkGreen).Background(tcell.ColorBlack)
 	c.screen.SetCell(p.dungX*(roomW+1)+(roomW+2)/2+dung_x_offset, p.dungY*(roomH+1)+(roomH+2)/2+dung_y_offset, c.style, '@')
-	c.renderPlayerDungeonUI(dh+2, d)
+	c.renderPlayerDungeonUI(d, dh+2)
+	c.renderLogAt(log, 0, dh+3)
 	c.screen.Show()
 }
 
@@ -67,6 +69,7 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 				runeToDraw = ' '
 			case '1', '2', '3':
 				c.setStyle(tcell.ColorBlack, tcell.ColorBlue)
+				c.setBgColorByColorTag(c.getColorTagForKeyNumber(int(runemap[x][y] - '0')))
 				runeToDraw = '='
 			default:
 				runeToDraw = runemap[x][y]
@@ -88,19 +91,29 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 	}
 }
 
-func (c *consoleIO) renderPlayerDungeonUI(yCoord int, d *dungeon) {
+func (c *consoleIO) renderPlayerDungeonUI(d *dungeon, yCoord int) {
 	c.resetStyle()
-	var lines = []string{
-		fmt.Sprintf("HP: %d/%d ", d.plr.hitpoints, d.plr.getMaxHp()),
-	}
+	keyLine := ""
 	if len(d.plr.keys) > 0 {
-		keyLine := "Keys: "
-		for k, _ := range d.plr.keys {
-			keyLine += fmt.Sprintf("%d ", k)
+		keyLine = "Keys: "
+		for i := 0; i < len(d.plr.keys); i++ {
+			colorTag := c.getColorTagForKeyNumber(i+1)
+			keyLine += entities.MakeStringColorTagged(fmt.Sprintf("%d ", i+1), []string{colorTag})
 		}
-		lines = append(lines, keyLine)
+	}
+	var lines = []string{
+		fmt.Sprintf("HP: %d/%d %s", d.plr.hitpoints, d.plr.getMaxHp(), keyLine),
 	}
 	for i := range lines {
 		c.putColorTaggedString(lines[i], 0, yCoord+i)
+	}
+}
+
+func (c *consoleIO) getColorTagForKeyNumber(num int) string {
+	switch num{
+	case 1: return "BLUE"
+	case 2: return "RED"
+	case 3: return "YELLOW"
+	default: panic("y u no")
 	}
 }
