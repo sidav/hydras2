@@ -41,15 +41,23 @@ var weaponsStaticData = []*WeaponTypeStaticData{
 type ItemWeapon struct {
 	WeaponType    weaponType
 	WeaponElement Element
+	Brand         *Brand
 	Damage        int
 }
 
 func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 	index := rnd.SelectRandomIndexFromWeighted(len(weaponsStaticData), func(i int) int { return weaponsStaticData[i].Frequency })
+	var brand *Brand
+	if rnd.OneChanceFrom(1) { // TODO: actual chance
+		brand = &Brand{
+			Code: rnd.Rand(len(BrandsTable)),
+		}
+	}
 	iw := ItemWeapon{
-		WeaponType: weaponType(index),
+		WeaponType:    weaponType(index),
 		WeaponElement: Element{GetWeightedRandomElementCode(rnd)},
-		Damage:     rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+2),
+		Brand:         brand,
+		Damage:        rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+2),
 	}
 	return &iw
 }
@@ -77,6 +85,9 @@ func (w *ItemWeapon) GetName() string {
 		name += fmt.Sprintf("%d-logarithmer", w.Damage)
 	default:
 		panic("No ItemWeapon name")
+	}
+	if w.Brand != nil {
+		name += " of " + w.Brand.GetName()
 	}
 	return text_colors.MakeStringColorTagged(name, w.WeaponElement.GetColorTags())
 }
