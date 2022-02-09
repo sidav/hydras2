@@ -28,6 +28,13 @@ func (dc *dungeonCell) generateDungeonCell() {
 	dc.contentsGenerated = true
 }
 
+func (dc *dungeonCell) hasFeature(ftype int) bool {
+	if dc.feature == nil {
+		return false
+	}
+	return dc.feature.featureCode == ftype
+}
+
 func (dc *dungeonCell) isCleared() bool {
 	return !dc.contentsGenerated || len(dc.enemies) == 0
 }

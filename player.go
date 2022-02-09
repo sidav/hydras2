@@ -13,7 +13,10 @@ type player struct {
 
 	hitpoints int
 
+	souls int
+
 	// stats
+	level    int
 	strength int // how many items can be carried
 	vitality int // how many HP does the player have
 
@@ -22,6 +25,7 @@ type player struct {
 }
 
 func (p *player) init() {
+	p.level = 1
 	p.strength = 5
 	p.vitality = 20
 	p.hitpoints = p.getMaxHp()

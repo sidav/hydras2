@@ -27,7 +27,7 @@ func (d *dungeon) initAndGenerate(patternFileName string) (int, int) {
 			}
 			if d.layout.GetElement(x, y).IsNode() && d.layout.GetElement(x, y).HasTag("start") {
 				d.rooms[x][y].contentsGenerated = true
-				d.rooms[x][y].feature = &dungeonRoomFeature{featureType: DRF_BONFIRE}
+				d.rooms[x][y].feature = &dungeonRoomFeature{featureCode: DRF_BONFIRE}
 				playerx = x
 				playery = y
 			}
@@ -50,7 +50,7 @@ func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {
 			continue
 		}
 		d.rooms[x][y].feature = &dungeonRoomFeature{
-			featureType: featureCode,
+			featureCode: featureCode,
 		}
 		return
 	}

@@ -92,7 +92,7 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 	if cell.feature != nil {
 		c.setStyle(tcell.ColorDarkGray, tcell.ColorBlack)
 		featureString := ""
-		switch cell.feature.featureType {
+		switch cell.feature.featureCode {
 		case DRF_BONFIRE: featureString = "bnf"
 		case DRF_ALTAR: featureString = "alt"
 		default: panic("no cell feature string")
@@ -114,7 +114,7 @@ func (c *consoleIO) renderPlayerDungeonUI(d *dungeon, yCoord int) {
 		}
 	}
 	var lines = []string{
-		fmt.Sprintf("HP: %d/%d %s", d.plr.hitpoints, d.plr.getMaxHp(), keyLine),
+		fmt.Sprintf("HP: %d/%d $%d %s", d.plr.hitpoints, d.plr.getMaxHp(), d.plr.souls, keyLine),
 	}
 	for i := range lines {
 		c.putColorTaggedString(lines[i], 0, yCoord+i)

@@ -75,6 +75,7 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) {
 		for i := range room.enemies {
 			soulsAcquired += room.enemies[i].headsOnGeneration
 		}
+		d.plr.souls += soulsAcquired
 		lines := []string {
 			fmt.Sprintf("%d hydras slain.", len(room.enemies)),
 			fmt.Sprintf("You acquired %d hydra essense", soulsAcquired),

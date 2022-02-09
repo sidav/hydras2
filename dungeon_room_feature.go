@@ -6,7 +6,7 @@ const (
 )
 
 type dungeonRoomFeature struct {
-	featureType int
+	featureCode int
 }
 
 func getDungeonRoomFeatureNameByCode(x int) string {

@@ -13,8 +13,12 @@ func (d *dungeon) selectPlayerRoomAction() {
 	actionFuncs = append(actionFuncs, d.pickUpFromPlayerRoom)
 
 	actions = append(actions, "Rest")
-	allowed = append(allowed, false)
+	allowed = append(allowed, room.hasFeature(DRF_BONFIRE))
 	actionFuncs = append(actionFuncs, func(){})
+
+	actions = append(actions, "Pray")
+	allowed = append(allowed, room.hasFeature(DRF_ALTAR))
+	actionFuncs = append(actionFuncs, d.buyPlayerStatUpgrades)
 
 	actions = append(actions, "Nothing")
 	allowed = append(allowed, true)
@@ -44,5 +48,19 @@ func (d *dungeon) pickUpFromPlayerRoom() {
 		}
 		d.plr.acquireItem(room.treasure[picked])
 		room.treasure = append(room.treasure[:picked], room.treasure[picked+1:]...)
+	}
+}
+
+func (d *dungeon) buyPlayerStatUpgrades() {
+	upgradeCost := d.plr.level * 75 / 10
+	lines := []string{
+		fmt.Sprintf("You have %d hydra essense.", d.plr.souls),
+		fmt.Sprintf("Spend %d to upgrade vitality?", upgradeCost),
+	}
+	picked := io.showYNSelect("MAKE AN OFFERING", lines)
+	if picked && d.plr.souls >= upgradeCost {
+		d.plr.souls -= upgradeCost
+		d.plr.vitality += 2
+		d.plr.level += 1
 	}
 }
