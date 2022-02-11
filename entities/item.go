@@ -45,8 +45,8 @@ func (i *Item) GetTypeAndCode() (int, int) {
 func (i *Item) GetName() string {
 	if i.AsConsumable != nil {
 		name := consumablesData[i.AsConsumable.Code].name
-		if i.AsConsumable.Enchantment > 0 {
-			name += fmt.Sprintf(" +%d", i.AsConsumable.Enchantment)
+		if i.AsConsumable.EnchantAmount > 0 {
+			name += fmt.Sprintf(" +%d", i.AsConsumable.EnchantAmount)
 		}
 		return name
 	}
@@ -72,10 +72,12 @@ func GenerateRandomItem(rnd *fibrandom.FibRandom) *Item {
 			AsWeapon: GenerateRandomItemWeapon(rnd),
 		}
 	case 1: // consumable
+		code := GetWeightedRandomConsumableCode(rnd)
 		return &Item{
 			AsConsumable: &ItemConsumable{
-				Code:   GetWeightedRandomConsumableCode(rnd),
-				Amount: 1,
+				Code:          code,
+				EnchantAmount: consumablesData[code].defaultEnchantAmount,
+				Amount:        1,
 			},
 		}
 	case 2: // material

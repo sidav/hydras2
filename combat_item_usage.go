@@ -11,8 +11,7 @@ func (b *battlefield) usePlayerConsumable() {
 		if b.player.hitpoints == b.player.getMaxHp() {
 			return
 		}
-		healAmount := 3 + b.player.currentConsumable.AsConsumable.Enchantment
-		b.player.hitpoints += healAmount
+		b.player.hitpoints += b.player.currentConsumable.AsConsumable.EnchantAmount
 		if b.player.hitpoints > b.player.getMaxHp() {
 			b.player.hitpoints = b.player.getMaxHp()
 		}

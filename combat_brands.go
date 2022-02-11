@@ -22,7 +22,7 @@ func (b *battlefield) activateOnHitBrandOnItem(item *entities.Item, hitEnemy *en
 				b.performWeaponStrikeOnEnemy(item.AsWeapon, hitEnemy)
 			}
 		case entities.BRAND_FAST_STRIKE:
-			b.player.nextTickToAct -= COMBAT_HIT_COST / 4
+			b.player.nextTickToAct -= item.AsWeapon.Brand.EnchantAmount
 		}
 	}
 }

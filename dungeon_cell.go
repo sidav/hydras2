@@ -19,8 +19,8 @@ func (dc *dungeonCell) generateDungeonCell(num int) {
 		if numEnemies > 5 {
 			numEnemies = 5
 		}
-		minHeads, maxHeads := num/3+1, num/3+3
-		for i := 0; i < numEnemies; i++ {
+		minHeads, maxHeads := num/3+1, num/3+4
+		for i := 0; i < numEnemies && len(dc.enemies) < 5; i++ {
 			dc.enemies = append(dc.enemies, generateRandomEnemy(minHeads, maxHeads))
 		}
 		if len(dc.treasure) > 0 { // it may be when re-generating

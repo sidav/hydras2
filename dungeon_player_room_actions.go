@@ -12,7 +12,7 @@ func (d *dungeon) selectPlayerRoomAction() {
 	var actionFuncs []func()
 
 	actions = append(actions, "Pick up treasure")
-	allowed = append(allowed, len(room.treasure)>0)
+	allowed = append(allowed, len(room.treasure) > 0)
 	actionFuncs = append(actionFuncs, d.pickUpFromPlayerRoom)
 
 	actions = append(actions, "Rest")
@@ -29,10 +29,10 @@ func (d *dungeon) selectPlayerRoomAction() {
 
 	actions = append(actions, "Nothing")
 	allowed = append(allowed, true)
-	actionFuncs = append(actionFuncs, func(){})
+	actionFuncs = append(actionFuncs, func() {})
 
 	chosenActionNum := io.showSelectWindowWithDisableableOptions(
-		"Select an action:", actions, func(x int) bool{return allowed[x]}, false)
+		"Select an action:", actions, func(x int) bool { return allowed[x] }, false)
 	if chosenActionNum != -1 {
 		actionFuncs[chosenActionNum]()
 	}
@@ -77,7 +77,7 @@ func (d *dungeon) buyPlayerStatUpgrades() {
 
 	if d.plr.souls < upgradeCost {
 		io.showInfoWindow("NOTHING TO OFFER", []string{
-			fmt.Sprintf("You need %d more essence to offer.", upgradeCost - d.plr.souls),
+			fmt.Sprintf("You need %d more essence to offer.", upgradeCost-d.plr.souls),
 		})
 		return
 	}
@@ -90,6 +90,7 @@ func (d *dungeon) buyPlayerStatUpgrades() {
 	if picked && d.plr.souls >= upgradeCost {
 		d.plr.souls -= upgradeCost
 		d.plr.vitality += 2
+		d.plr.hitpoints++
 		d.plr.level += 1
 	}
 }

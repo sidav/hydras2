@@ -9,15 +9,16 @@ const (
 )
 
 type ItemConsumable struct {
-	Code        int
-	Amount      int
-	Enchantment int
+	Code          int
+	Amount        int
+	EnchantAmount int
 }
 
 type ConsumableItemInfo struct {
-	consumableType uint8
-	name, info     string
-	frequency      int
+	consumableType       uint8
+	name, info           string
+	frequency            int
+	defaultEnchantAmount int
 }
 
 func GetWeightedRandomConsumableCode(rnd *fibrandom.FibRandom) int {

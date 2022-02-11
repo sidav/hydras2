@@ -51,8 +51,9 @@ func (p *player) init() {
 	p.secondaryWeapon = p.inventory[1]
 	p.inventory = append(p.inventory, &entities.Item{
 		AsConsumable: &entities.ItemConsumable{
-			Code:   entities.CONSUMABLE_HEAL,
-			Amount: 2,
+			Code:          entities.CONSUMABLE_HEAL,
+			EnchantAmount: 3,
+			Amount:        2,
 		},
 	})
 	p.currentConsumable = p.inventory[2]
