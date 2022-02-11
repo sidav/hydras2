@@ -4,6 +4,7 @@ func (b *battlefield) startCombatLoop() {
 	log.Clear()
 	for !b.battleEnded {
 		for b.player.nextTickToAct <= b.currentTick && !b.battleEnded {
+			b.sortEnemiesByDistanceFromPlayer()
 			io.renderBattlefield(b)
 			b.workPlayerInput()
 		}

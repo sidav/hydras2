@@ -4,6 +4,7 @@ import (
 	"hydras2/entities"
 	"hydras2/text_colors"
 	"math"
+	"sort"
 )
 
 const (
@@ -26,8 +27,8 @@ type battlefield struct {
 
 func generateBattlefield(p *player, enemies []*enemy) *battlefield {
 	b := &battlefield{}
-	bfW := rnd.RandInRange(3, 5)*2 + 1
-	bfH := rnd.RandInRange(5, 9)
+	bfW := rnd.RandInRange(3, len(enemies)+2)*2 + 1
+	bfH := rnd.RandInRange(7, 12)
 	b.tiles = make([][]int, bfW)
 	for i := range b.tiles {
 		b.tiles[i] = make([]int, bfH)
@@ -168,4 +169,15 @@ func (b *battlefield) cleanup() {
 	if b.player.hitpoints <= 0 || len(b.enemies) == 0 {
 		b.battleEnded = true
 	}
+}
+
+func (b *battlefield) sortEnemiesByDistanceFromPlayer() { // for enemies UI
+	playerX, playerY := b.player.x, b.player.y
+	sort.Slice(b.enemies, 
+		func(i, j int) bool{
+			iDist := (b.enemies[i].x-playerX)*(b.enemies[i].x-playerX)+(b.enemies[i].y-playerY)*(b.enemies[i].y-playerY)
+			jDist := (b.enemies[j].x-playerX)*(b.enemies[j].x-playerX)+(b.enemies[j].y-playerY)*(b.enemies[j].y-playerY)
+			return iDist < jDist
+		},
+	)
 }

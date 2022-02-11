@@ -66,6 +66,7 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 		fmt.Sprintf("3) Itm: %dx %s",
 			b.player.currentConsumable.AsConsumable.Amount,
 			b.player.currentConsumable.GetName()),
+		"",
 		"ENEMIES:",
 	}
 	enemiesLinesStart := len(lines)
@@ -76,11 +77,11 @@ func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 		))
 	}
 	for i := range lines {
-		c.putColorTaggedString(lines[i], xCoord, i+1)
+		c.putColorTaggedString(lines[i], xCoord, i)
 	}
 	// render enemies for those enemy lines
 	for i, e := range b.enemies {
-		c.renderEnemyAtCoords(e, b.currentTick, xCoord, enemiesLinesStart+i+1)
+		c.renderEnemyAtCoords(e, b.currentTick, xCoord, enemiesLinesStart+i)
 	}
 }
 
