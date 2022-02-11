@@ -16,6 +16,13 @@ func (b *battlefield) activateOnHitBrandOnItem(item *entities.Item, hitEnemy *en
 		case entities.BRAND_DOUBLE_STRIKE:
 			log.AppendMessage("The weapon hits twice!")
 			b.performWeaponStrikeOnEnemy(item.AsWeapon, hitEnemy)
+		case entities.BRAND_SAFE_DOUBLE_STRIKE:
+			if item.AsWeapon.GetDamageOnHeads(hitEnemy.heads) > 0 {
+				log.AppendMessage("The weapon hits twice!")
+				b.performWeaponStrikeOnEnemy(item.AsWeapon, hitEnemy)
+			}
+		case entities.BRAND_FAST_STRIKE:
+			b.player.nextTickToAct -= COMBAT_HIT_COST / 4
 		}
 	}
 }

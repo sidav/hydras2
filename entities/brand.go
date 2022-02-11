@@ -12,6 +12,7 @@ const (
 	BRAND_PASSIVE_ELEMENTS_SHIFTING = iota
 	BRAND_PASSIVE_DISTORTION
 	BRAND_DOUBLE_STRIKE
+	BRAND_SAFE_DOUBLE_STRIKE
 	BRAND_FAST_STRIKE
 )
 
@@ -42,11 +43,16 @@ var BrandsTable = map[int]*BrandData{
 		info:                "Hits twice.",
 		upgradedVersionCode: BRAND_FAST_STRIKE,
 	},
-	//BRAND_FAST_STRIKE: {
-	//	canBeOnWeapon: true,
-	//	name:          "swift strike",
-	//	info:          "Hits faster.",
-	//},
+	BRAND_SAFE_DOUBLE_STRIKE: {
+		canBeOnWeapon: true,
+		name:          "swift strike",
+		info:          "Hits twice if needed.",
+	},
+	BRAND_FAST_STRIKE: {
+		canBeOnWeapon: true,
+		name:          "fast strike",
+		info:          "Hits faster.",
+	},
 }
 
 //func GetWeightedRandomBrandCode(rnd *fibrandom.FibRandom) int {
