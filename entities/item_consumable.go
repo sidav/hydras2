@@ -5,7 +5,8 @@ import "github.com/sidav/sidavgorandom/fibrandom"
 const (
 	CONSUMABLE_HEAL = iota
 	CONSUMABLE_RETREAT
-	TOTAL_CONSUMABLE_TYPES_NUMBER // for generators
+	CONSUMABLE_DESTROY_HYDRA
+	CONSUMABLE_SHUFFLE_ELEMENT
 )
 
 type ItemConsumable struct {
@@ -23,7 +24,7 @@ type ConsumableItemInfo struct {
 
 func GetWeightedRandomConsumableCode(rnd *fibrandom.FibRandom) int {
 	return rnd.SelectRandomIndexFromWeighted(
-		TOTAL_CONSUMABLE_TYPES_NUMBER,
+		len(consumablesData),
 		func(x int) int { return consumablesData[x].frequency },
 	)
 }
@@ -32,27 +33,27 @@ var consumablesData = []*ConsumableItemInfo{
 	{
 		consumableType: CONSUMABLE_HEAL,
 		name:           "Healing flask",
-		frequency:      2,
+		frequency:      3,
 		info:           "Can be used to recover HP.",
 	},
 	{
 		consumableType: CONSUMABLE_RETREAT,
 		name:           "Escape vial",
-		frequency:      1,
+		frequency:      2,
 		info:           "Use it to flee from combat.",
 	},
-	//{
-	//	consumableType: ITEM_ENCHANTER,
-	//	name:           "Glyph of enchant weapon",
-	//	frequency:      3,
-	//	info:           "Can be used to increase weapon damage.",
-	//},
-	//{
-	//	consumableType: ITEM_DESTROY_HYDRA,
-	//	name:           "Glyph of destroy hydra",
-	//	frequency:      1,
-	//	info:           "Can be used to destroy hydra.",
-	//},
+	{
+		consumableType: CONSUMABLE_DESTROY_HYDRA,
+		name:           "Scroll of destroy hydra",
+		frequency:      1,
+		info:           "Can be used to destroy hydra.",
+	},
+	{
+		consumableType: CONSUMABLE_SHUFFLE_ELEMENT,
+		name:           "Scroll of shuffle elements",
+		frequency:      1,
+		info:           "Can be used to change hydras' elements.",
+	},
 	//{
 	//	consumableType: ITEM_CONFUSE_HYDRA,
 	//	name:           "Glyph of confuse hydra",
@@ -63,24 +64,6 @@ var consumablesData = []*ConsumableItemInfo{
 	//	consumableType: ITEM_MASS_CONFUSION,
 	//	name:           "Scroll of confused party",
 	//	info:           "Can be used to confuse all enemies.",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_INCREASE_HP,
-	//	name:           "Potion of vitality",
-	//	info:           "Permanently increases your maximum HP and heals you.",
-	//	frequency:      3,
-	//},
-	//{
-	//	consumableType: ITEM_STRENGTH,
-	//	name:           "Potion of strength",
-	//	info:           "Permanently increases your inventory size.",
-	//	frequency:      3,
-	//},
-	//{
-	//	consumableType: ITEM_CHANGE_ELEMENT_RANDOM,
-	//	name:           "Glyph of randomize element",
-	//	info:           "Changes hydra's or Item's element.",
 	//	frequency:      1,
 	//},
 	//{
