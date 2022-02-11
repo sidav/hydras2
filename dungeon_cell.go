@@ -5,7 +5,6 @@ import "hydras2/entities"
 type dungeonCell struct {
 	isRoom            bool
 	contentsGenerated bool
-	wasSeen           bool
 
 	enemies  []*enemy
 	treasure []*entities.Item
@@ -33,18 +32,18 @@ func (dc *dungeonCell) generateDungeonCellContents(discoveryCount int, boss bool
 			bossEnemy.isBoss = true
 			dc.enemies = append(dc.enemies, bossEnemy)
 		}
+
+		// add treasure
 		if len(dc.treasure) > 0 { // it may be when re-generating
-			return
-		} else {
-			numItems := rnd.RandInRange(0, 3)
-			if boss {
-				numItems += 3
-			}
-			for i := 0; i < numItems; i++ {
-				dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
-			}
+			dc.treasure = make([]*entities.Item, 0)
 		}
-	} else {
+		numItems := rnd.RandInRange(0, 3)
+		if boss {
+			numItems += 3
+		}
+		for i := 0; i < numItems; i++ {
+			dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
+		}
 	}
 	dc.contentsGenerated = true
 }

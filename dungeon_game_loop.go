@@ -6,7 +6,7 @@ func (d *dungeon) startDungeonLoop() {
 	for {
 		d.performPreTurnCellActions()
 		if d.plr.hitpoints <= 0 {
-			io.showYNSelect("YOU DIED", []string{"Try again?"})
+			exitGame = !io.showYNSelect("YOU DIED", []string{"Try again?"})
 			return
 		}
 		io.renderDungeon(d, d.plr)
@@ -15,6 +15,7 @@ func (d *dungeon) startDungeonLoop() {
 		case "ENTER":
 			d.selectPlayerRoomAction()
 		case "ESCAPE":
+			exitGame = true
 			return
 		}
 		vx, vy := readKeyToVector(key)
@@ -39,7 +40,6 @@ func (d *dungeon) performPreTurnCellActions() {
 func (d *dungeon) doesPlayerEnterRoom(vx, vy int) bool {
 	x, y := d.plr.dungX+vx, d.plr.dungY+vy
 	room := d.rooms[x][y]
-	room.wasSeen = true
 	// enter combat?
 	if !room.isCleared() {
 		if d.offerCombatToPlayer(room) {
@@ -79,7 +79,7 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
 			soulsAcquired += room.enemies[i].headsOnGeneration
 		}
 		d.plr.souls += soulsAcquired
-		lines := []string {
+		lines := []string{
 			fmt.Sprintf("%d hydras slain.", len(room.enemies)),
 			fmt.Sprintf("You acquired %d hydra essense", soulsAcquired),
 		}
@@ -88,6 +88,7 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
 		}
 		io.showInfoWindow("VICTORY ACHIEVED", lines)
 		room.enemies = []*enemy{}
+		d.checkGameWon()
 		return true
 	} else {
 		if b.playerFled {
@@ -110,4 +111,25 @@ func (d *dungeon) movePlayerByVector(vx, vy int) {
 			d.plr.dungY += vy
 		}
 	}
+}
+
+func (d *dungeon) checkGameWon() {
+	for x := range d.rooms {
+		for y := range d.rooms[x] {
+			if d.rooms[x][y].isRoom && (!d.rooms[x][y].contentsGenerated || !d.rooms[x][y].isCleared()) {
+				return
+			}
+		}
+	}
+	exitGame = io.showYNSelect("YOU HAVE WON!",
+		[]string{
+			"You have saved the kingdom from",
+			"the hydra vermin. You now can",
+			"exit game or stay here and rest",
+			"at bonfire for new and harder",
+			"enemies spawn. ",
+			"",
+			"Do you want to stay here? ",
+		},
+	)
 }

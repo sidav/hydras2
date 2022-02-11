@@ -8,6 +8,7 @@ import (
 var io consoleIO
 var rnd *fibrandom.FibRandom
 var log *game_log.GameLog
+var exitGame bool
 
 func main() {
 	io.init()

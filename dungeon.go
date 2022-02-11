@@ -68,7 +68,6 @@ func (d *dungeon) generateAndRevealRoomsAroundPlayer() {
 		for y := -1; y <= 1; y++ {
 			if (x == 0 || y == 0) && d.canPlayerMoveFromByVector(x, y) {
 				rx, ry := d.plr.dungX+x, d.plr.dungY+y
-				d.rooms[rx][ry].wasSeen = true
 				if !d.rooms[rx][ry].contentsGenerated {
 					if d.rooms[rx][ry].isRoom {
 						d.totalOpenedRooms++
@@ -85,7 +84,6 @@ func (d *dungeon) clearRoomsGeneratedState() {
 		for y := range d.rooms[x] {
 			if d.rooms[x][y].isCleared() && !d.rooms[x][y].hasFeature(DRF_BONFIRE) {
 				d.rooms[x][y].contentsGenerated = false
-				d.rooms[x][y].wasSeen = false
 			}
 		}
 	}
