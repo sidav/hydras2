@@ -3,11 +3,15 @@ package main
 func (b *battlefield) startCombatLoop() {
 	log.Clear()
 	for !b.battleEnded {
-		io.renderBattlefield(b)
-		b.workPlayerInput()
+		for b.player.nextTickToAct <= b.currentTick && !b.battleEnded {
+			io.renderBattlefield(b)
+			b.workPlayerInput()
+		}
 		b.cleanup()
 		for _, e := range b.enemies {
-			b.actAsEnemy(e)
+			if e.nextTickToAct <= b.currentTick {
+				b.actAsEnemy(e)
+			}
 		}
 		b.activatePassiveBrandsOnPlayerItems()
 		b.currentTick++
@@ -37,6 +41,7 @@ func (b *battlefield) workPlayerInput() {
 			return
 		case "ENTER":
 			b.usePlayerConsumable()
+			b.player.nextTickToAct = b.currentTick + 10
 			return
 		case " ":
 			return
@@ -50,9 +55,11 @@ func (b *battlefield) workPlayerInput() {
 						enemyAt := b.getEnemyAt(newPlrX, newPlrY)
 						if enemyAt != nil {
 							b.playerHitsEnemy(enemyAt)
+							b.player.nextTickToAct = b.currentTick + 10
 						} else {
 							b.player.x += vx
 							b.player.y += vy
+							b.player.nextTickToAct = b.currentTick + 10
 						}
 					}
 				}

@@ -21,7 +21,8 @@ type player struct {
 	vitality int // how many HP does the player have
 
 	// battlefield-only vars
-	x, y int
+	x, y          int
+	nextTickToAct int
 }
 
 func (p *player) init() {

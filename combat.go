@@ -43,7 +43,8 @@ func generateBattlefield(p *player, enemies []*enemy) *battlefield {
 	}
 	b.player = p
 	b.player.x = bfW / 2
-	b.player.y = bfH - 2
+	b.player.y = bfH - 1
+	b.player.nextTickToAct = 1
 	return b
 }
 
@@ -73,9 +74,11 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 	if b.areCoordsValid(newX, newY) && b.tiles[newX][newY] != TILE_WALL && b.getEnemyAt(newX, newY) == nil {
 		if b.player.x == newX && b.player.y == newY {
 			b.enemyHitsPlayer(e)
+			e.nextTickToAct = b.currentTick + 10
 		} else {
 			e.x += e.dirx
 			e.y += e.diry
+			e.nextTickToAct = b.currentTick + 10
 		}
 	}
 }
