@@ -54,8 +54,19 @@ func (e *Element) GetColorTags() []string {
 	return elementsTable[e.Code].colorTags
 }
 
-func GetWeightedRandomElementCode(rnd *fibrandom.FibRandom) int {
+func GetRandomElementCode(rnd *fibrandom.FibRandom) int {
 	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int { return elementsTable[x].frequency })
+}
+
+func GetRandomRareElementCode(rnd *fibrandom.FibRandom) int {
+	return rnd.SelectRandomIndexFromWeighted(len(elementsTable),
+		func(x int) int {
+			if elementsTable[x].frequency == frequencyEpic || elementsTable[x].frequency == frequencyLegendary {
+				return 1
+			}
+			return 0
+		},
+	)
 }
 
 type elementData struct {

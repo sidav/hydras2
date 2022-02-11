@@ -67,7 +67,7 @@ func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
 	case 3:
 		return &ItemMaterial{
 			Code:           MATERIAL_APPLY_ELEMENT,
-			AppliesElement: &Element{GetWeightedRandomElementCode(rnd)},
+			AppliesElement: &Element{GetRandomElementCode(rnd)},
 		}
 	case 4:
 		enchantProbabilities := []int{1, 2, 0, 3, 1}

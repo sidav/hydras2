@@ -34,7 +34,7 @@ func (b *battlefield) activatePassiveBrandOnItem(item *entities.Item) {
 		}
 		switch item.AsWeapon.Brand.Code {
 		case entities.BRAND_PASSIVE_ELEMENTS_SHIFTING:
-			item.AsWeapon.WeaponElement.Code = entities.GetWeightedRandomElementCode(rnd)
+			item.AsWeapon.WeaponElement.Code = entities.GetRandomElementCode(rnd)
 		case entities.BRAND_PASSIVE_DISTORTION:
 			item.AsWeapon.Damage += rnd.RandInRange(-1, 1)
 			if item.AsWeapon.Damage == 0 {

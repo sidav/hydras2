@@ -34,7 +34,7 @@ func (b *battlefield) usePlayerConsumable() {
 		}
 	case entities.CONSUMABLE_SHUFFLE_ELEMENT:
 		for _, e := range b.enemies {
-			e.element.Code = entities.GetWeightedRandomElementCode(rnd)
+			e.element.Code = entities.GetRandomElementCode(rnd)
 		}
 		log.AppendMessagef("Hydras have their elements shifted!")
 	case entities.CONSUMABLE_MASS_BISECTION:

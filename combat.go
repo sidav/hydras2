@@ -63,7 +63,7 @@ func (b *battlefield) getEnemyAt(x, y int) *enemy {
 func (b *battlefield) actAsEnemy(e *enemy) {
 	const faceChangePeriod = 10
 	if e.aura != nil && e.aura.Code == entities.AURA_SUMMONING && rnd.OneChanceFrom(10) {
-		newEnemy := generateRandomEnemy(1, e.heads/2, false, false)
+		newEnemy := generateRandomEnemy(1, e.heads/2, false, false, false)
 		newEnemy.x = e.x
 		newEnemy.y = e.y
 		b.enemies = append(b.enemies, newEnemy)

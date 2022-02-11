@@ -40,15 +40,19 @@ func (e *enemy) getName() string {
 	return text_colors.MakeStringColorTagged(name, e.element.GetColorTags())
 }
 
-func generateRandomEnemy(minHeads, maxHeads int, aura, prime bool) *enemy {
+func generateRandomEnemy(minHeads, maxHeads int, aura, prime, forceRareElement bool) *enemy {
 	heads := rnd.RandInRange(minHeads, maxHeads)
 	if prime {
 		heads = rnd.GenerateRandomPrimeInRange(minHeads, maxHeads)
 	}
+	element := entities.GetRandomElementCode(rnd)
+	if forceRareElement {
+		element = entities.GetRandomRareElementCode(rnd)
+	}
 	e := &enemy{
 		enemyType: ENEMY_HYDRA,
 		heads:     heads,
-		element:   &entities.Element{Code: entities.GetWeightedRandomElementCode(rnd)},
+		element:   &entities.Element{Code: element},
 	}
 	if aura {
 		e.aura = entities.GenerateRandomAura(rnd)

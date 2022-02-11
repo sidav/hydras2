@@ -52,7 +52,7 @@ func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 	}
 	iw := ItemWeapon{
 		WeaponTypeCode: index,
-		WeaponElement:  Element{GetWeightedRandomElementCode(rnd)},
+		WeaponElement:  Element{GetRandomElementCode(rnd)},
 		Brand:          brand,
 		Damage:         rnd.RandInRange(weaponsStaticData[index].MinDamageForGeneration, weaponsStaticData[index].MinDamageForGeneration+2),
 	}

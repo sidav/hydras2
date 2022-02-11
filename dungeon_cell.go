@@ -21,12 +21,13 @@ func (dc *dungeonCell) generateDungeonCellContents(discoveryCount int, boss bool
 		}
 		minHeads, maxHeads := discoveryCount/5+1, discoveryCount/3+1
 		for i := 0; i < numEnemies && len(dc.enemies) < 5; i++ {
-			dc.enemies = append(dc.enemies, generateRandomEnemy(minHeads, maxHeads, rnd.OneChanceFrom(5), false))
+			dc.enemies = append(dc.enemies, generateRandomEnemy(minHeads, maxHeads, rnd.OneChanceFrom(5), false, false))
 		}
 		if boss {
 			bossEnemy := generateRandomEnemy(
 				discoveryCount*2,
 				discoveryCount*3,
+				true,
 				true,
 				true)
 			bossEnemy.isBoss = true
