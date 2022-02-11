@@ -143,12 +143,12 @@ func (c *consoleIO) putWrappedTextInRect(text string, x, y, w int) {
 	for _, t := range textSplitByLines {
 		lineSplitByWords := strings.Split(t, " ")
 		for _, word := range lineSplitByWords {
-			if currentLineLength+len(word) > w {
+			if currentLineLength+text_colors.TaggedStringLength(word) > w {
 				currentLine++
 				currentLineLength = 0
 			}
-			c.putColorTaggedString(word+" ", x+currentLineLength, y+currentLine)
-			currentLineLength += len(word)+1
+			c.putColorTaggedStringNonResetting(word+" ", x+currentLineLength, y+currentLine)
+			currentLineLength += text_colors.TaggedStringLength(word)+1
 		}
 		currentLine++
 		currentLineLength = newLineOffset

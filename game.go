@@ -1,5 +1,7 @@
 package main
 
+import "hydras2/text_colors"
+
 func runGame() {
 	for !exitGame {
 		dung := &dungeon{}
@@ -14,7 +16,7 @@ func runGame() {
 			"WELCOME TO HYDRAS 2",
 			"You are a Hydra Hunter! With your yet simple weapons you move into this " +
 				"dungeon full of strangeness. \n" +
-				"Will you be able to save your kingdom from hydras' vermin?",
+				text_colors.MakeStringColorTagged("Will you be able to save your kingdom from hydras' vermin?", []string{"YELLOW"}),
 			)
 		dung.startDungeonLoop()
 	}

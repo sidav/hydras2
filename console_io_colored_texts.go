@@ -59,3 +59,17 @@ func (c *consoleIO) putColorTaggedString(str string, x, y int) {
 	}
 	c.resetStyle()
 }
+
+// for word-by-word rendering of text, where only first word has a tag
+func (c *consoleIO) putColorTaggedStringNonResetting(str string, x, y int) {
+	offset := 0
+	for i := 0; i < len(str); i++ {
+		tag := text_colors.GetColorTagNameInStringAtPosition(str, i)
+		if tag != "" {
+			i += text_colors.COLOR_TAG_LENGTH
+			offset += text_colors.COLOR_TAG_LENGTH
+			c.setFgColorByColorTag(tag)
+		}
+		c.screen.SetCell(x+i-offset+c.offsetX, y+c.offsetY, c.style, rune(str[i]))
+	}
+}
