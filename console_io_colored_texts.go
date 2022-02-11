@@ -13,10 +13,14 @@ func (c *consoleIO) getColorByColorTag(tag string) tcell.Color {
 		return tcell.ColorYellow
 	case "BLUE":
 		return tcell.ColorBlue
+	case "DARKBLUE":
+		return tcell.ColorDarkBlue
 	case "CYAN":
 		return tcell.ColorLightCyan
 	case "DARKGRAY":
 		return tcell.ColorDarkGray
+	case "DARKMAGENTA":
+		return tcell.ColorDarkMagenta
 	default:
 		panic("Y U NO IMPLEMENT")
 	}

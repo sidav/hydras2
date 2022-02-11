@@ -10,6 +10,13 @@ const (
 	ELEMENT_AIR
 	ELEMENT_MAGMA
 	ELEMENT_STEAM
+	ELEMENT_CHAOS
+	ELEMENT_VOID
+
+	frequencyOften = 8
+	frequencyRare = 6
+	frequencyEpic = 4
+	frequencyLegendary = 1
 )
 
 type Element struct {
@@ -48,13 +55,12 @@ func (e *Element) GetColorTags() []string {
 }
 
 func GetWeightedRandomElementCode(rnd *fibrandom.FibRandom) int {
-	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int { return elementsTable[x].frequencyUsual })
+	return rnd.SelectRandomIndexFromWeighted(len(elementsTable), func(x int) int { return elementsTable[x].frequency })
 }
 
 type elementData struct {
-	frequencyUsual        int
-	frequencyIfPreferRare int
-	frequencyIfPreferEpic int
+	frequency int
+
 	name                  string
 
 	susceptibleToDamageFrom []int
@@ -64,64 +70,64 @@ type elementData struct {
 
 var elementsTable = []elementData{
 	ELEMENT_NONE: {
-		frequencyUsual:          8,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   0,
+		frequency:               frequencyOften,
 		susceptibleToDamageFrom: []int{},
 		isBoth:                  []int{},
 	},
 	ELEMENT_FIRE: {
-		frequencyUsual:          2,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   1,
-		susceptibleToDamageFrom: []int{ELEMENT_ICE},
+		frequency:               frequencyRare,
+		susceptibleToDamageFrom: []int{ELEMENT_ICE, ELEMENT_VOID},
 		isBoth:                  []int{},
 		colorTags:               []string{"RED"},
 		name:                    "Flaming",
 	},
 	ELEMENT_ICE: {
-		frequencyUsual:          2,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   1,
-		susceptibleToDamageFrom: []int{ELEMENT_FIRE},
+		frequency:               frequencyRare,
+		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_VOID},
 		isBoth:                  []int{},
 		colorTags:               []string{"BLUE"},
 		name:                    "Ice",
 	},
 	ELEMENT_AIR: {
-		frequencyUsual:          2,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   1,
-		susceptibleToDamageFrom: []int{ELEMENT_EARTH},
+		frequency:               frequencyRare,
+		susceptibleToDamageFrom: []int{ELEMENT_EARTH, ELEMENT_VOID},
 		isBoth:                  []int{},
 		colorTags:               []string{"YELLOW"},
 		name:                    "Storm",
 	},
 	ELEMENT_EARTH: {
-		frequencyUsual:          2,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   1,
-		susceptibleToDamageFrom: []int{ELEMENT_AIR},
+		frequency:               frequencyRare,
+		susceptibleToDamageFrom: []int{ELEMENT_AIR, ELEMENT_VOID},
 		isBoth:                  []int{},
 		colorTags:               []string{"DARKGRAY"},
 		name:                    "Stone",
 	},
 	ELEMENT_MAGMA: {
-		frequencyUsual:          1,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   1,
-		susceptibleToDamageFrom: []int{ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM},
+		frequency:               frequencyEpic,
+		susceptibleToDamageFrom: []int{ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_VOID},
 		isBoth:                  []int{ELEMENT_FIRE, ELEMENT_EARTH},
 		colorTags:               []string{"RED", "DARKGRAY"},
 		name:                    "Magmatic",
 	},
 	ELEMENT_STEAM: {
-		frequencyUsual:          1,
-		frequencyIfPreferRare:   4,
-		frequencyIfPreferEpic:   2,
-		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_EARTH, ELEMENT_MAGMA},
+		frequency:               frequencyEpic,
+		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_EARTH, ELEMENT_MAGMA, ELEMENT_VOID},
 		isBoth:                  []int{ELEMENT_AIR, ELEMENT_ICE},
 		colorTags:               []string{"BLUE", "YELLOW"},
 		name:                    "Steaming",
+	},
+	ELEMENT_CHAOS: {
+		frequency:               frequencyLegendary,
+		susceptibleToDamageFrom: []int{ELEMENT_NONE, ELEMENT_VOID},
+		isBoth:                  []int{ELEMENT_EARTH, ELEMENT_FIRE, ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_MAGMA},
+		colorTags:               []string{"RED", "BLUE", "YELLOW", "DARKGRAY"},
+		name:                    "Chaotic",
+	},
+	ELEMENT_VOID: {
+		frequency:               1,
+		susceptibleToDamageFrom: []int{ELEMENT_NONE},
+		isBoth:                  []int{ELEMENT_VOID, ELEMENT_EARTH, ELEMENT_FIRE, ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_MAGMA},
+		colorTags:               []string{"DARKGRAY", "BLUE", "DARKMAGENTA", "DARKBLUE"},
+		name:                    "Void",
 	},
 }

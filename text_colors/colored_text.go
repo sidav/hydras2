@@ -6,12 +6,14 @@ const (
 )
 
 var ColorTagsTable = map[string]string{
-	"RED":      "`red",
-	"YELLOW":   "`ylw",
-	"BLUE":     "`blu",
-	"CYAN":     "`cyn",
-	"DARKGRAY": "`dgr",
-	"RESET":    "`nil",
+	"RED":         "`red",
+	"YELLOW":      "`ylw",
+	"BLUE":        "`blu",
+	"DARKBLUE":    "`dbl",
+	"CYAN":        "`cyn",
+	"DARKGRAY":    "`dgr",
+	"DARKMAGENTA": "`dmg",
+	"RESET":       "`nil",
 }
 
 func GetColorTagNameInStringAtPosition(s string, pos int) string {
@@ -61,6 +63,11 @@ func IsStringColorTagged(s string) bool {
 }
 
 func MakeStringColorTagged(s string, tagsNames []string) string {
+	for _, tn := range tagsNames {
+		if ColorTagsTable[tn] == "" {
+			panic("Y U NO IMPLEMENT")
+		}
+	}
 	switch len(tagsNames) {
 	case 0:
 		return s
@@ -77,5 +84,4 @@ func MakeStringColorTagged(s string, tagsNames []string) string {
 		newStr += string(s[i])
 	}
 	return newStr
-	panic("Y U NO IMPLEMENT")
 }
