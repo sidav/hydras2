@@ -11,6 +11,7 @@ const (
 )
 
 type enemy struct {
+	aura              *entities.Aura
 	enemyType         int
 	heads             int
 	element           *entities.Element
@@ -27,15 +28,26 @@ func (e *enemy) getName() string {
 	if len(name) > 0 {
 		name += " "
 	}
-	name += fmt.Sprintf("%d-headed hydra", e.heads)
+	auraName := ""
+	if e.aura != nil {
+		auraName = e.aura.GetName() + " "
+	}
+	name += fmt.Sprintf("%d-headed %shydra", e.heads, auraName)
 	return text_colors.MakeStringColorTagged(name, e.element.GetColorTags())
 }
 
-func generateRandomEnemy(minHeads, maxHeads int) *enemy {
+func generateRandomEnemy(minHeads, maxHeads int, aura, prime bool) *enemy {
+	heads := rnd.RandInRange(minHeads, maxHeads)
+	if prime {
+
+	}
 	e := &enemy{
 		enemyType: ENEMY_HYDRA,
-		heads:     rnd.RandInRange(1, 5),
+		heads:     heads,
 		element:   &entities.Element{Code: entities.GetWeightedRandomElementCode(rnd)},
+	}
+	if aura {
+		e.aura = entities.GenerateRandomAura(rnd)
 	}
 	e.headsOnGeneration = e.heads
 	return e

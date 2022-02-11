@@ -62,6 +62,30 @@ func (b *battlefield) getEnemyAt(x, y int) *enemy {
 
 func (b *battlefield) actAsEnemy(e *enemy) {
 	const faceChangePeriod = 10
+	if e.aura != nil && e.aura.Code == entities.AURA_SUMMONING && rnd.OneChanceFrom(10) {
+		newEnemy := generateRandomEnemy(1, e.heads/2, false, false)
+		newEnemy.x = e.x
+		newEnemy.y = e.y
+		b.enemies = append(b.enemies, newEnemy)
+		log.AppendMessagef("%s summons %s!!", e.getName(), newEnemy.getName())
+		e.nextTickToAct = b.currentTick+COMBAT_MOVE_COST
+	}
+	if e.aura != nil && e.aura.Code == entities.AURA_SELF_GROWING && rnd.OneChanceFrom(15) {
+		grow := e.heads/2
+		if grow == 0 {
+			grow = 1
+		}
+		log.AppendMessagef("%s grows itself %d more heads!!", e.getName(), grow)
+		e.heads += grow
+		e.nextTickToAct = b.currentTick+COMBAT_MOVE_COST
+	}
+	if e.aura != nil && e.aura.Code == entities.AURA_OTHERS_GROWING && rnd.OneChanceFrom(15) {
+		log.AppendMessagef("%s makes others grow more heads!!", e.getName())
+		for _, en := range b.enemies {
+			en.heads++
+		}
+		e.nextTickToAct = b.currentTick+COMBAT_MOVE_COST
+	}
 	// first, check if we're in same row or col with the player
 	if e.x == b.player.x || e.y == b.player.y {
 		// if so, set direction to player
@@ -82,6 +106,9 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 			e.x += e.dirx
 			e.y += e.diry
 			e.nextTickToAct = b.currentTick + COMBAT_MOVE_COST
+			if e.aura != nil && e.aura.Code == entities.AURA_FAST {
+				e.nextTickToAct -= COMBAT_MOVE_COST/2
+			}
 		}
 	}
 }
@@ -117,6 +144,14 @@ func (b *battlefield) enemyHitsPlayer(e *enemy) {
 	dmg := int(math.Log2(float64(e.heads + 1)))
 	b.player.hitpoints -= dmg
 	log.AppendMessagef("%s bites you for %d damage!", e.getName(), dmg)
+	if e.aura != nil && e.aura.Code == entities.AURA_VAMPIRIC {
+		regrow := dmg
+		if regrow == 0 {
+			regrow = 1
+		}
+		log.AppendMessagef("%s grows itself %d heads from your blood!", e.getName(), regrow)
+		e.heads += regrow
+	}
 	if b.player.hitpoints <= b.player.getMaxHp()/3 {
 		log.AppendMessage(text_colors.MakeStringColorTagged("!!LOW HITPOINT WARNING!!", []string{"RED"}))
 	}
