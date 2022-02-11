@@ -83,20 +83,18 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
 			}
 		}
 		d.plr.souls += soulsAcquired
-		lines := []string{
-			fmt.Sprintf("%d hydras slain.", len(room.enemies)),
-			fmt.Sprintf("You acquired %d hydra essense", soulsAcquired),
-		}
+		text := fmt.Sprintf("%d hydras slain.\n", len(room.enemies))
+		text += fmt.Sprintf("You acquired %d hydra essense\n", soulsAcquired)
 		if room.hasKey > 0 {
-			lines = append(lines, fmt.Sprintf("Acquired key %d", room.hasKey))
+			text += fmt.Sprintf("Acquired key %d", room.hasKey)
 		}
-		io.showInfoWindow("VICTORY ACHIEVED", lines)
+		io.showInfoWindow("VICTORY ACHIEVED", text)
 		room.enemies = []*enemy{}
 		d.checkGameWon()
 		return true
 	} else {
 		if b.playerFled {
-			io.showInfoWindow("YOU HAVE FLED", []string{fmt.Sprintf("You have lost %d essence.", d.plr.souls)})
+			io.showInfoWindow("YOU HAVE FLED", fmt.Sprintf("You have lost %d essence.", d.plr.souls))
 			d.plr.dungX, d.plr.dungY = d.startX, d.startY
 			d.plr.souls = 0
 			for i := range room.enemies {

@@ -89,9 +89,9 @@ func (d *dungeon) buyPlayerStatUpgrades() {
 	upgradeCost := d.plr.level * 55 / 10
 
 	if d.plr.souls < upgradeCost {
-		io.showInfoWindow("NOTHING TO OFFER", []string{
+		io.showInfoWindow("NOTHING TO OFFER",
 			fmt.Sprintf("You need %d more essence to offer.", upgradeCost-d.plr.souls),
-		})
+		)
 		return
 	}
 
@@ -110,7 +110,7 @@ func (d *dungeon) buyPlayerStatUpgrades() {
 
 func (d *dungeon) tinkerWithItems() {
 	if len(d.plr.getAllMaterials()) == 0 {
-		io.showInfoWindow("NO MATERIALS", []string{"You have no materials to tinker with."})
+		io.showInfoWindow("NO MATERIALS", "You have no materials to tinker with.")
 		return
 	}
 	selectedMaterial := selectAnItemFromList("SELECT MATERIAL:", d.plr.getAllMaterials())
@@ -134,11 +134,11 @@ func (d *dungeon) tinkerWithItems() {
 	}
 	preTinkerWeaponName := selectedItem.GetName()
 	applyMaterialToItem(selectedMaterial, selectedItem)
-	io.showInfoWindow("SUCCESS", []string{
-		"You made ",
+	io.showInfoWindow("SUCCESS", fmt.Sprintf(
+		"You made \n%s into \n%s",
 		preTinkerWeaponName,
-		"into",
-		selectedItem.GetName()},
+		selectedItem.GetName(),
+	),
 	)
 	d.plr.removeItemFromInventory(selectedMaterial)
 }

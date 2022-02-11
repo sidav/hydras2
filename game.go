@@ -10,6 +10,12 @@ func runGame() {
 		}
 		plr.init()
 		dung.plr = plr
+		io.showInfoWindow(
+			"WELCOME TO HYDRAS 2",
+			"You are a Hydra Hunter! With your yet simple weapons you move into this " +
+				"dungeon full of strangeness. \n" +
+				"Will you be able to save your kingdom from hydras' vermin?",
+			)
 		dung.startDungeonLoop()
 	}
 }

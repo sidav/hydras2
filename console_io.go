@@ -5,6 +5,7 @@ import (
 	_ "github.com/gdamore/tcell/v2"
 	"hydras2/game_log"
 	"hydras2/text_colors"
+	"strings"
 )
 
 type consoleIO struct {
@@ -132,4 +133,24 @@ func (c *consoleIO) renderLogAt(log *game_log.GameLog, x, y int) {
 		c.putColorTaggedString(m.GetText(), 0, i)
 	}
 	c.setOffsets(0, 0)
+}
+
+func (c *consoleIO) putWrappedTextInRect(text string, x, y, w int) {
+	const newLineOffset = 2
+	currentLine := 0
+	currentLineLength := newLineOffset
+	textSplitByLines := strings.Split(text, "\n")
+	for _, t := range textSplitByLines {
+		lineSplitByWords := strings.Split(t, " ")
+		for _, word := range lineSplitByWords {
+			if currentLineLength+len(word) > w {
+				currentLine++
+				currentLineLength = 0
+			}
+			c.putColorTaggedString(word+" ", x+currentLineLength, y+currentLine)
+			currentLineLength += len(word)+1
+		}
+		currentLine++
+		currentLineLength = newLineOffset
+	}
 }

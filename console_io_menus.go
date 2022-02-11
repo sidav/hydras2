@@ -114,24 +114,17 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 	}
 }
 
-func (c *consoleIO) showInfoWindow(title string, lines []string) {
-	longestLineLen := text_colors.TaggedStringLength(title) + 2
-	for i := range lines {
-		if text_colors.TaggedStringLength(lines[i]) > longestLineLen {
-			longestLineLen = text_colors.TaggedStringLength(lines[i])
-		}
-	}
+func (c *consoleIO) showInfoWindow(title, text string) {
+	windowWidth := 25
 	for {
 		c.setStyle(tcell.ColorBlack, tcell.ColorBlack)
-		c.drawFilledRect(' ', 0, 0, longestLineLen+2, len(lines)+1)
+		c.drawFilledRect(' ', 0, 0, windowWidth+2, 10)
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.drawRect(0, 0, longestLineLen+1, len(lines)+2)
+		c.drawRect(0, 0, windowWidth+1, 10)
 		c.resetStyle()
-		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
-		for i, l := range lines {
-			c.putColorTaggedString(l, 1, 1+i)
-		}
-		c.drawStringCenteredAround("<OK>", (longestLineLen+2)/2, len(lines)+2)
+		c.drawStringCenteredAround(title, (windowWidth+2)/2, 0)
+		c.drawStringCenteredAround("<OK>", (windowWidth+2)/2, 10)
+		c.putWrappedTextInRect(text, 1, 1, windowWidth-1)
 		c.screen.Show()
 		k := c.readKey()
 		switch k {
