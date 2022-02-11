@@ -35,6 +35,9 @@ func SortItemsArray(iArr []*Item) {
 			if iArr[i].IsConsumable() && !iArr[j].IsWeapon() {
 				return true
 			}
+			if iArr[i].IsMaterial() && iArr[j].IsMaterial() {
+				return iArr[i].AsMaterial.Code < iArr[j].AsMaterial.Code
+			}
 			return false
 		},
 	)

@@ -76,7 +76,11 @@ func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
 	if len(b.enemies) == 0 {
 		soulsAcquired := 0
 		for i := range room.enemies {
-			soulsAcquired += room.enemies[i].headsOnGeneration
+			if room.enemies[i].isBoss {
+				soulsAcquired += room.enemies[i].headsOnGeneration * 2
+			} else {
+				soulsAcquired += room.enemies[i].headsOnGeneration
+			}
 		}
 		d.plr.souls += soulsAcquired
 		lines := []string{

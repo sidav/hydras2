@@ -126,7 +126,7 @@ var BrandsTable = map[int]*BrandData{
 		isEnchantable:        false,
 		upgradedVersionCode:  0,
 		name:                 "dark craving",
-		info:                 "10% chance to gain 2 health on hit",
+		info:                 "20% chance to gain 1 health on hit",
 		frequency:            0,
 	},
 }

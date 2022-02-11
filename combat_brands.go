@@ -29,12 +29,9 @@ func (b *battlefield) activateOnHitBrandOnItem(item *entities.Item, hitEnemy *en
 				log.AppendMessage("You consume hydra's blood!")
 			}
 		case entities.BRAND_BETTER_VAMPIRISM:
-			if rnd.OneChanceFrom(10) {
-				b.player.hitpoints += 2
-				log.AppendMessage("You devour hydra's blood!!")
-				if b.player.hitpoints > b.player.getMaxHp() {
-					b.player.hitpoints = b.player.getMaxHp()
-				}
+			if rnd.OneChanceFrom(5) && b.player.getMaxHp() > b.player.hitpoints {
+				b.player.hitpoints += 1
+				log.AppendMessage("You consume hydra's blood!")
 			}
 		}
 	}

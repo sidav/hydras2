@@ -37,7 +37,7 @@ func (dc *dungeonCell) generateDungeonCellContents(discoveryCount int, boss bool
 		if len(dc.treasure) > 0 { // it may be when re-generating
 			dc.treasure = make([]*entities.Item, 0)
 		}
-		numItems := rnd.RandInRange(0, 3)
+		numItems := rnd.RandInRange(9, 9)
 		if boss {
 			numItems += 3
 		}
