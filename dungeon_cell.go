@@ -45,6 +45,7 @@ func (dc *dungeonCell) generateDungeonCellContents(discoveryCount int, boss bool
 			dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
 		}
 	}
+	entities.SortItemsArray(dc.treasure)
 	dc.contentsGenerated = true
 }
 

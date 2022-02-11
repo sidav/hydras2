@@ -2,7 +2,6 @@ package main
 
 import (
 	"hydras2/entities"
-	"sort"
 )
 
 type player struct {
@@ -183,20 +182,5 @@ func (p *player) getAllMaterials() []*entities.Item {
 }
 
 func (p *player) sortInventory() {
-	sort.Slice(p.inventory,
-		func(i, j int) bool {
-			if p.inventory[i].IsWeapon() && !p.inventory[j].IsWeapon() {
-				return true
-			}
-			if p.inventory[i].IsWeapon() && p.inventory[j].IsWeapon() {
-				if p.inventory[i].AsWeapon.Damage > p.inventory[j].AsWeapon.Damage {
-					return true
-				}
-			}
-			if p.inventory[i].IsConsumable() && !p.inventory[j].IsWeapon() {
-				return true
-			}
-			return false
-		},
-	)
+	entities.SortItemsArray(p.inventory)
 }

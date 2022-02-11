@@ -3,6 +3,7 @@ package entities
 import (
 	"fmt"
 	"github.com/sidav/sidavgorandom/fibrandom"
+	"sort"
 )
 
 const (
@@ -15,6 +16,25 @@ type Item struct {
 	AsConsumable *ItemConsumable
 	AsWeapon     *ItemWeapon
 	AsMaterial   *ItemMaterial
+}
+
+func SortItemsArray(iArr []*Item) {
+	sort.Slice(iArr,
+		func(i, j int) bool {
+			if iArr[i].IsWeapon() && !iArr[j].IsWeapon() {
+				return true
+			}
+			if iArr[i].IsWeapon() && iArr[j].IsWeapon() {
+				if iArr[i].AsWeapon.Damage > iArr[j].AsWeapon.Damage {
+					return true
+				}
+			}
+			if iArr[i].IsConsumable() && !iArr[j].IsWeapon() {
+				return true
+			}
+			return false
+		},
+	)
 }
 
 func (i *Item) IsConsumable() bool {
