@@ -71,7 +71,7 @@ func (i *Item) GetTypeAndCode() (int, int) {
 func (i *Item) GetName() string {
 	if i.AsConsumable != nil {
 		name := consumablesData[i.AsConsumable.Code].name
-		if i.AsConsumable.EnchantAmount > 0 {
+		if i.AsConsumable.EnchantAmount > consumablesData[i.AsConsumable.Code].defaultEnchantAmount {
 			name += fmt.Sprintf(" +%d", i.AsConsumable.EnchantAmount)
 		}
 		return name

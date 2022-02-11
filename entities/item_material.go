@@ -3,6 +3,7 @@ package entities
 import (
 	"fmt"
 	"github.com/sidav/sidavgorandom/fibrandom"
+	"hydras2/text_colors"
 )
 
 const (
@@ -33,7 +34,7 @@ func (im *ItemMaterial) GetName() string {
 		if im.AppliesElement.Code == ELEMENT_NONE {
 			return "Purging gem"
 		} else {
-			return im.AppliesElement.GetName() + " gem"
+			return text_colors.MakeStringColorTagged(im.AppliesElement.GetName() + " gem", im.AppliesElement.GetColorTags())
 		}
 	case MATERIAL_ENCHANT:
 		if im.EnchantAmount > 0 {

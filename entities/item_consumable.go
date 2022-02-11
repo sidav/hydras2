@@ -33,12 +33,17 @@ func GetWeightedRandomConsumableCode(rnd *fibrandom.FibRandom) int {
 	)
 }
 
+func (ic *ItemConsumable) GetDefaultEnchantAmount() int {
+	return consumablesData[ic.Code].defaultEnchantAmount
+}
+
 var consumablesData = []*ConsumableItemInfo{
 	{
-		consumableType: CONSUMABLE_HEAL,
-		name:           "Healing flask",
-		frequency:      4,
-		info:           "Can be used to recover HP.",
+		consumableType:       CONSUMABLE_HEAL,
+		name:                 "Healing flask",
+		frequency:            4,
+		defaultEnchantAmount: 2,
+		info:                 "Can be used to recover HP.",
 	},
 	{
 		consumableType: CONSUMABLE_RETREAT,

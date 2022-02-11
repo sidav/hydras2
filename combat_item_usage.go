@@ -70,5 +70,5 @@ func (b *battlefield) usePlayerConsumable() {
 	}
 
 	log.AppendMessagef("%s used.", b.player.currentConsumable.GetName())
-	b.player.currentConsumable.AsConsumable.Amount--
+	b.player.removeItemFromInventory(b.player.currentConsumable)
 }

@@ -144,7 +144,18 @@ func (p *player) cycleToNextConsumable() {
 func (p *player) removeItemFromInventory(itmToRemove *entities.Item) {
 	for i, item := range p.inventory {
 		if item == itmToRemove {
+			if item.IsConsumable() {
+				item.AsConsumable.Amount--
+				if item.AsConsumable.Amount > 0 || item.AsConsumable.EnchantAmount > item.AsConsumable.GetDefaultEnchantAmount() {
+					return
+				}
+			}
 			p.inventory = append(p.inventory[:i], p.inventory[i+1:]...)
+			if p.currentConsumable == itmToRemove {
+				p.currentConsumable = nil
+				p.cycleToNextConsumable()
+			}
+			p.sortInventory()
 			return
 		}
 	}
