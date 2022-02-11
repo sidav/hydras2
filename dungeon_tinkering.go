@@ -12,7 +12,7 @@ func applyMaterialToItem(mat, item *entities.Item) bool {
 	case entities.MATERIAL_IMBUE_BRAND:
 		item.AsWeapon.Brand = mat.AsMaterial.ImbuesBrand
 	case entities.MATERIAL_IMPROVE_BRAND:
-
+		item.AsWeapon.Brand.Improve()
 	case entities.MATERIAL_APPLY_ELEMENT:
 		item.AsWeapon.WeaponElement.Code = mat.AsMaterial.AppliesElement.Code
 	case entities.MATERIAL_ENCHANT:

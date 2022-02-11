@@ -28,7 +28,7 @@ func (im *ItemMaterial) GetName() string {
 	case MATERIAL_IMBUE_BRAND:
 		return "Glyph of " + im.ImbuesBrand.GetName()
 	case MATERIAL_IMPROVE_BRAND:
-		return "Stone of power"
+		return "Stoneglyph of power"
 	case MATERIAL_APPLY_ELEMENT:
 		if im.AppliesElement.Code == ELEMENT_NONE {
 			return "Purging gem"
@@ -58,7 +58,7 @@ func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
 	case 1:
 		return &ItemMaterial{
 			Code:        MATERIAL_IMBUE_BRAND,
-			ImbuesBrand: &Brand{rnd.Rand(len(BrandsTable))},
+			ImbuesBrand: GenerateRandomBrand(rnd),
 		}
 	case 2:
 		return &ItemMaterial{
@@ -74,7 +74,7 @@ func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
 		enchantAmount := rnd.SelectRandomIndexFromWeighted(len(enchantProbabilities), func(x int) int { return enchantProbabilities[x] })
 		return &ItemMaterial{
 			Code:          MATERIAL_ENCHANT,
-			EnchantAmount: enchantAmount-len(enchantProbabilities)/2,
+			EnchantAmount: enchantAmount - len(enchantProbabilities)/2,
 		}
 	case 5:
 		return &ItemMaterial{

@@ -48,9 +48,7 @@ func GenerateRandomItemWeapon(rnd *fibrandom.FibRandom) *ItemWeapon {
 	index := rnd.SelectRandomIndexFromWeighted(len(weaponsStaticData), func(i int) int { return weaponsStaticData[i].Frequency })
 	var brand *Brand
 	if rnd.OneChanceFrom(3) { // TODO: actual chance
-		brand = &Brand{
-			Code: rnd.Rand(len(BrandsTable)),
-		}
+		brand = GenerateRandomBrand(rnd)
 	}
 	iw := ItemWeapon{
 		WeaponTypeCode: index,
@@ -105,7 +103,7 @@ func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {
 		return heads - (heads / iw.Damage)
 	case WTYPE_LOGARITHMER:
 		// log_x(a) = log_y(a)/log_y(x)
-		logResult := math.Log2(float64(heads))/math.Log2(float64(iw.Damage))
+		logResult := math.Log2(float64(heads)) / math.Log2(float64(iw.Damage))
 		// check if result is int
 		if logResult == float64(int(logResult)) {
 			return heads - int(logResult)
