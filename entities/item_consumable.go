@@ -7,6 +7,10 @@ const (
 	CONSUMABLE_RETREAT
 	CONSUMABLE_DESTROY_HYDRA
 	CONSUMABLE_SHUFFLE_ELEMENT
+	CONSUMABLE_MASS_BISECTION
+	CONSUMABLE_PARALYZE_HYDRAS
+	CONSUMABLE_UNELEMENT_HYDRAS
+	CONSUMABLE_MERGE_HYDRAS
 )
 
 type ItemConsumable struct {
@@ -33,7 +37,7 @@ var consumablesData = []*ConsumableItemInfo{
 	{
 		consumableType: CONSUMABLE_HEAL,
 		name:           "Healing flask",
-		frequency:      3,
+		frequency:      4,
 		info:           "Can be used to recover HP.",
 	},
 	{
@@ -54,6 +58,30 @@ var consumablesData = []*ConsumableItemInfo{
 		frequency:      1,
 		info:           "Can be used to change hydras' elements.",
 	},
+	{
+		consumableType: CONSUMABLE_MASS_BISECTION,
+		name:           "Scroll of mass bisection",
+		info:           "Divides all heads of present hydras by 2.",
+		frequency:      1,
+	},
+	{
+		consumableType: CONSUMABLE_PARALYZE_HYDRAS,
+		name:           "Scroll of stagger hydras",
+		info:           "Paralyzes all hydras.",
+		frequency:      1,
+	},
+	{
+		consumableType: CONSUMABLE_UNELEMENT_HYDRAS,
+		name:           "Scroll of purge hydras",
+		info:           "Purges all hydras.",
+		frequency:      1,
+	},
+	{
+		consumableType: CONSUMABLE_MERGE_HYDRAS,
+		name:           "Scroll of merge hydras",
+		info:           "Merges all hydras.",
+		frequency:      1,
+	},
 	//{
 	//	consumableType: ITEM_CONFUSE_HYDRA,
 	//	name:           "Glyph of confuse hydra",
@@ -70,42 +98,6 @@ var consumablesData = []*ConsumableItemInfo{
 	//	consumableType: ITEM_CHANGE_ELEMENT_SPECIFIC,
 	//	name:           "Glyph of ", // not an error!
 	//	info:           "Changes hydra's or Item's element.",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_BRANDING_RANDOM,
-	//	name:           "Glyph of imbue random brand",
-	//	info:           "Used to imbue a random brand onto Item.",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_BRANDING_SPECIFIC,
-	//	name:           "Glyph of imbue ", // not an error
-	//	info:           "Used to imbue a specific brand onto Item.",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_UNELEMENT_ENEMIES,
-	//	name:           "Scroll of nullification",
-	//	info:           "Permanently makes all present enemies non-elemental.",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_DECAPITATION,
-	//	name:           "Scroll of mass bisection",
-	//	info:           "Divides all heads of presen hydras by 2.",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_IMPROVE_BRAND,
-	//	name:           "Glyph of improve brand",
-	//	info:           "Can be used to improve branded (magic) items",
-	//	frequency:      1,
-	//},
-	//{
-	//	consumableType: ITEM_MERGE_HYDRAS_INTO_ONE,
-	//	name:           "Scroll of merge hydras",
-	//	info:           "Used to make a single hydra from many.",
 	//	frequency:      1,
 	//},
 	//{

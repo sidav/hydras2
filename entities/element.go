@@ -13,7 +13,7 @@ const (
 	ELEMENT_CHAOS
 	ELEMENT_VOID
 
-	frequencyOften = 8
+	frequencyOften = 7
 	frequencyRare = 6
 	frequencyEpic = 4
 	frequencyLegendary = 1
@@ -124,9 +124,9 @@ var elementsTable = []elementData{
 		name:                    "Chaotic",
 	},
 	ELEMENT_VOID: {
-		frequency:               1,
-		susceptibleToDamageFrom: []int{ELEMENT_NONE},
-		isBoth:                  []int{ELEMENT_VOID, ELEMENT_EARTH, ELEMENT_FIRE, ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_MAGMA},
+		frequency:               frequencyLegendary,
+		susceptibleToDamageFrom: []int{ELEMENT_NONE, ELEMENT_CHAOS},
+		isBoth:                  []int{ELEMENT_EARTH, ELEMENT_FIRE, ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_MAGMA},
 		colorTags:               []string{"DARKGRAY", "BLUE", "DARKMAGENTA", "DARKBLUE"},
 		name:                    "Void",
 	},

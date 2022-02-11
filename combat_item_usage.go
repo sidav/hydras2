@@ -37,6 +37,36 @@ func (b *battlefield) usePlayerConsumable() {
 			e.element.Code = entities.GetWeightedRandomElementCode(rnd)
 		}
 		log.AppendMessagef("Hydras have their elements shifted!")
+	case entities.CONSUMABLE_MASS_BISECTION:
+		for _, e := range b.enemies {
+			e.heads /= 2
+		}
+		log.AppendMessagef("All hydras are bisected!")
+	case entities.CONSUMABLE_PARALYZE_HYDRAS:
+		for _, e := range b.enemies {
+			e.nextTickToAct = b.currentTick+5*COMBAT_MOVE_COST
+		}
+		log.AppendMessagef("All hydras are paralyzed for 5 turns!")
+	case entities.CONSUMABLE_UNELEMENT_HYDRAS:
+		for _, e := range b.enemies {
+			e.element.Code = entities.ELEMENT_NONE
+		}
+		log.AppendMessagef("All hydras are purged!")
+	case entities.CONSUMABLE_MERGE_HYDRAS:
+		totalHeads := 0
+		var enemyToMergeInto *enemy
+		for _, e := range b.enemies {
+			totalHeads += e.heads
+			if enemyToMergeInto == nil || e.aura != nil || e.heads > enemyToMergeInto.heads {
+				enemyToMergeInto = e
+			}
+			e.heads = 0
+		}
+		enemyToMergeInto.heads = totalHeads
+		log.AppendMessagef("All hydras are merged!")
+
+	default:
+		panic("wat")
 	}
 
 	log.AppendMessagef("%s used.", b.player.currentConsumable.GetName())
