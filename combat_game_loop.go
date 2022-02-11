@@ -41,9 +41,10 @@ func (b *battlefield) workPlayerInput() {
 			return
 		case "ENTER":
 			b.usePlayerConsumable()
-			b.player.nextTickToAct = b.currentTick + 10
+			b.player.nextTickToAct = b.currentTick + COMBAT_HIT_COST
 			return
 		case " ":
+			b.player.nextTickToAct = b.currentTick + COMBAT_MOVE_COST
 			return
 		default:
 			vx, vy := readKeyToVector(key)
@@ -55,11 +56,11 @@ func (b *battlefield) workPlayerInput() {
 						enemyAt := b.getEnemyAt(newPlrX, newPlrY)
 						if enemyAt != nil {
 							b.playerHitsEnemy(enemyAt)
-							b.player.nextTickToAct = b.currentTick + 10
+							b.player.nextTickToAct = b.currentTick + COMBAT_HIT_COST
 						} else {
 							b.player.x += vx
 							b.player.y += vy
-							b.player.nextTickToAct = b.currentTick + 10
+							b.player.nextTickToAct = b.currentTick + COMBAT_MOVE_COST
 						}
 					}
 				}

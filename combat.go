@@ -9,6 +9,9 @@ import (
 const (
 	TILE_FLOOR = iota
 	TILE_WALL
+
+	COMBAT_MOVE_COST = 10
+	COMBAT_HIT_COST  = 10
 )
 
 type battlefield struct {
@@ -74,11 +77,11 @@ func (b *battlefield) actAsEnemy(e *enemy) {
 	if b.areCoordsValid(newX, newY) && b.tiles[newX][newY] != TILE_WALL && b.getEnemyAt(newX, newY) == nil {
 		if b.player.x == newX && b.player.y == newY {
 			b.enemyHitsPlayer(e)
-			e.nextTickToAct = b.currentTick + 10
+			e.nextTickToAct = b.currentTick + COMBAT_HIT_COST
 		} else {
 			e.x += e.dirx
 			e.y += e.diry
-			e.nextTickToAct = b.currentTick + 10
+			e.nextTickToAct = b.currentTick + COMBAT_MOVE_COST
 		}
 	}
 }
