@@ -25,6 +25,9 @@ func SortItemsArray(iArr []*Item) {
 				return true
 			}
 			if iArr[i].IsWeapon() && iArr[j].IsWeapon() {
+				if iArr[i].AsWeapon.WeaponTypeCode < iArr[j].AsWeapon.WeaponTypeCode {
+					return true
+				}
 				if iArr[i].AsWeapon.Damage > iArr[j].AsWeapon.Damage {
 					return true
 				}

@@ -36,10 +36,14 @@ func (b *Brand) Improve() { // enchant or get improved
 
 const (
 	BRAND_PASSIVE_ELEMENTS_SHIFTING = iota
+	BRAND_PASSIVE_RARE_ELEMENTS_SHIFTING
 	BRAND_PASSIVE_DISTORTION
+	BRAND_PASSIVE_SMARTER_DISTORTION
 	BRAND_DOUBLE_STRIKE
 	BRAND_SAFE_DOUBLE_STRIKE
 	BRAND_FAST_STRIKE
+	BRAND_VAMPIRISM
+	BRAND_BETTER_VAMPIRISM
 )
 
 type BrandData struct {
@@ -56,18 +60,34 @@ type BrandData struct {
 
 var BrandsTable = map[int]*BrandData{
 	BRAND_PASSIVE_ELEMENTS_SHIFTING: {
+		canBeOnWeapon:       true,
+		canBeOnRing:         false,
+		isActivatable:       false,
+		name:                "elements",
+		info:                "Changes its element each turn randomly.",
+		upgradedVersionCode: BRAND_PASSIVE_RARE_ELEMENTS_SHIFTING,
+		frequency:           1,
+	},
+	BRAND_PASSIVE_RARE_ELEMENTS_SHIFTING: {
 		canBeOnWeapon: true,
 		canBeOnRing:   false,
 		isActivatable: false,
-		name:          "instability",
+		name:          "space",
 		info:          "Changes its element each turn randomly.",
-		frequency:     1,
+		frequency:     0,
 	},
 	BRAND_PASSIVE_DISTORTION: {
+		canBeOnWeapon:       true,
+		name:                "distortion",
+		info:                "Changes its damage each turn randomly.",
+		upgradedVersionCode: BRAND_PASSIVE_SMARTER_DISTORTION,
+		frequency:           1,
+	},
+	BRAND_PASSIVE_SMARTER_DISTORTION: {
 		canBeOnWeapon: true,
-		name:          "distortion",
+		name:          "attuned distortion",
 		info:          "Changes its damage each turn randomly.",
-		frequency:     1,
+		frequency:     0,
 	},
 	BRAND_DOUBLE_STRIKE: {
 		canBeOnWeapon:       true,
@@ -87,9 +107,27 @@ var BrandsTable = map[int]*BrandData{
 		name:                 "fast strike",
 		info:                 "Hits faster.",
 		isEnchantable:        true,
-		defaultEnchantAmount: 1,
+		defaultEnchantAmount: 3,
 		maxEnchantAmount:     5,
 		frequency:            1,
+	},
+	BRAND_VAMPIRISM: {
+		canBeOnWeapon:        true,
+		isActivatable:        false,
+		isEnchantable:        false,
+		upgradedVersionCode:  BRAND_BETTER_VAMPIRISM,
+		name:                 "vampirism",
+		info:                 "10% chance to gain 1 health on hit",
+		frequency:            1,
+	},
+	BRAND_BETTER_VAMPIRISM: {
+		canBeOnWeapon:        true,
+		isActivatable:        false,
+		isEnchantable:        false,
+		upgradedVersionCode:  0,
+		name:                 "dark craving",
+		info:                 "10% chance to gain 2 health on hit",
+		frequency:            0,
 	},
 }
 
