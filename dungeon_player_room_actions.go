@@ -27,9 +27,9 @@ func (d *dungeon) selectPlayerRoomAction() {
 	allowed = append(allowed, room.hasFeature(DRF_TINKER))
 	actionFuncs = append(actionFuncs, d.tinkerWithItems)
 
-	actions = append(actions, "Nothing")
+	actions = append(actions, "View inventory")
 	allowed = append(allowed, true)
-	actionFuncs = append(actionFuncs, func() {})
+	actionFuncs = append(actionFuncs, d.viewPlayerInventory)
 
 	chosenActionNum := io.showSelectWindowWithDisableableOptions(
 		"Select an action:", actions, func(x int) bool { return allowed[x] }, false)
@@ -56,6 +56,19 @@ func (d *dungeon) pickUpFromPlayerRoom() {
 		d.plr.acquireItem(room.treasure[picked])
 		room.treasure = append(room.treasure[:picked], room.treasure[picked+1:]...)
 	}
+}
+
+func (d *dungeon) viewPlayerInventory() {
+	d.plr.sortInventory()
+	var lines []string
+	for _, i := range d.plr.inventory {
+		if i.IsConsumable() {
+			lines = append(lines, fmt.Sprintf("%dx %s", i.AsConsumable.Amount, i.GetName()))
+		} else {
+			lines = append(lines, fmt.Sprintf(i.GetName()))
+		}
+	}
+	io.showSelectWindow("INVENTORY:", lines)
 }
 
 func (d *dungeon) playerRest() {
