@@ -42,6 +42,7 @@ func (d *dungeon) initAndGenerate(patternFileName string) {
 	}
 	d.placeFeatureInRandomRoom(DRF_ALTAR)
 	d.placeFeatureInRandomRoom(DRF_TINKER)
+	d.placeFeatureInRandomRoom(DRF_BOSS)
 }
 
 func (d *dungeon) placeFeatureInRandomRoom(featureCode int) {
@@ -72,7 +73,7 @@ func (d *dungeon) generateAndRevealRoomsAroundPlayer() {
 					if d.rooms[rx][ry].isRoom {
 						d.totalOpenedRooms++
 					}
-					d.rooms[rx][ry].generateDungeonCell(d.totalOpenedRooms)
+					d.rooms[rx][ry].generateDungeonCellContents(d.totalOpenedRooms, d.rooms[rx][ry].hasFeature(DRF_BOSS))
 				}
 			}
 		}

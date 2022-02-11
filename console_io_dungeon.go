@@ -96,6 +96,7 @@ func (c *consoleIO) renderRoom(rx, ry int, d *dungeon) {
 		case DRF_BONFIRE: featureString = "bnf"
 		case DRF_ALTAR: featureString = "alt"
 		case DRF_TINKER: featureString = "tnk"
+		case DRF_BOSS: featureString = "bos"
 		default: panic("no cell feature string")
 		}
 		c.putColorTaggedString(featureString, topLeftX+1, topLeftY+roomH)

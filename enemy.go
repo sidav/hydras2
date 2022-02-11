@@ -11,6 +11,7 @@ const (
 )
 
 type enemy struct {
+	isBoss            bool
 	aura              *entities.Aura
 	enemyType         int
 	heads             int
@@ -33,13 +34,16 @@ func (e *enemy) getName() string {
 		auraName = e.aura.GetName() + " "
 	}
 	name += fmt.Sprintf("%d-headed %shydra", e.heads, auraName)
+	if e.isBoss {
+		name += " overlord"
+	}
 	return text_colors.MakeStringColorTagged(name, e.element.GetColorTags())
 }
 
 func generateRandomEnemy(minHeads, maxHeads int, aura, prime bool) *enemy {
 	heads := rnd.RandInRange(minHeads, maxHeads)
 	if prime {
-
+		heads = rnd.GenerateRandomPrimeInRange(minHeads, maxHeads)
 	}
 	e := &enemy{
 		enemyType: ENEMY_HYDRA,

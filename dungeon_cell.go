@@ -13,20 +13,32 @@ type dungeonCell struct {
 	hasKey   int
 }
 
-func (dc *dungeonCell) generateDungeonCell(num int) {
+func (dc *dungeonCell) generateDungeonCellContents(discoveryCount int, boss bool) {
 	if dc.isRoom {
-		numEnemies := rnd.RandInRange(0, num/3+1)
+		numEnemies := rnd.RandInRange(0, discoveryCount/3+1)
 		if numEnemies > 5 {
 			numEnemies = 5
 		}
-		minHeads, maxHeads := num/5+1, num/3+1
+		minHeads, maxHeads := discoveryCount/5+1, discoveryCount/3+1
 		for i := 0; i < numEnemies && len(dc.enemies) < 5; i++ {
 			dc.enemies = append(dc.enemies, generateRandomEnemy(minHeads, maxHeads, rnd.OneChanceFrom(5), false))
+		}
+		if boss {
+			bossEnemy := generateRandomEnemy(
+				discoveryCount*2,
+				discoveryCount*3,
+				true,
+				true)
+			bossEnemy.isBoss = true
+			dc.enemies = append(dc.enemies, bossEnemy)
 		}
 		if len(dc.treasure) > 0 { // it may be when re-generating
 			return
 		} else {
 			numItems := rnd.RandInRange(0, 3)
+			if boss {
+				numItems += 3
+			}
 			for i := 0; i < numItems; i++ {
 				dc.treasure = append(dc.treasure, entities.GenerateRandomItem(rnd))
 			}
