@@ -73,7 +73,7 @@ func (d *dungeon) playerRest() {
 }
 
 func (d *dungeon) buyPlayerStatUpgrades() {
-	upgradeCost := d.plr.level * 75 / 10
+	upgradeCost := d.plr.level * 55 / 10
 
 	if d.plr.souls < upgradeCost {
 		io.showInfoWindow("NOTHING TO OFFER", []string{
