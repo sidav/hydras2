@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gdamore/tcell"
+	"github.com/gdamore/tcell/v2"
 	"hydras2/game_log"
 	"hydras2/text_colors"
 	"strings"

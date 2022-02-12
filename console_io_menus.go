@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/gdamore/tcell"
+	"github.com/gdamore/tcell/v2"
 	"hydras2/text_colors"
 )
 
 func (c *consoleIO) getMenuWindowWidth() int {
 	w, _ := c.getConsoleSize()
-	if w > 35 {
+	if w > 60 {
 		return w/2
 	}
-	if w > 20 {
+	if w > 40 {
 		return 3*w/4
 	}
 	return w
