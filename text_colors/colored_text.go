@@ -6,15 +6,16 @@ const (
 )
 
 var ColorTagsTable = map[string]string{
-	"RED":         "`red",
-	"YELLOW":      "`ylw",
-	"BLUE":        "`blu",
-	"DARKBLUE":    "`dbl",
-	"CYAN":        "`cyn",
-	"DARKCYAN":    "`dcn",
-	"DARKGRAY":    "`dgr",
-	"DARKMAGENTA": "`dmg",
-	"RESET":       "`nil",
+	"RED":         "`RED",
+	"DARKRED":     "`DRD",
+	"YELLOW":      "`YLW",
+	"BLUE":        "`BLU",
+	"DARKBLUE":    "`DBL",
+	"CYAN":        "`CYN",
+	"DARKCYAN":    "`DCN",
+	"DARKGRAY":    "`DGR",
+	"DARKMAGENTA": "`DMG",
+	"RESET":       "`NIL",
 }
 
 func GetColorTagNameInStringAtPosition(s string, pos int) string {

@@ -9,6 +9,8 @@ func (c *consoleIO) getColorByColorTag(tag string) tcell.Color {
 	switch tag {
 	case "RED":
 		return tcell.ColorRed
+	case "DARKRED":
+		return tcell.ColorDarkRed
 	case "YELLOW":
 		return tcell.ColorYellow
 	case "BLUE":

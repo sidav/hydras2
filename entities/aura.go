@@ -17,6 +17,7 @@ const (
 	AURA_FAST
 	AURA_SUMMONING
 	AURA_VAMPIRIC
+	AURA_NIGHTMARE
 )
 
 type auraData struct {
@@ -39,6 +40,9 @@ var aurasTable = map[int]*auraData{
 	},
 	AURA_VAMPIRIC: {
 		name: "vampiric",
+	},
+	AURA_NIGHTMARE: {
+		name: "nightmare",
 	},
 }
 

@@ -63,6 +63,13 @@ func (b *battlefield) getEnemyAt(x, y int) *enemy {
 
 func (b *battlefield) actAsEnemy(e *enemy) {
 	const faceChangePeriod = 10
+	if e.aura != nil && e.aura.Code == entities.AURA_NIGHTMARE && rnd.OneChanceFrom(10) {
+		log.AppendMessagef(text_colors.MakeStringColorTagged(
+			"YOU ARE TERRIFIED OF NIGHTMARE HYDRA PRESENCE!!!",
+			[]string{"RED", "DARKRED"},
+			))
+		b.player.nextTickToAct = b.player.nextTickToAct+COMBAT_MOVE_COST
+	}
 	if e.aura != nil && e.aura.Code == entities.AURA_SUMMONING && rnd.OneChanceFrom(10) {
 		newEnemy := generateRandomEnemy(1, e.heads/2, false, false, false)
 		newEnemy.x = e.x
