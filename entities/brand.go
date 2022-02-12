@@ -25,6 +25,10 @@ func (b *Brand) GetName() string {
 	return BrandsTable[b.Code].name
 }
 
+func (b *Brand) getDescription() string {
+	return "It has the brand of " + b.GetName() + ". " + BrandsTable[b.Code].info
+}
+
 func (b *Brand) Improve() { // enchant or get improved
 	if BrandsTable[b.Code].isEnchantable && b.EnchantAmount < BrandsTable[b.Code].maxEnchantAmount {
 		b.EnchantAmount++
@@ -99,7 +103,7 @@ var BrandsTable = map[int]*BrandData{
 	BRAND_SAFE_DOUBLE_STRIKE: {
 		canBeOnWeapon: true,
 		name:          "swift strike",
-		info:          "Hits twice if needed.",
+		info:          "Hits twice if the second strike will deal any damage.",
 		frequency:     0,
 	},
 	BRAND_FAST_STRIKE: {
@@ -117,7 +121,7 @@ var BrandsTable = map[int]*BrandData{
 		isEnchantable:        false,
 		upgradedVersionCode:  BRAND_BETTER_VAMPIRISM,
 		name:                 "vampirism",
-		info:                 "10% chance to gain 1 health on hit",
+		info:                 "10% chance to gain 1 health on hit.",
 		frequency:            1,
 	},
 	BRAND_BETTER_VAMPIRISM: {
@@ -126,7 +130,7 @@ var BrandsTable = map[int]*BrandData{
 		isEnchantable:        false,
 		upgradedVersionCode:  0,
 		name:                 "dark craving",
-		info:                 "20% chance to gain 1 health on hit",
+		info:                 "20% chance to gain 1 health on hit.",
 		frequency:            0,
 	},
 }

@@ -60,15 +60,22 @@ func (d *dungeon) pickUpFromPlayerRoom() {
 
 func (d *dungeon) viewPlayerInventory() {
 	d.plr.sortInventory()
-	var lines []string
-	for _, i := range d.plr.inventory {
-		if i.IsConsumable() {
-			lines = append(lines, fmt.Sprintf("%dx %s", i.AsConsumable.Amount, i.GetName()))
+	for {
+		var lines []string
+		for _, i := range d.plr.inventory {
+			if i.IsConsumable() {
+				lines = append(lines, fmt.Sprintf("%dx %s", i.AsConsumable.Amount, i.GetName()))
+			} else {
+				lines = append(lines, fmt.Sprintf(i.GetName()))
+			}
+		}
+		selected := io.showSelectWindow("INVENTORY:", lines)
+		if selected == -1 {
+			break
 		} else {
-			lines = append(lines, fmt.Sprintf(i.GetName()))
+			io.showInfoWindow("ITEM INFO", d.plr.inventory[selected].GetDescription())
 		}
 	}
-	io.showSelectWindow("INVENTORY:", lines)
 }
 
 func (d *dungeon) playerRest() {

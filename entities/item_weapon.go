@@ -17,6 +17,7 @@ type WeaponTypeStaticData struct {
 	WeaponTypeCode         int
 	Frequency              int
 	MinDamageForGeneration int
+	fluffText              string
 }
 
 var weaponsStaticData = []*WeaponTypeStaticData{
@@ -24,16 +25,22 @@ var weaponsStaticData = []*WeaponTypeStaticData{
 		WeaponTypeCode:         WTYPE_SUBSTRACTOR,
 		Frequency:              4,
 		MinDamageForGeneration: 1,
+		fluffText: "The simplest and most trusty weapon. A good hydra hunters will always take " +
+			"one or two, wherever they go.",
 	},
 	{
 		WeaponTypeCode:         WTYPE_DIVISOR,
 		Frequency:              2,
 		MinDamageForGeneration: 2,
+		fluffText: "There is an interesting paradox with divisor weapons: " +
+			"the more powerful this weapon grows, the more hydras become immune to it.",
 	},
 	{
 		WeaponTypeCode:         WTYPE_LOGARITHMER,
 		Frequency:              1,
 		MinDamageForGeneration: 2,
+		fluffText: "The most powerful, yet the most demanding weapon. " +
+			"They say that with an appropriate logarithmer one can pacify even 262144-headed hydra.",
 	},
 }
 
@@ -87,6 +94,19 @@ func (w *ItemWeapon) GetName() string {
 		name += " of " + w.Brand.GetName()
 	}
 	return text_colors.MakeStringColorTagged(name, w.WeaponElement.GetColorTags())
+}
+
+func (iw *ItemWeapon) getDescription() string {
+	brandDescr := ""
+	if iw.Brand != nil {
+		brandDescr = "\n"+iw.Brand.getDescription()
+	}
+	return fmt.Sprintf(
+		"%s \n%s%s",
+		iw.GetName(),
+		text_colors.MakeStringColorTagged(weaponsStaticData[iw.WeaponTypeCode].fluffText, []string{"YELLOW"}),
+		brandDescr,
+	)
 }
 
 func (iw *ItemWeapon) GetDamageOnHeads(heads int) int {

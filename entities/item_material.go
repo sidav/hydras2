@@ -48,6 +48,39 @@ func (im *ItemMaterial) GetName() string {
 	panic("No GetName")
 }
 
+func (im *ItemMaterial) getDescription() string {
+	switch im.Code {
+	case MATERIAL_CLEAR_BRAND:
+		return "Cleansing glyph. \n It removes any brand on a weapon. \n" +
+			"It is said in Book of Arkanists that any glyph is bound to be purged someday."
+	case MATERIAL_IMBUE_BRAND:
+		return "Glyph of " + im.ImbuesBrand.GetName() + ". \nThe powerful magic sigil, which will imbue a strong magic " +
+			"on any weapon. " + im.ImbuesBrand.getDescription()
+	case MATERIAL_IMPROVE_BRAND:
+		return "Stoneglyph of power. \nIt is a magic symbol of unknown origin. It is said to be able to enforce any brand with dark power."
+	case MATERIAL_APPLY_ELEMENT:
+		if im.AppliesElement.Code == ELEMENT_NONE {
+			return "\nThose gems are growing from bones of elementless hydras. Those gems somehow can unlink elements " +
+				"from any soulless item. Scientists of Tarlidorf are still intrigued of this secret."
+		} else {
+			return text_colors.MakeStringColorTagged(im.AppliesElement.GetName() + " gem", im.AppliesElement.GetColorTags()) +
+				"\nThose gems are just always growing in hydras' lairs. This may be tied with their elemental origin."
+		}
+	case MATERIAL_ENCHANT:
+		str := ""
+		if im.EnchantAmount > 0 {
+			str = fmt.Sprintf("Sharpener (+%d)", im.EnchantAmount)
+		} else {
+			str = fmt.Sprintf("Sharpener (%d)", im.EnchantAmount)
+		}
+		return str + "\nA good sharpener may reinforce one's weapon, as well as ruin it. Use it wisely."
+	case MATERIAL_ENCHANT_CONSUMABLE:
+		return "Bezoar. \nAn ancient organic stone with hydra's petrified blood in it. It can give a good share of " +
+			"hydras' regeneration. The safest way to get it is through one's healing flask."
+	}
+	panic("No GetName")
+}
+
 func GenerateRandomMaterial(rnd *fibrandom.FibRandom) *ItemMaterial {
 	typeFrequencies := []int{2, 1, 1, 1, 3, 1}
 	whatToGen := rnd.SelectRandomIndexFromWeighted(len(typeFrequencies), func(x int) int { return typeFrequencies[x] })

@@ -85,6 +85,19 @@ func (i *Item) GetName() string {
 	panic("No item name!")
 }
 
+func (i *Item) GetDescription() string {
+	if i.IsConsumable() {
+		return i.AsConsumable.getDescription()
+	}
+	if i.IsWeapon() {
+		return i.AsWeapon.getDescription()
+	}
+	if i.IsMaterial() {
+		return i.AsMaterial.getDescription()
+	}
+	panic("NO DESCRIPTION")
+}
+
 func (i *Item) IsStackable() bool {
 	return i.IsConsumable()
 }
