@@ -17,6 +17,8 @@ func (c *consoleIO) getColorByColorTag(tag string) tcell.Color {
 		return tcell.ColorDarkBlue
 	case "CYAN":
 		return tcell.ColorLightCyan
+	case "DARKCYAN":
+		return tcell.ColorDarkCyan
 	case "DARKGRAY":
 		return tcell.ColorDarkGray
 	case "DARKMAGENTA":
@@ -54,6 +56,9 @@ func (c *consoleIO) putColorTaggedString(str string, x, y int) {
 			i += text_colors.COLOR_TAG_LENGTH
 			offset += text_colors.COLOR_TAG_LENGTH
 			c.setFgColorByColorTag(tag)
+			if i >= len(str) {
+				break
+			}
 		}
 		c.screen.SetCell(x+i-offset+c.offsetX, y+c.offsetY, c.style, rune(str[i]))
 	}

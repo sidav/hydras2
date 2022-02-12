@@ -96,7 +96,7 @@ var elementsTable = []elementData{
 		frequency:               frequencyRare,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_VOID},
 		isBoth:                  []int{},
-		colorTags:               []string{"BLUE"},
+		colorTags:               []string{"DARKCYAN"},
 		name:                    "Ice",
 	},
 	ELEMENT_AIR: {
@@ -124,21 +124,21 @@ var elementsTable = []elementData{
 		frequency:               frequencyEpic,
 		susceptibleToDamageFrom: []int{ELEMENT_FIRE, ELEMENT_EARTH, ELEMENT_MAGMA, ELEMENT_VOID},
 		isBoth:                  []int{ELEMENT_AIR, ELEMENT_ICE},
-		colorTags:               []string{"BLUE", "YELLOW"},
+		colorTags:               []string{"DARKCYAN", "YELLOW"},
 		name:                    "Steaming",
 	},
 	ELEMENT_CHAOS: {
 		frequency:               frequencyLegendary,
 		susceptibleToDamageFrom: []int{ELEMENT_NONE, ELEMENT_VOID},
 		isBoth:                  []int{ELEMENT_EARTH, ELEMENT_FIRE, ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_MAGMA},
-		colorTags:               []string{"RED", "BLUE", "YELLOW", "DARKGRAY"},
+		colorTags:               []string{"RED", "DARKCYAN", "YELLOW", "DARKGRAY"},
 		name:                    "Chaotic",
 	},
 	ELEMENT_VOID: {
 		frequency:               frequencyLegendary,
 		susceptibleToDamageFrom: []int{ELEMENT_NONE, ELEMENT_CHAOS},
 		isBoth:                  []int{ELEMENT_EARTH, ELEMENT_FIRE, ELEMENT_ICE, ELEMENT_AIR, ELEMENT_STEAM, ELEMENT_MAGMA},
-		colorTags:               []string{"DARKGRAY", "BLUE", "DARKMAGENTA", "DARKBLUE"},
+		colorTags:               []string{"DARKGRAY", "DARKCYAN", "DARKMAGENTA"},
 		name:                    "Void",
 	},
 }

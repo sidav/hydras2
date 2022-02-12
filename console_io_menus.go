@@ -5,50 +5,15 @@ import (
 	"hydras2/text_colors"
 )
 
-func (c *consoleIO) showYNSelect(title string, lines []string) bool {
-	c.screen.Clear()
-	cursor := 0
-	longestLineLen := text_colors.TaggedStringLength(title) + 2
-	for i := range lines {
-		if text_colors.TaggedStringLength(lines[i]) > longestLineLen {
-			longestLineLen = text_colors.TaggedStringLength(lines[i])
-		}
+func (c *consoleIO) getMenuWindowWidth() int {
+	w, _ := c.getConsoleSize()
+	if w > 35 {
+		return w/2
 	}
-	for {
-		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.drawRect(0, 0, longestLineLen+2, len(lines)+2)
-		c.resetStyle()
-		c.drawStringCenteredAround(title, (longestLineLen+2)/2, 0)
-		for i, l := range lines {
-			c.putColorTaggedString(l, 1, 1+i)
-		}
-		if cursor == 0 {
-			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
-		} else {
-			c.resetStyle()
-		}
-		c.drawStringCenteredAround("YES", (longestLineLen+2)/3, len(lines)+2)
-		if cursor == 1 {
-			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
-		} else {
-			c.resetStyle()
-		}
-		c.drawStringCenteredAround("NO", 2*(longestLineLen+2)/3, len(lines)+2)
-		c.screen.Show()
-		k := c.readKey()
-		switch k {
-		case "LEFT":
-			cursor--
-		case "RIGHT":
-			cursor++
-		case "ENTER":
-			return cursor == 0
-		case "y":
-			return true
-		case "n":
-			return false
-		}
+	if w > 20 {
+		return 3*w/4
 	}
+	return w
 }
 
 func (c *consoleIO) showSelectWindow(title string, lines []string) int {
@@ -114,17 +79,57 @@ func (c *consoleIO) showSelectWindowWithDisableableOptions(title string, lines [
 	}
 }
 
-func (c *consoleIO) showInfoWindow(title, text string) {
-	windowWidth := 25
+func (c *consoleIO) showYNSelect(title, text string) bool {
+	windowWidth := c.getMenuWindowWidth()
+	c.screen.Clear()
+	cursor := 0
 	for {
-		c.setStyle(tcell.ColorBlack, tcell.ColorBlack)
-		c.drawFilledRect(' ', 0, 0, windowWidth+2, 10)
-		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.drawRect(0, 0, windowWidth+1, 10)
 		c.resetStyle()
-		c.drawStringCenteredAround(title, (windowWidth+2)/2, 0)
-		c.drawStringCenteredAround("<OK>", (windowWidth+2)/2, 10)
-		c.putWrappedTextInRect(text, 1, 1, windowWidth-1)
+		windowHeight := c.putWrappedTextInRect(text, 1, 1, windowWidth-1)+1
+		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+		c.drawRect(0, 0, windowWidth, windowHeight)
+		c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
+		c.drawStringCenteredAround(" " + title + " ", (windowWidth+2)/2, 0)
+		if cursor == 0 {
+			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
+		} else {
+			c.resetStyle()
+		}
+		c.drawStringCenteredAround("< YES", (windowWidth+2)/3, windowHeight)
+		if cursor == 1 {
+			c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
+		} else {
+			c.resetStyle()
+		}
+		c.drawStringCenteredAround("NO >", 2*(windowWidth+2)/3, windowHeight)
+		c.screen.Show()
+		k := c.readKey()
+		switch k {
+		case "LEFT":
+			cursor=0
+		case "RIGHT":
+			cursor=1
+		case "ENTER":
+			return cursor == 0
+		case "y":
+			return true
+		case "n":
+			return false
+		}
+	}
+}
+
+func (c *consoleIO) showInfoWindow(title, text string) {
+	windowWidth := c.getMenuWindowWidth()
+	for {
+		c.resetStyle()
+		textHeight := c.putWrappedTextInRect(text, 1, 1, windowWidth-1)
+		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+		c.drawRect(0, 0, windowWidth+1, textHeight+1)
+		c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
+		c.drawStringCenteredAround(" "+title+" ", (windowWidth+2)/2, 0)
+		c.setStyle(tcell.ColorBlack, tcell.ColorWhite)
+		c.drawStringCenteredAround("<OK>", (windowWidth+2)/2, textHeight+1)
 		c.screen.Show()
 		k := c.readKey()
 		switch k {

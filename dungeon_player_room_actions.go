@@ -72,13 +72,10 @@ func (d *dungeon) viewPlayerInventory() {
 }
 
 func (d *dungeon) playerRest() {
-	lines := []string{
-		"Rest for some time?",
-		"It will restore your health, but the",
-		"dungeon will become dark again, and cleared",
-		"rooms may be repopulated with hydras!",
-	}
-	picked := io.showYNSelect("REST", lines)
+	text := "Rest for some time? \n" +
+		"It will restore your health, but the dungeon will become dark again, " +
+		"and cleared rooms may be repopulated with hydras!"
+	picked := io.showYNSelect("REST", text)
 	if picked {
 		d.plr.hitpoints = d.plr.getMaxHp()
 		d.clearRoomsGeneratedState()
@@ -95,11 +92,8 @@ func (d *dungeon) buyPlayerStatUpgrades() {
 		return
 	}
 
-	lines := []string{
-		fmt.Sprintf("You have %d hydra essense.", d.plr.souls),
-		fmt.Sprintf("Spend %d to upgrade vitality?", upgradeCost),
-	}
-	picked := io.showYNSelect("MAKE AN OFFERING", lines)
+	text := fmt.Sprintf("You have %d hydra essense. Spend %d to upgrade vitality?", d.plr.souls, upgradeCost)
+	picked := io.showYNSelect("MAKE AN OFFERING", text)
 	if picked && d.plr.souls >= upgradeCost {
 		d.plr.souls -= upgradeCost
 		d.plr.vitality += 2

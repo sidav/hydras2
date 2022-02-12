@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gdamore/tcell"
-	_ "github.com/gdamore/tcell/v2"
 	"hydras2/game_log"
 	"hydras2/text_colors"
 	"strings"
@@ -11,7 +10,6 @@ import (
 type consoleIO struct {
 	screen                        tcell.Screen
 	style                         tcell.Style
-	CONSOLE_WIDTH, CONSOLE_HEIGHT int
 	offsetX, offsetY              int
 }
 
@@ -28,7 +26,11 @@ func (c *consoleIO) init() {
 	// c.screen.EnableMouse()
 	c.setStyle(tcell.ColorWhite, tcell.ColorBlack)
 	c.screen.SetStyle(c.style)
-	c.CONSOLE_WIDTH, c.CONSOLE_HEIGHT = c.screen.Size()
+	c.screen.Clear()
+}
+
+func (c *consoleIO) getConsoleSize() (int, int) {
+	return c.screen.Size()
 }
 
 func (c *consoleIO) close() {
@@ -135,22 +137,40 @@ func (c *consoleIO) renderLogAt(log *game_log.GameLog, x, y int) {
 	c.setOffsets(0, 0)
 }
 
-func (c *consoleIO) putWrappedTextInRect(text string, x, y, w int) {
-	const newLineOffset = 2
+// returns resulting height
+func (c *consoleIO) putWrappedTextInRect(text string, x, y, w int) int {
 	currentLine := 0
-	currentLineLength := newLineOffset
+	currentLineLength := 0
+	addLineOffset := true
 	textSplitByLines := strings.Split(text, "\n")
 	for _, t := range textSplitByLines {
 		lineSplitByWords := strings.Split(t, " ")
+		currentLineLength = 0
 		for _, word := range lineSplitByWords {
+			// check if next word will fit in line
 			if currentLineLength+text_colors.TaggedStringLength(word) > w {
+				// if not, fill the line to w
+				if currentLineLength < w {
+					spaces := w - currentLineLength + 1
+					c.putUncoloredString(strings.Repeat(" ", spaces), x+currentLineLength, y+currentLine)
+				}
 				currentLine++
 				currentLineLength = 0
+				addLineOffset = false
+			}
+			if addLineOffset && currentLineLength == 0 {
+				word = " "+word
 			}
 			c.putColorTaggedStringNonResetting(word+" ", x+currentLineLength, y+currentLine)
 			currentLineLength += text_colors.TaggedStringLength(word)+1
 		}
+		// fill with spaces to enforce overdraw
+		if currentLineLength < w {
+			spaces := w - currentLineLength + 1
+			c.putUncoloredString(strings.Repeat(" ", spaces), x+currentLineLength, y+currentLine)
+		}
 		currentLine++
-		currentLineLength = newLineOffset
+		addLineOffset = true
 	}
+	return currentLine
 }

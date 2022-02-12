@@ -11,6 +11,7 @@ var ColorTagsTable = map[string]string{
 	"BLUE":        "`blu",
 	"DARKBLUE":    "`dbl",
 	"CYAN":        "`cyn",
+	"DARKCYAN":    "`dcn",
 	"DARKGRAY":    "`dgr",
 	"DARKMAGENTA": "`dmg",
 	"RESET":       "`nil",
@@ -72,7 +73,7 @@ func MakeStringColorTagged(s string, tagsNames []string) string {
 	case 0:
 		return s
 	case 1:
-		return ColorTagsTable[tagsNames[0]] + s
+		return ColorTagsTable[tagsNames[0]] + s + ColorTagsTable["RESET"]
 	}
 	// maybe calculate this when rendering?.. Why consume memory?
 	newStr := ""
@@ -83,5 +84,5 @@ func MakeStringColorTagged(s string, tagsNames []string) string {
 		}
 		newStr += string(s[i])
 	}
-	return newStr
+	return newStr + ColorTagsTable["RESET"]
 }

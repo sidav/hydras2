@@ -6,7 +6,7 @@ func (d *dungeon) startDungeonLoop() {
 	for {
 		d.performPreTurnCellActions()
 		if d.plr.hitpoints <= 0 {
-			exitGame = !io.showYNSelect("YOU DIED", []string{"Try again?"})
+			exitGame = !io.showYNSelect("YOU DIED", "Do you want to try again?")
 			return
 		}
 		io.renderDungeon(d, d.plr)
@@ -53,23 +53,21 @@ func (d *dungeon) doesPlayerEnterRoom(vx, vy int) bool {
 }
 
 func (d *dungeon) offerCombatToPlayer(room *dungeonCell) bool {
-	var lines []string
-	lines = append(lines, "   Enemies:")
+	text := "   Enemies:\n"
 	for _, e := range room.enemies {
-		lines = append(lines, e.getName())
+		text += e.getName()+"\n"
 	}
 	if len(room.treasure) > 0 {
-		lines = append(lines, "   Treasure:")
+		text += "   Treasure:\n"
 		for _, t := range room.treasure {
-			lines = append(lines, t.GetName())
+			text += t.GetName()+"\n"
 		}
 	}
 	if room.hasKey > 0 {
-		lines = append(lines, " !There is a key!")
+		text += " !There is a key!\n"
 	}
-	lines = append(lines, "")
-	lines = append(lines, "  Enter the combat?")
-	return io.showYNSelect(" ENCOUNTER ", lines)
+	text += "  Enter the combat?"
+	return io.showYNSelect("ENCOUNTER", text)
 }
 
 func (d *dungeon) onCombatEnd(b *battlefield, room *dungeonCell) bool {
@@ -124,14 +122,8 @@ func (d *dungeon) checkGameWon() {
 		}
 	}
 	exitGame = io.showYNSelect("YOU HAVE WON!",
-		[]string{
-			"You have saved the kingdom from",
-			"the hydra vermin. You now can",
-			"exit game or stay here and rest",
-			"at bonfire for new and harder",
-			"enemies spawn. ",
-			"",
-			"Do you want to stay here? ",
-		},
+		"You have saved the kingdom from the hydra vermin. \n" +
+		"You now can exit game or stay here and rest at bonfire for new and harder enemies spawn. \n\n" +
+		"Do you want to stay here? ",
 	)
 }

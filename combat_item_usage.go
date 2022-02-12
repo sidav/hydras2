@@ -16,7 +16,7 @@ func (b *battlefield) usePlayerConsumable() {
 			b.player.hitpoints = b.player.getMaxHp()
 		}
 	case entities.CONSUMABLE_RETREAT:
-		if io.showYNSelect("Flee?", []string{"You will lose all essence!"}) {
+		if io.showYNSelect("Flee?", "Are you sure you want to flee?\n You will lose all essence!") {
 			b.playerFled = true
 			b.battleEnded = true
 		} else {
